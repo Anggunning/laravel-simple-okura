@@ -41,6 +41,7 @@ class SktmModel extends Model
         'kk',                   
         'ktp',                 
         'surat_pernyataan',     
+        'user_id'
     ];
 
     protected $casts = [
@@ -51,6 +52,11 @@ class SktmModel extends Model
    public function riwayat_sktm()
 {
    return $this->hasMany(RiwayatsktmModel::class, 'sktm_id', 'id');
+}
+
+public function user()
+{
+    return $this->belongsTo(User::class);
 }
 
 

@@ -38,7 +38,7 @@
             {{-- Penduduk Miskin --}}
             @if (!in_array(auth()->user()->role, ['Masyarakat', 'Lurah', 'Sekretaris']))
                 <li>
-                    <a class="app-menu__item" href="{{ route('pendudukMiskin.penduduk_miskin') }}">
+                    <a class="app-menu__item" href="{{ route('pendudukMiskin.index') }}">
                         <i class="app-menu__icon bi bi-speedometer"></i>
                         <span class="app-menu__label">Penduduk Miskin</span>
                     </a>
@@ -48,7 +48,7 @@
         {{-- Peta Persebaran --}}
         @if (auth()->user()->role != 'Masyarakat')
             <li>
-                <a class="app-menu__item" href="{{ route('peta_persebaran') }}">
+                <a class="app-menu__item" href="{{ route('pendudukMiskin.peta') }}">
                     <i class="app-menu__icon bi bi-code-square"></i>
                     <span class="app-menu__label">Peta Persebaran</span>
                 </a>
@@ -58,7 +58,7 @@
         {{-- Data Pengguna --}}
         @if (auth()->user()->role === 'Admin')
             <li>
-                <a class="app-menu__item" href="{{ route('dataPengguna.data_pengguna') }}">
+                <a class="app-menu__item" href="{{ route('dataPengguna.index') }}">
                     <i class="app-menu__icon bi bi-code-square"></i>
                     <span class="app-menu__label">Data Pengguna</span>
                 </a>

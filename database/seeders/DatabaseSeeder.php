@@ -22,7 +22,8 @@ class DatabaseSeeder extends Seeder
             RiwayatsktmSeeder::class,
             RiwayatskuSeeder::class,
             RiwayatSkpSeeder::class,
-            OrangTuaSeeder::class
+            OrangTuaSeeder::class,
+            PendudukMiskinSeeder::class,
             
             
         ]);

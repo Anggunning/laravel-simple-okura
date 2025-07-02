@@ -31,6 +31,7 @@ return new class extends Migration
             $table->string('foto')->nullable(); // path file
 
             $table->timestamps();
+            $table->uuid('user_id');
             $table->uuid('status_perkawinan_id');
             $table->foreign('status_perkawinan_id')->references('id')->on('status_perkawinan')->onDelete('cascade');
             

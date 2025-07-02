@@ -23,7 +23,8 @@
             <div class="widget-small primary coloured-icon"><i class="icon bi bi-people fs-1"></i>
                 <div class="info">
                     <h4>Pengguna</h4>
-                    <p><b>5</b></p>
+                    <p><b>{{ $jumlahPengguna }}</b></p>
+
                 </div>
             </div>
         </div>
@@ -31,7 +32,7 @@
             <div class="widget-small info coloured-icon"><i class="icon bi bi-heart fs-1"></i>
                 <div class="info">
                     <h4>Penduduk Miskin</h4>
-                    <p><b>25</b></p>
+                     <p><b>{{ $jumlahPendudukMiskin}}</b></p>
                 </div>
             </div>
         </div>
@@ -39,7 +40,7 @@
             <div class="widget-small warning coloured-icon"><i class="icon bi bi-folder2 fs-1"></i>
                 <div class="info">
                     <h4>Pengajuan</h4>
-                    <p><b>10</b></p>
+                     <p><b>{{ $totalPengajuan }}</b></p>
                 </div>
             </div>
         </div>
@@ -56,15 +57,15 @@
                     <div class="card-title">Rekap Total Pengajuan:</div>
                     <div class="card-row d-flex justify-content-between">
                         <span>Diajukan</span>
-                        <span class="badge gray">5</span>
+                        <span class="badge gray">{{ $sktm['diajukan'] }}</span>
                     </div>
                     <div class="card-row d-flex justify-content-between">
                         <span>Diproses</span>
-                        <span class="badge yellow">8</span>
+                        <span class="badge yellow">{{ $sktm['diproses'] }}</span>
                     </div>
                     <div class="card-row d-flex justify-content-between">
                         <span>Selesai</span>
-                        <span class="badge green">25</span>
+                        <span class="badge green">{{ $sktm['selesai'] }}</span>
                     </div>
                     <div class="card-footer mt-3 text-muted">Dari Pengajuan di tahun ini</div>
                 </div>
@@ -77,15 +78,15 @@
                     <div class="card-title">Rekap Total Pengajuan:</div>
                     <div class="card-row d-flex justify-content-between">
                         <span>Diajukan</span>
-                        <span class="badge gray">5</span>
+                        <span class="badge gray">{{ $sku['diajukan'] }}</span>
                     </div>
                     <div class="card-row d-flex justify-content-between">
                         <span>Diproses</span>
-                        <span class="badge yellow">8</span>
+                        <span class="badge yellow">{{ $sku['diproses'] }}</span>
                     </div>
                     <div class="card-row d-flex justify-content-between">
                         <span>Selesai</span>
-                        <span class="badge green">25</span>
+                        <span class="badge green">{{ $sku['selesai'] }}</span>
                     </div>
                     <div class="card-footer mt-3 text-muted">Dari Pengajuan di tahun ini</div>
                 </div>
@@ -98,15 +99,15 @@
                     <div class="card-title">Rekap Total Pengajuan:</div>
                     <div class="card-row d-flex justify-content-between">
                         <span>Diajukan</span>
-                        <span class="badge gray">5</span>
+                        <span class="badge gray">{{ $skp['diajukan'] }}</span>
                     </div>
                     <div class="card-row d-flex justify-content-between">
                         <span>Diproses</span>
-                        <span class="badge yellow">8</span>
+                        <span class="badge yellow">{{ $skp['diproses'] }}</span>
                     </div>
                     <div class="card-row d-flex justify-content-between">
                         <span>Selesai</span>
-                        <span class="badge green">25</span>
+                        <span class="badge green">{{ $skp['selesai'] }}</span>
                     </div>
                     <div class="card-footer mt-3 text-muted">Dari Pengajuan di tahun ini</div>
                 </div>

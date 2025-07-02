@@ -13,7 +13,7 @@ return new class extends Migration
     {
 Schema::create('status_perkawinan', function (Blueprint $table) {
     $table->uuid('id')->primary();
-    $table->enum('status_kawin', ['Belum Pernah Menikah', 'Cerai Mati', 'Cerai Hidup'])->nullable();
+    $table->enum('status_kawin', ['Belum Menikah', 'Cerai Mati', 'Cerai Hidup'])->nullable();
     $table->enum('jenis_kelamin_psgn_dulu', ['Laki-laki', 'Perempuan'])->nullable();
     $table->string('nama_pasangan_dulu')->nullable();
     $table->timestamps();

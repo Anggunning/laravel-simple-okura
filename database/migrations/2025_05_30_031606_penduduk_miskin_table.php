@@ -15,8 +15,8 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('nama');
             $table->text('alamat');
-            $table->string('nama_kepala_keluarga');
-            $table->integer('jml_agt_keluarga');
+            $table->string('nama_kepala_keluarga')->nullable();
+            $table->integer('jml_agt_keluarga')->nullable();;
             $table->string('kelompokPKH')->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->decimal('latitude', 10, 7)->nullable();

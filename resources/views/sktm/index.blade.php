@@ -29,13 +29,13 @@
 
                     <div class="mb-3 d-flex justify-content-between align-items-center">
                         <!-- Search di kiri -->
-                        <div id="sampleTable_filter" class="dataTables_filter mb-0">
+                        {{-- <div id="sampleTable_filter" class="dataTables_filter mb-0">
                             <label class="mb-0">
                                 Search:
                                 <input type="search" class="form-control form-control-sm" placeholder=""
                                     id="customSearchInput">
                             </label>
-                        </div>
+                        </div> --}}
 
                         {{-- Tombol Tambah Pengajuan --}}
                         @if (auth()->check() && in_array(auth()->user()->role, ['Masyarakat', 'Admin']))
@@ -52,21 +52,21 @@
                     <table class="table table-hover table-bordered" id="sktmTable">
                         <thead>
                             <tr>
-                                <th>Nama Pemohon</th>
                                 <th>Tanggal</th>
+                                <th>Nama Pemohon</th>
+                                <th>Alamat</th>
                                 <th>Tujuan</th>
-                                <th>Keterangan</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($sktm as $item)
+                            @forelse($sktm as $item)
                                 <tr>
-                                    <td>{{ $item->nama }}</td>
                                     <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>
+                                    <td>{{ $item->nama }}</td>
+                                    <td>{{ $item->alamat }}</td>
                                     <td>{{ $item->tujuan }}</td>
-                                    <td>{{ $item->keterangan }}</td>
                                     <td>
                                         @php
                                             $badgeClass = match ($item->status) {
@@ -83,8 +83,13 @@
                                     <td>
                                         <div class="btn-group">
                                             @if (auth()->check() && in_array(auth()->user()->role, ['Masyarakat', 'Admin']))
+                                                 @php
+                                                    $isDisabled = in_array($item->status, ['Selesai']);
+                                                @endphp
+
                                                 <a href="#" class="btn btn-white me-2" style="color: #2E8B57;"
-                                                    data-bs-toggle="modal" data-bs-target="#modalEditPengajuan"
+                                                    data-bs-toggle="{{ $isDisabled ? '' : 'modal' }}"
+                                                    data-bs-target="{{ $isDisabled ? '' : '#modalEditPengajuan' }}"
                                                     data-id="{{ $item->id }}" data-nama="{{ $item->nama }}"
                                                     data-tujuan="{{ $item->tujuan }}"
                                                     data-jenis_kelamin="{{ $item->jenis_kelamin }}"
@@ -92,16 +97,20 @@
                                                     data-tanggal_lahir="{{ \Carbon\Carbon::parse($item->tanggalLahir)->format('Y-m-d') }}"
                                                     data-agama="{{ $item->agama }}" data-nik="{{ $item->nik }}"
                                                     data-alamat="{{ $item->alamat }}"
-                                                    data-keterangan="{{ e($item->keterangan) }}">
-                                                    <i class="bi bi-pencil-square fs-5"></i>
+                                                    data-keterangan="{{ e($item->keterangan) }}"
+                                                   onclick="{{ $isDisabled ? 'return false;' : '' }}">
+                                                    <i class="bi bi-pencil-square fs-5"
+                                                        style="color: {{ $isDisabled ? '#A9A9A9' : '#2E8B57' }}"></i>
                                                 </a>
-                                                <form action="{{ route('sktm.destroy', $item->id) }}" method="POST"
+                                                </a>
+                                                <form id="formHapus-{{ $item->id }}"
+                                                    action="{{ route('sktm.destroy', $item->id) }}" method="POST"
                                                     style="display:inline;">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" class="btn btn-white me-2"
-                                                        style="color: #2E8B57;"
-                                                        onclick="return confirm('Yakin hapus data?')">
+                                                    <button type="button" class="btn btn-white me-2"
+                                                        id="btnHapus-{{ $item->id }}" style="color: #2E8B57;"
+                                                        onclick="konfirmasiHapus('{{ $item->id }}')">
                                                         <i class="bi bi-trash fs-5"></i>
                                                     </button>
                                                 </form>
@@ -113,15 +122,23 @@
                                         </div>
                                     </td>
                                 </tr>
-                            @endforeach
+                                @empty
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted">Tidak ada data pengajuan SKU.</td>
+                                </tr>
+                            @endforelse
+            
                         </tbody>
                     </table>
                 </div>
+                </div>
+             
+                
 
                 {{-- Paginate --}}
-                <div class="d-flex justify-content-center mt-3">
+                {{-- <div class="d-flex justify-content-center mt-3">
                     {{ $sktm->links() }}
-                </div>
+                </div> --}}
 
 
 
@@ -130,6 +147,15 @@
                     aria-hidden="true">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $err)
+                                            <li>{{ $err }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <form action="{{ route('sktm.store') }}" method="POST" enctype="multipart/form-data">
                                 @csrf
                                 <div class="modal-header">
@@ -140,80 +166,130 @@
 
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="nama" class="form-label">Nama Pemohon</label>
-                                        <input type="text" name="nama" class="form-control" required>
+                                        <label for="nama" class="form-label">Nama Pemohon <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="nama" class="form-control" required
+                                            placeholder="Masukkan Nama Lengkap"
+                                            oninvalid="this.setCustomValidity('Silakan isi nama lengkap')"
+                                            oninput="this.setCustomValidity('')">
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="tujuan" class="form-label">Tujuan</label>
-                                        <input type="text" name="tujuan" class="form-control" required>
+                                        <label for="tujuan" class="form-label">Tujuan <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="tujuan" class="form-control" required
+                                            placeholder="Masukkan Tujuan"
+                                            oninvalid="this.setCustomValidity('Silakan isi tujuan pengajuan')"
+                                            oninput="this.setCustomValidity('')">
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin</label>
-                                        <select name="jenis_kelamin" class="form-select" required>
-                                            <option value="">-- Pilih --</option>
+                                        <label for="jenis_kelamin" class="form-label">Jenis Kelamin <span
+                                                class="text-danger">*</span></label>
+                                        <select name="jenis_kelamin" class="form-select" required
+                                            oninvalid="this.setCustomValidity('Silakan pilih jenis kelamin')"
+                                            oninput="this.setCustomValidity('')">
+                                            <option value="" disabled selected hidden>Jenis Kelamin</option>
                                             <option value="Laki-laki">Laki-laki</option>
                                             <option value="Perempuan">Perempuan</option>
                                         </select>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="tempatLahir" class="form-label">Tempat Lahir</label>
-                                        <input type="text" name="tempatLahir" class="form-control" required>
+                                        <label for="tempatLahir" class="form-label">Tempat Lahir <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="tempatLahir" class="form-control" required
+                                            placeholder="Masukkan Tempat Lahir"
+                                            oninvalid="this.setCustomValidity('Silakan isi tempat lahir')"
+                                            oninput="this.setCustomValidity('')">
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="tanggalLahir" class="form-label">Tanggal Lahir</label>
-                                        <input type="date" name="tanggalLahir" class="form-control" required>
+                                        <label for="tanggalLahir" class="form-label">Tanggal Lahir <span
+                                                class="text-danger">*</span></label>
+                                        <input type="date" name="tanggalLahir" class="form-control" required
+                                            oninvalid="this.setCustomValidity('Silakan pilih tanggal lahir')"
+                                            oninput="this.setCustomValidity('')">
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="agama" class="form-label">Agama</label>
-                                        <input type="text" name="agama" class="form-control" required>
+                                        <label for="agama" class="form-label">Agama <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="agama" class="form-control" required
+                                            placeholder="Masukkan Agama"
+                                            oninvalid="this.setCustomValidity('Silakan isi agama')"
+                                            oninput="this.setCustomValidity('')">
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="nik" class="form-label">NIK</label>
-                                        <input type="text" name="nik" class="form-control" required>
+                                        <label for="nik" class="form-label">NIK <span
+                                                class="text-danger">*</span></label>
+                                        <input type="text" name="nik" id="nik" class="form-control"
+                                            required placeholder="Masukkan NIK" maxlength="16">
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="alamat" class="form-label">Alamat</label>
-                                        <textarea name="alamat" class="form-control" rows="2" required></textarea>
+                                        <label for="alamat" class="form-label">Alamat <span
+                                                class="text-danger">*</span></label>
+                                        <textarea name="alamat" class="form-control" rows="2" required placeholder="Masukkan Alamat"
+                                            oninvalid="this.setCustomValidity('Silakan isi alamat')" oninput="this.setCustomValidity('')"></textarea>
                                     </div>
 
                                     <input type="hidden" name="tanggal" id="tanggal">
 
                                     <div class="mb-3">
-                                        <label for="keterangan" class="form-label">Keterangan</label>
-                                        <textarea name="keterangan" class="form-control" rows="3" required></textarea>
+                                        <label for="keterangan" class="form-label">Keterangan <span
+                                                class="text-danger">*</span></label>
+                                        <textarea name="keterangan" class="form-control" rows="3" required placeholder="Masukkan Keterangan"
+                                            oninvalid="this.setCustomValidity('Silakan isi keterangan')" oninput="this.setCustomValidity('')"></textarea>
                                     </div>
+
+                                    <!-- INPUT FILE -->
                                     <div class="mb-3">
-                                        <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW
-                                            (gambar atau PDF)</label>
-                                        <input type="file" name="pengantar_rt_rw" class="form-control"
-                                            accept=".jpg,.jpeg,.png,.pdf" required>
+                                        <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span
+                                                class="text-danger">*</span></label>
+                                        <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw"
+                                            class="form-control" accept=".jpg,.jpeg,.png,.pdf" required
+                                            oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
+                                            oninput="this.setCustomValidity('')">
+                                        <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                            2MB.</small>
                                     </div>
+
                                     <div class="mb-3">
-                                        <label for="kk" class="form-label">Kartu Keluarga(gambar atau
-                                            PDF)</label>
-                                        <input type="file" name="kk" class="form-control"
-                                            accept=".jpg,.jpeg,.png,.pdf" required>
+                                        <label for="kk" class="form-label">Kartu Keluarga <span
+                                                class="text-danger">*</span></label>
+                                        <input type="file" name="kk" id="kk" class="form-control"
+                                            accept=".jpg,.jpeg,.png,.pdf" required
+                                            oninvalid="this.setCustomValidity('Silakan unggah file KK')"
+                                            oninput="this.setCustomValidity('')">
+                                        <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                            2MB.</small>
                                     </div>
+
                                     <div class="mb-3">
-                                        <label for="ktp" class="form-label">Kartu Tanda Penduduk (gambar atau
-                                            PDF)</label>
-                                        <input type="file" name="ktp" class="form-control"
-                                            accept=".jpg,.jpeg,.png,.pdf" required>
+                                        <label for="ktp" class="form-label">Kartu Tanda Penduduk <span
+                                                class="text-danger">*</span></label>
+                                        <input type="file" name="ktp" id="ktp" class="form-control"
+                                            accept=".jpg,.jpeg,.png,.pdf" required
+                                            oninvalid="this.setCustomValidity('Silakan unggah file KTP')"
+                                            oninput="this.setCustomValidity('')">
+                                        <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                            2MB.</small>
                                     </div>
+
                                     <div class="mb-3">
-                                        <label for="surat_pernyataan" class="form-label">Surat Pernyataan (gambar
-                                            atau PDF)</label>
-                                        <input type="file" name="surat_pernyataan" class="form-control"
-                                            accept=".jpg,.jpeg,.png,.pdf" required>
+                                        <label for="surat_pernyataan" class="form-label">Surat Pernyataan <span
+                                                class="text-danger">*</span></label>
+                                        <input type="file" name="surat_pernyataan" id="surat_pernyataan"
+                                            class="form-control" accept=".jpg,.jpeg,.png,.pdf" required
+                                            oninvalid="this.setCustomValidity('Silakan unggah surat pernyataan')"
+                                            oninput="this.setCustomValidity('')">
+                                        <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                            2MB.</small>
                                     </div>
                                 </div>
+
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-secondary"
                                         data-bs-dismiss="modal">Batal</button>
@@ -243,87 +319,101 @@
 
                                 <div class="modal-body">
                                     <div class="mb-3">
-                                        <label for="edit-nama" class="form-label">Nama Pemohon</label>
+                                        <label for="edit-nama" class="form-label">Nama Pemohon <span
+                                                class="text-danger">*</span></label>
                                         <input type="text" name="nama" id="edit-nama" class="form-control"
                                             required>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="edit-tujuan" class="form-label">Tujuan</label>
+                                        <label for="edit-tujuan" class="form-label">Tujuan <span
+                                                class="text-danger">*</span></label>
                                         <input type="text" name="tujuan" id="edit-tujuan" class="form-control"
                                             required>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="edit-jenis_kelamin" class="form-label">Jenis Kelamin</label>
+                                        <label for="edit-jenis_kelamin" class="form-label">Jenis Kelamin <span
+                                                class="text-danger">*</span></label>
                                         <select name="jenis_kelamin" id="edit-jenis_kelamin" class="form-select"
                                             required>
-                                            <option value="">-- Pilih --</option>
                                             <option value="Laki-laki">Laki-laki</option>
                                             <option value="Perempuan">Perempuan</option>
                                         </select>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="edit-tempatLahir" class="form-label">Tempat Lahir</label>
+                                        <label for="edit-tempatLahir" class="form-label">Tempat Lahir <span
+                                                class="text-danger">*</span></label>
                                         <input type="text" name="tempatLahir" id="edit-tempatLahir"
                                             class="form-control" required>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="edit-tanggalLahir" class="form-label">Tanggal Lahir</label>
+                                        <label for="edit-tanggalLahir" class="form-label">Tanggal Lahir <span
+                                                class="text-danger">*</span></label>
                                         <input type="date" name="tanggalLahir" id="edit-tanggalLahir"
                                             class="form-control" required>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="edit-agama" class="form-label">Agama</label>
+                                        <label for="edit-agama" class="form-label">Agama <span
+                                                class="text-danger">*</span></label>
                                         <input type="text" name="agama" id="edit-agama" class="form-control"
                                             required>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="edit-nik" class="form-label">NIK</label>
+                                        <label for="edit-nik" class="form-label">NIK <span
+                                                class="text-danger">*</span></label>
                                         <input type="text" name="nik" id="edit-nik" class="form-control"
                                             required>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="edit-alamat" class="form-label">Alamat</label>
+                                        <label for="edit-alamat" class="form-label">Alamat <span
+                                                class="text-danger">*</span></label>
                                         <textarea name="alamat" id="edit-alamat" class="form-control" rows="2" required></textarea>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="edit-keterangan" class="form-label">Keterangan</label>
+                                        <label for="edit-keterangan" class="form-label">Keterangan <span
+                                                class="text-danger">*</span></label>
                                         <textarea name="keterangan" id="edit-keterangan" class="form-control" rows="3" required></textarea>
                                     </div>
 
                                     <div class="mb-3">
-                                        <label for="edit-pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW
-                                            (gambar atau PDF)</label>
-
+                                        <label for="edit-pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span
+                                                class="text-danger">*</span></label>
                                         <input type="file" name="pengantar_rt_rw" id="edit-pengantar_rt_rw"
                                             class="form-control" accept=".jpg,.jpeg,.png,.pdf">
+                                        <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                            2MB.</small>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="edit-kk" class="form-label">Kartu Keluarga
-                                            (gambar atau PDF)</label>
+                                        <label for="edit-kk" class="form-label">Kartu Keluarga <span
+                                                class="text-danger">*</span></label>
                                         <div class="mb-2" id="preview-edit-kk"></div>
-
                                         <input type="file" name="kk" id="edit-kk" class="form-control"
                                             accept=".jpg,.jpeg,.png,.pdf">
+                                        <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                            2MB.</small>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="edit-ktp" class="form-label">Kartu Tanda Penduduk
-                                            (gambar atau PDF)</label>
+                                        <label for="edit-ktp" class="form-label">Kartu Tanda Penduduk <span
+                                                class="text-danger">*</span></label>
                                         <input type="file" name="ktp" id="edit-ktp" class="form-control"
                                             accept=".jpg,.jpeg,.png,.pdf">
+                                        <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                            2MB.</small>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="edit-surat_pernyataan" class="form-label">Surat Pernyataan
-                                            (gambar atau PDF)</label>
+                                        <label for="edit-surat_pernyataan" class="form-label">Surat Pernyataan <span
+                                                class="text-danger">*</span></label>
                                         <input type="file" name="surat_pernyataan" id="edit-surat_pernyataan"
                                             class="form-control" accept=".jpg,.jpeg,.png,.pdf">
+                                        <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                            2MB.</small>
                                     </div>
                                 </div>
 
@@ -339,20 +429,13 @@
             @endsection
 
 
-            @section('scripts')
+            @push('scripts')
                 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
                 <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
                 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
                 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
-                <script>
-                    $(document).ready(function() {
-                        $('#sampleTable').DataTable();
-                    });
-                    $('#customSearchInput').on('keyup', function() {
-                        table.search(this.value).draw();
-                    });
-                </script>
+
                 <script>
                     document.addEventListener('DOMContentLoaded', function() {
                         const today = new Date();
@@ -365,44 +448,95 @@
                     });
                 </script>
 
-
                 <script>
-                    document.addEventListener('DOMContentLoaded', function() {
-                        var modal = document.getElementById('modalEditPengajuan');
-                        modal.addEventListener('show.bs.modal', function(event) {
-                            var button = event.relatedTarget;
+                    $(document).ready(function() {
+                        $('#modalEditPengajuan').on('show.bs.modal', function(event) {
+                            var button = $(event.relatedTarget);
 
-                            // Ambil data dari tombol edit
-                            var id = button.getAttribute('data-id');
-                            var nama = button.getAttribute('data-nama');
-                            var tujuan = button.getAttribute('data-tujuan');
-                            var jenisKelamin = button.getAttribute('data-jenis_kelamin');
-                            var tempatLahir = button.getAttribute('data-tempat_lahir');
-                            var tanggalLahir = button.getAttribute('data-tanggal_lahir');
-                            var agama = button.getAttribute('data-agama');
-                            var nik = button.getAttribute('data-nik');
-                            var alamat = button.getAttribute('data-alamat');
-                            var keterangan = button.getAttribute('data-keterangan');
+                            $('#edit-id').val(button.data('id'));
+                            $('#edit-nama').val(button.data('nama'));
+                            $('#edit-tujuan').val(button.data('tujuan'));
+                            $('#edit-jenis_kelamin').val(button.data('jenis_kelamin'));
+                            $('#edit-tempatLahir').val(button.data('tempat_lahir'));
+                            $('#edit-tanggalLahir').val(button.data('tanggal_lahir'));
+                            $('#edit-agama').val(button.data('agama'));
+                            $('#edit-nik').val(button.data('nik'));
+                            $('#edit-alamat').val(button.data('alamat'));
+                            $('#edit-keterangan').val(button.data('keterangan'));
 
-                            // Set value ke form
-                            modal.querySelector('#edit-id').value = id;
-                            modal.querySelector('#edit-nama').value = nama;
-                            modal.querySelector('#edit-tujuan').value = tujuan;
-                            modal.querySelector('#edit-jenis_kelamin').value = jenisKelamin;
-                            modal.querySelector('#edit-tempatLahir').value = tempatLahir;
-                            modal.querySelector('#edit-tanggalLahir').value = tanggalLahir;
-                            modal.querySelector('#edit-agama').value = agama;
-                            modal.querySelector('#edit-nik').value = nik;
-                            modal.querySelector('#edit-alamat').value = alamat;
-                            modal.querySelector('#edit-keterangan').value = keterangan;
-
-
-                            // Update action form supaya submit ke route yang sesuai id
-                            var form = modal.querySelector('#formEditPengajuan');
-                            form.action = "{{ route('sktm.update', ['id' => 'REPLACE_ID']) }}".replace('REPLACE_ID',
-                                id);
-
+                            let newAction = "{{ route('sktm.update', ['id' => 'REPLACE_ID']) }}".replace('REPLACE_ID',
+                                button.data('id'));
+                            $('#formEditPengajuan').attr('action', newAction);
                         });
                     });
                 </script>
-            @endsection
+
+                {{-- <script>
+                    $('#sktmTable').DataTable({
+                        paging: true,
+                        pageLength: 10
+
+                    });
+                </script> --}}
+                 @if ($sktm->count() > 0)
+            <script>
+                $(document).ready(function() {
+                    $('#sktmTable').DataTable(
+                        // {paging: true,
+                        // pageLength: 10}
+                    );
+                    
+                });
+            </script>
+        @endif
+
+                <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script>
+                    function konfirmasiHapus(id) {
+                        Swal.fire({
+                            title: 'Yakin ingin menghapus data?',
+                            text: "Data yang dihapus tidak dapat dikembalikan!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Ya, Hapus!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                const btn = document.getElementById('btnHapus-' + id);
+                                const form = document.getElementById('formHapus-' + id);
+
+                                if (!btn || !form) {
+                                    console.error("❌ Tidak ditemukan: btnHapus-" + id + " atau formHapus-" + id);
+                                    return;
+                                }
+
+                                btn.disabled = true;
+                                btn.innerText = 'Menghapus...';
+                                form.submit();
+                            }
+                        });
+                    }
+                </script>
+
+                <script>
+                    const nikInput = document.getElementById('nik');
+
+                    nikInput.addEventListener('input', function() {
+                        const val = this.value.trim();
+
+                        if (val === '') {
+                            this.setCustomValidity('Silakan isi NIK');
+                        } else if (!/^\d{16}$/.test(val)) {
+                            this.setCustomValidity('NIK harus terdiri dari 16 digit angka');
+                        } else {
+                            this.setCustomValidity('');
+                        }
+                    });
+
+                    // Trigger validasi ulang saat blur (pindah fokus)
+                    nikInput.addEventListener('blur', function() {
+                        this.reportValidity();
+                    });
+                </script>
+            @endpush

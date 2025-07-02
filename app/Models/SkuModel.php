@@ -43,6 +43,7 @@ class SkuModel extends Model
         'kk',
         'ktp',
         'surat_pernyataan',
+        'user_id'
     ];
 
     protected $casts = [
@@ -54,4 +55,11 @@ class SkuModel extends Model
 {
     return $this->hasMany(RiwayatskuModel::class, 'sku_id');
 }
+
+
+public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
 }

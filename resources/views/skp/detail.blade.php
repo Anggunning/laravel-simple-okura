@@ -54,16 +54,18 @@
                                     );
                                 @endphp
 
+                                <!-- DATA PEMOHON -->
+                                <h5 class="fw-bold mb-3">Data Pemohon</h5>
                                 @foreach ([
             'Nama Pemohon' => $skp->nama,
+            'NIK' => $skp->nik,
             'Jenis Kelamin' => $skp->jenis_kelamin,
             'Tempat, Tanggal Lahir' => $skp->tempat_lahir . ', ' . $tanggalLahir,
             'Agama' => $skp->agama,
-            'NIK' => $skp->nik,
             'Alamat' => $skp->alamat,
             'Kewarganegaraan' => $skp->kewarganegaraan,
             'Pekerjaan' => $skp->pekerjaan,
-            'Status Perkawinan' => $skp->status_kawin,
+            'Status Perkawinan' => $skp->status_perkawinan?->status_kawin,
             'Tanggal Pengajuan' => $tanggalPengajuan,
             'Status' => ucfirst($skp->status),
         ] as $label => $value)
@@ -72,6 +74,47 @@
                                         <div class="col-sm-8">: {{ $value }}</div>
                                     </div>
                                 @endforeach
+
+                                @if (in_array($skp->status_perkawinan?->status_kawin, ['Cerai Hidup', 'Cerai Mati']))
+                                    <div class="row mb-2">
+                                        <div class="col-sm-4 fw-bold">Nama Pasangan Sebelumnya</div>
+                                        <div class="col-sm-8">: {{ $skp->status_perkawinan->nama_pasangan_dulu ?? '-' }}
+                                        </div>
+                                    </div>
+                                    <div class="row mb-2">
+                                        <div class="col-sm-4 fw-bold">Jenis Kelamin Pasangan Sebelumnya</div>
+                                        <div class="col-sm-8">:
+                                            {{ $skp->status_perkawinan->jenis_kelamin_psgn_dulu ?? '-' }}</div>
+                                    </div>
+                                @endif
+
+                                <!-- PEMISAH -->
+                                <br>
+                                <h5 class="fw-bold mb-3">Data Orang Tua</h5>
+
+                                <!-- DATA AYAH & IBU -->
+                                @foreach ([
+            'Nama Ayah' => $skp->orangTua->nama_ayah,
+            'NIK Ayah' => $skp->orangTua->nik_ayah,
+            'Agama Ayah' => $skp->orangTua->agama_ayah,
+            'Kewarganegaraan Ayah' => $skp->orangTua->kewarganegaraan_ayah,
+            'Pekerjaan Ayah' => $skp->orangTua->pekerjaan_ayah,
+            'Alamat Ayah' => $skp->orangTua->alamat_ayah,
+            'Nama Ibu' => $skp->orangTua->nama_ibu,
+            'NIK Ibu' => $skp->orangTua->nik_ibu,
+            'Agama Ibu' => $skp->orangTua->agama_ibu,
+            'Kewarganegaraan Ibu' => $skp->orangTua->kewarganegaraan_ibu,
+            'Pekerjaan Ibu' => $skp->orangTua->pekerjaan_ibu,
+            'Alamat Ibu' => $skp->orangTua->alamat_ibu,
+        ] as $label => $value)
+                                    <div class="row mb-2">
+                                        <div class="col-sm-4 fw-bold">{{ $label }}</div>
+                                        <div class="col-sm-8">: {{ $value }}</div>
+                                    </div>
+                                @endforeach
+
+
+
                             </div>
 
                             <!-- Kolom Kanan (Dokumen) -->
@@ -99,25 +142,39 @@
 
                         {{-- Tombol Verifikasi dan Cetak --}}
                         @if (auth()->check())
-                            @if (in_array(auth()->user()->role, ['Admin', 'Sekretaris']) && $skp->status === 'Diajukan')
-                                <form id="verifikasiFormAdmin" action="{{ route('skp.verifikasi', $skp->id) }}"
-                                    method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success">Verifikasi</button>
-                                </form>
-                            @elseif (auth()->user()->role === 'Lurah' && $skp->status === 'Diproses')
-                                <form id="verifikasiFormLurah" action="{{ route('skp.verifikasi', $skp->id) }}"
-                                    method="POST">
-                                    @csrf
-                                    <button type="submit" class="btn btn-success">Sahkan</button>
-                                </form>
-                            @elseif ($skp->status === 'Selesai')
-                                <a href="{{ route('skp.cetak', $skp->id) }}" target="_blank" class="btn btn-success">
-                                    <i class="bi bi-printer"></i> Cetak Surat
-                                </a>
-                            @else
-                                <button class="btn btn-secondary" disabled>Sudah Diproses</button>
+                            {{-- ADMIN & SEKRETARIS --}}
+                            @if (in_array(auth()->user()->role, ['Admin', 'Sekretaris']))
+                                @if ($skp->status === 'Diajukan')
+                                    <form id="verifikasiFormAdmin" action="{{ route('skp.verifikasi', $skp->id) }}"
+                                        method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="button" id="btnVerifikasiAdmin" class="btn btn-success"
+                                            onclick="verifikasiAdminConfirm()">Verifikasi</button>
+                                    </form>
+                                @else
+                                    <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
+                                @endif
+
+                                {{-- LURAH --}}
+                            @elseif (auth()->user()->role === 'Lurah')
+                                @if ($skp->status === 'Diproses')
+                                    <form id="verifikasiFormLurah" action="{{ route('skp.verifikasi', $skp->id) }}"
+                                        method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="button" id="btnVerifikasiLurah" class="btn btn-success"
+                                            onclick="verifikasiLurahConfirm()">Verifikasi</button>
+                                    </form>
+                                @elseif ($skp->status === 'Selesai')
+                                    <button class="btn btn-secondary" disabled>Sudah Disahkan</button>
+                                @endif
                             @endif
+                        @endif
+
+                        {{-- Tombol Cetak jika status selesai --}}
+                        @if (auth()->check() && $skp->status === 'Selesai')
+                            <a href="{{ route('skp.cetak', $skp->id) }}" target="_blank" class="btn btn-success">
+                                <i class="bi bi-printer"></i> Cetak Surat
+                            </a>
                         @endif
                     </div>
 
@@ -143,12 +200,14 @@
                             @endforelse
                         </ul>
                     </div>
+                </section>
             </div>
         </div>
     </div>
 @endsection
 
-@section('scripts')
+
+@push('scripts')
     <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
@@ -194,52 +253,26 @@
 
 
 
-    <!-- Google analytics script-->
-    <script type="text/javascript">
-        if (document.location.hostname == 'pratikborsadiya.in') {
-            (function(i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r;
-                i[r] = i[r] || function() {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-                a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-                a.async = 1;
-                a.src = g;
-                m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-            ga('create', 'UA-72504830-1', 'auto');
-            ga('send', 'pageview');
-        }
-    </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const btnDetail = document.getElementById('btnDetail');
-            const btnRiwayat = document.getElementById('btnRiwayat');
-            const tabContentDetail = document.getElementById('tabContentDetail');
-            const tabContentRiwayat = document.getElementById('tabContentRiwayat');
+        $(document).ready(function() {
+            $('#btnDetail').on('click', function() {
 
-            btnDetail.addEventListener('click', () => {
-                tabContentDetail.classList.remove('d-none');
-                tabContentRiwayat.classList.add('d-none');
+                console.log('Riwayat diklik');
 
-                btnDetail.classList.add('tab-active');
-                btnDetail.classList.remove('tab-inactive');
+                $('#tabContentDetail').removeClass('d-none');
+                $('#tabContentRiwayat').addClass('d-none');
 
-                btnRiwayat.classList.add('tab-inactive');
-                btnRiwayat.classList.remove('tab-active');
+                $('#btnDetail').addClass('tab-active').removeClass('tab-inactive');
+                $('#btnRiwayat').addClass('tab-inactive').removeClass('tab-active');
             });
 
-            btnRiwayat.addEventListener('click', () => {
-                tabContentRiwayat.classList.remove('d-none');
-                tabContentDetail.classList.add('d-none');
+            $('#btnRiwayat').on('click', function() {
+                $('#tabContentRiwayat').removeClass('d-none');
+                $('#tabContentDetail').addClass('d-none');
 
-                btnRiwayat.classList.add('tab-active');
-                btnRiwayat.classList.remove('tab-inactive');
-
-                btnDetail.classList.add('tab-inactive');
-                btnDetail.classList.remove('tab-active');
+                $('#btnRiwayat').addClass('tab-active').removeClass('tab-inactive');
+                $('#btnDetail').addClass('tab-inactive').removeClass('tab-active');
             });
         });
     </script>
-@endsection
+@endpush

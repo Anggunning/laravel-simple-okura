@@ -21,7 +21,6 @@ class RiwayatSkpSeeder extends Seeder
                 'keterangan' => 'Dokumen belum lengkap',
                 'tanggal' => '2024-06-01',
                 'waktu' => now(),
-                'surat_balasan' => null,
                 'created_at' => now(),
                 'updated_at' => now(),
                 'skp_id' => '8881c2f2-d066-11ee-8bb8-744ca1759401', // Budi Santoso
@@ -33,7 +32,6 @@ class RiwayatSkpSeeder extends Seeder
                 'keterangan' => 'Sudah sesuai persyaratan',
                 'tanggal' => '2024-06-02',
                 'waktu' => now(),
-                'surat_balasan' => 'files/surat_balasan_sari.pdf',
                 'created_at' => now(),
                 'updated_at' => now(),
                 'skp_id' => '8881c578-d066-11ee-8bb8-744ca1759402', // Sari Lestari
@@ -45,7 +43,6 @@ class RiwayatSkpSeeder extends Seeder
                 'keterangan' => 'Data pekerjaan tidak sesuai',
                 'tanggal' => '2024-06-03',
                 'waktu' => now(),
-                'surat_balasan' => 'files/penolakan_andi.pdf',
                 'created_at' => now(),
                 'updated_at' => now(),
                 'skp_id' => '8881c70e-d066-11ee-8bb8-744ca1759403', // Andi Gunawan

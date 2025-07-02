@@ -91,42 +91,42 @@
                             </div>
                         </div>
 
-                       {{-- Tombol Verifikasi --}}
-@if (auth()->check())
-    {{-- ADMIN & SEKRETARIS --}}
-    @if (in_array(auth()->user()->role, ['Admin', 'Sekretaris']))
-        @if ($sku->status === 'Diajukan')
-            <form id="verifikasiFormAdmin" action="{{ route('sku.verifikasi', $sku->id) }}"
-                method="POST" style="display:inline;">
-                @csrf
-                <button type="button" id="btnVerifikasiAdmin" class="btn btn-success"
-                    onclick="verifikasiAdminConfirm()">Verifikasi</button>
-            </form>
-        @else
-            <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
-        @endif
+                        {{-- Tombol Verifikasi --}}
+                        @if (auth()->check())
+                            {{-- ADMIN & SEKRETARIS --}}
+                            @if (in_array(auth()->user()->role, ['Admin', 'Sekretaris']))
+                                @if ($sku->status === 'Diajukan')
+                                    <form id="verifikasiFormAdmin" action="{{ route('sku.verifikasi', $sku->id) }}"
+                                        method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="button" id="btnVerifikasiAdmin" class="btn btn-success"
+                                            onclick="verifikasiAdminConfirm()">Verifikasi</button>
+                                    </form>
+                                @else
+                                    <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
+                                @endif
 
-    {{-- LURAH --}}
-    @elseif (auth()->user()->role === 'Lurah')
-        @if ($sku->status === 'Diproses')
-            <form id="verifikasiFormLurah" action="{{ route('sku.verifikasi', $sku->id) }}"
-                method="POST" style="display:inline;">
-                @csrf
-                <button type="button" id="btnVerifikasiLurah" class="btn btn-success"
-                    onclick="verifikasiLurahConfirm()">Verifikasi</button>
-            </form>
-        @elseif ($sku->status === 'Selesai')
-            <button class="btn btn-secondary" disabled>Sudah Disahkan</button>
-        @endif
-    @endif
-@endif
+                                {{-- LURAH --}}
+                            @elseif (auth()->user()->role === 'Lurah')
+                                @if ($sku->status === 'Diproses')
+                                    <form id="verifikasiFormLurah" action="{{ route('sku.verifikasi', $sku->id) }}"
+                                        method="POST" style="display:inline;">
+                                        @csrf
+                                        <button type="button" id="btnVerifikasiLurah" class="btn btn-success"
+                                            onclick="verifikasiLurahConfirm()">Verifikasi</button>
+                                    </form>
+                                @elseif ($sku->status === 'Selesai')
+                                    <button class="btn btn-secondary" disabled>Sudah Disahkan</button>
+                                @endif
+                            @endif
+                        @endif
 
-{{-- Tombol Cetak jika status selesai --}}
-@if (auth()->check() && $sku->status === 'Selesai')
-    <a href="{{ route('sku.cetak', $sku->id) }}" target="_blank" class="btn btn-success">
-        <i class="bi bi-printer"></i> Cetak Surat
-    </a>
-@endif
+                        {{-- Tombol Cetak jika status selesai --}}
+                        @if (auth()->check() && $sku->status === 'Selesai')
+                            <a href="{{ route('sku.cetak', $sku->id) }}" target="_blank" class="btn btn-success">
+                                <i class="bi bi-printer"></i> Cetak Surat
+                            </a>
+                        @endif
 
                     </div>
 
@@ -160,7 +160,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
@@ -205,25 +205,6 @@
     </script>
 
 
-
-    <!-- Google analytics script-->
-    <script type="text/javascript">
-        if (document.location.hostname == 'pratikborsadiya.in') {
-            (function(i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r;
-                i[r] = i[r] || function() {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-                a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-                a.async = 1;
-                a.src = g;
-                m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-            ga('create', 'UA-72504830-1', 'auto');
-            ga('send', 'pageview');
-        }
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const btnDetail = document.getElementById('btnDetail');
@@ -254,4 +235,4 @@
             });
         });
     </script>
-@endsection
+@endpush

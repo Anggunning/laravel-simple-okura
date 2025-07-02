@@ -130,7 +130,7 @@
                             @endif
                         @endif
 
-                        {{-- Tombol Cetak jika status selesai --}}
+                     {{-- Tombol Cetak jika status selesai --}}
                         @if (auth()->check() && $sktm->status === 'Selesai')
                             <a href="{{ route('sktm.cetak', $sktm->id) }}" target="_blank" class="btn btn-success">
                                 <i class="bi bi-printer"></i> Cetak Surat
@@ -166,7 +166,7 @@
     </div>
 @endsection
 
-@section('scripts')
+@push('scripts')
     <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
     <script src="{{ asset('js/bootstrap.min.js') }}"></script>
     <script src="{{ asset('js/main.js') }}"></script>
@@ -209,55 +209,25 @@
             });
         }
     </script>
+    
 
-
-
-    <!-- Google analytics script-->
-    <script type="text/javascript">
-        if (document.location.hostname == 'pratikborsadiya.in') {
-            (function(i, s, o, g, r, a, m) {
-                i['GoogleAnalyticsObject'] = r;
-                i[r] = i[r] || function() {
-                    (i[r].q = i[r].q || []).push(arguments)
-                }, i[r].l = 1 * new Date();
-                a = s.createElement(o),
-                    m = s.getElementsByTagName(o)[0];
-                a.async = 1;
-                a.src = g;
-                m.parentNode.insertBefore(a, m)
-            })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
-            ga('create', 'UA-72504830-1', 'auto');
-            ga('send', 'pageview');
-        }
-    </script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const btnDetail = document.getElementById('btnDetail');
-            const btnRiwayat = document.getElementById('btnRiwayat');
-            const tabContentDetail = document.getElementById('tabContentDetail');
-            const tabContentRiwayat = document.getElementById('tabContentRiwayat');
+        $(document).ready(function() {
+            $('#btnDetail').on('click', function() {
+                $('#tabContentDetail').removeClass('d-none');
+                $('#tabContentRiwayat').addClass('d-none');
 
-            btnDetail.addEventListener('click', () => {
-                tabContentDetail.classList.remove('d-none');
-                tabContentRiwayat.classList.add('d-none');
-
-                btnDetail.classList.add('tab-active');
-                btnDetail.classList.remove('tab-inactive');
-
-                btnRiwayat.classList.add('tab-inactive');
-                btnRiwayat.classList.remove('tab-active');
+                $('#btnDetail').addClass('tab-active').removeClass('tab-inactive');
+                $('#btnRiwayat').addClass('tab-inactive').removeClass('tab-active');
             });
 
-            btnRiwayat.addEventListener('click', () => {
-                tabContentRiwayat.classList.remove('d-none');
-                tabContentDetail.classList.add('d-none');
+            $('#btnRiwayat').on('click', function() {
+                $('#tabContentRiwayat').removeClass('d-none');
+                $('#tabContentDetail').addClass('d-none');
 
-                btnRiwayat.classList.add('tab-active');
-                btnRiwayat.classList.remove('tab-inactive');
-
-                btnDetail.classList.add('tab-inactive');
-                btnDetail.classList.remove('tab-active');
+                $('#btnRiwayat').addClass('tab-active').removeClass('tab-inactive');
+                $('#btnDetail').addClass('tab-inactive').removeClass('tab-active');
             });
         });
     </script>
-@endsection
+@endpush

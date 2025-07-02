@@ -7,16 +7,24 @@ use App\Models\SkuModel;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Models\RiwayatskuModel;
+use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 
 class SKUsahaController extends Controller
 {
     public function index()
-    {
-        $sku = SkuModel::orderBy('created_at', 'desc')->paginate(8);
-        return view('sku.index', compact('sku'));
+{
+    $user = auth()->user();
+    if ($user->role === 'Masyarakat') {
+        $sku = SkuModel::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+        // dd("User ID: " . $user->id, $sku); // Untuk cek isi data
+    } else {
+        $sku = SkuModel::all();
     }
+
+    return view('sku.index', compact('sku'));
+}
 
     // Menyimpan pengajuan baru
     public function store(Request $request)
@@ -28,7 +36,7 @@ class SKUsahaController extends Controller
             'tempatLahir' => 'required|string',
             'tanggalLahir' => 'required|date',
             'agama' => 'required|string',
-            'nik' => 'required|string',
+            'nik' => 'required|digits:16',
             'alamat' => 'required|string',
             'pekerjaan' => 'required|string',
             'jenis_usaha' => 'required|string',
@@ -54,7 +62,7 @@ class SKUsahaController extends Controller
             $data['surat_pernyataan'] = $request->file('surat_pernyataan')->store('sku');
              $data['tanggal'] = now();
             $data['status'] = 'Diajukan';
-
+            $data['user_id'] = auth()->id();
             $sku = SkuModel::create($data);
 
             RiwayatskuModel::create([
@@ -85,7 +93,7 @@ class SKUsahaController extends Controller
                 'tempatLahir' => 'required|string',
                 'tanggalLahir' => 'required|date',
                 'agama' => 'required|string',
-                'nik' => 'required|string',
+                'nik' => 'required|string|max:16',
                 'alamat' => 'required|string',
                 'pekerjaan' => 'required|string',
                 'jenis_usaha' => 'required|string',
@@ -190,10 +198,19 @@ class SKUsahaController extends Controller
     
     public function cetak($id)
     {
-        $sku = SkuModel::findOrFail($id);
+        // $sku = SkuModel::findOrFail($id);
 
-        // Logika untuk generate surat, bisa return view khusus cetak
-        return view('sku.cetak', compact('sku'));
+        // // Logika untuk generate surat, bisa return view khusus cetak
+        // return view('sku.cetak', compact('sku'));
+         $sku = SkuModel::findOrFail($id);
+
+    if ($sku->status !== 'Selesai') {
+        abort(403, 'Surat hanya bisa dicetak jika statusnya Selesai.');
+    }
+
+    $pdf = Pdf::loadView('sku.cetak', compact('sku'));
+
+    return $pdf->stream("SKU-{$sku->nama}.pdf"); // akan tampil di tab baru
     }
 
     

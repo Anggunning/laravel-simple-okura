@@ -9,13 +9,32 @@ use Illuminate\Support\Facades\Hash;
 
 class DataPenggunaController extends Controller
 {
-        public function index()
-    {
-        // $users = User::all();
-        $users = User::paginate(8);
-        // $user = User::latest()->get();
-        return view('dataPengguna.data_pengguna', compact('users'));
+    //     public function index()
+    // {
+    //     // $users = User::all();
+    //     $users = User::paginate(6);
+    //     // $user = User::latest()->get();
+    //     return view('dataPengguna.index', compact('users'));
+    // }
+    public function index(Request $request)
+{
+    $search = $request->input('search');
+
+    $users = User::query();
+
+    if ($search) {
+        $users->where(function ($query) use ($search) {
+            $query->where('username', 'like', "%{$search}%")
+                  ->orWhere('email', 'like', "%{$search}%")
+                  ->orWhere('role', 'like', "%{$search}%");
+        });
     }
+
+    $users = $users->orderBy('created_at', 'desc')->paginate(6)->appends(['search' => $search]);
+
+    return view('dataPengguna.index', compact('users'));
+}
+
 
     public function store(Request $request)
     {
@@ -26,6 +45,7 @@ class DataPenggunaController extends Controller
             'role' => $request->role,
         ]);
         return redirect()->back()->with('success', 'Pengguna berhasil ditambahkan');
+        
     }
 
 
@@ -35,7 +55,7 @@ class DataPenggunaController extends Controller
         'username' => 'required|string|max:255',
         'email' => 'required|email|max:255',
         'role' => 'required|string',
-        'password' => 'nullable|string|min:6',
+        'password' => 'nullable|string|min:8',
     ]);
 
     $pengguna = User::findOrFail($id);
@@ -47,7 +67,7 @@ class DataPenggunaController extends Controller
     $pengguna->role = $request->role;
     $pengguna->save();
 
-    return redirect()->route('data_pengguna.index')->with('success', 'Pengguna berhasil diperbarui');
+    return redirect()->route('dataPengguna.index')->with('success', 'Pengguna berhasil diperbarui');
 }
 
 

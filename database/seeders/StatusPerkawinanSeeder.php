@@ -35,7 +35,7 @@ class StatusPerkawinanSeeder extends Seeder
             [
                 'id' => '7174b28a-d066-11ee-8bb8-744ca1759436',
                 
-                'status_kawin' => 'Belum Pernah Menikah',
+                'status_kawin' => 'Belum Menikah',
                 'jenis_kelamin_psgn_dulu' => null,
                 'nama_pasangan_dulu' => null,
                 'created_at' => now(),

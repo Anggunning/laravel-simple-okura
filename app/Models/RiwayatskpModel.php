@@ -26,7 +26,7 @@ class RiwayatskpModel extends Model
     }
     protected $fillable = [
         'status', 'peninjau', 'keterangan', 'tanggal',
-        'waktu', 'surat_balasan', 'skp_id'
+        'waktu', 'skp_id'
     ];
 
     public function skp()

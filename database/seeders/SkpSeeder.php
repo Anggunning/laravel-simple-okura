@@ -17,6 +17,7 @@ class SkpSeeder extends Seeder
 
             [
                 'id' => '8881c2f2-d066-11ee-8bb8-744ca1759401',
+                'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791db',
                 'nama' => 'Budi Santoso',
                 'nik' => '1234567890123456',
                 'jenis_kelamin' => 'Laki-laki',
@@ -38,6 +39,7 @@ class SkpSeeder extends Seeder
             ],
             [
                 'id' => '8881c578-d066-11ee-8bb8-744ca1759402',
+                'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142781db',
                 'nama' => 'Sari Lestari',
                 'nik' => '2345678901234567',
                 'jenis_kelamin' => 'Perempuan',
@@ -59,6 +61,7 @@ class SkpSeeder extends Seeder
             ],
             [
                 'id' => '8881c70e-d066-11ee-8bb8-744ca1759403',
+                'user_id' => '585f56ca-ecd1-11ee-95e5-2a57132791db',
                 'nama' => 'Andi Gunawan',
                 'nik' => '3456789012345678',
                 'jenis_kelamin' => 'Laki-laki',

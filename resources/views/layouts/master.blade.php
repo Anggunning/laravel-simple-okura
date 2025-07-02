@@ -1,10 +1,8 @@
-
 <!DOCTYPE html>
 <html lang="en">
     @include('layouts.components.header')
    
   <body class="app sidebar-mini">
-     @yield('scripts')
     <!-- Navbar-->
     @include('layouts.components.navbar')
 
@@ -13,12 +11,13 @@
     @include('layouts.components.sidebar')
     
     <main class="app-content">
-      
-            @yield('content')
-        
+        @yield('content')
     </main>
 
     <!-- Essential javascripts for application to work-->
     @include('layouts.components.scripts')
+
+    {{-- Scripts tambahan dari view --}}
+    @stack('scripts')
   </body>
 </html>

@@ -24,13 +24,14 @@ class OrangTuaModel extends Model
             }
         });
     }
-    protected $fillable = [
-        'nama_ayah', 'nik_ayah', 'tempat_lahir_ayah', 'tanggal_lahir_ayah',
-        'kewarganegaraan_ayah', 'pekerjaan_ayah', 'agama_ayah', 'alamat_ayah',
-        'nama_ibu', 'nik_ibu', 'tempat_lahir_ibu', 'tanggal_lahir_ibu',
-        'kewarganegaraan_ibu', 'pekerjaan_ibu', 'agama_ibu', 'alamat_ibu',
-        'skp_id',
-    ];
+  protected $fillable = [
+    'nama_ayah', 'nik_ayah', 'tempat_lahir_ayah', 'tanggal_lahir_ayah',
+    'kewarganegaraan_ayah', 'pekerjaan_ayah', 'agama_ayah', 'alamat_ayah',
+    'nama_ibu', 'nik_ibu', 'tempat_lahir_ibu', 'tanggal_lahir_ibu',
+    'kewarganegaraan_ibu', 'pekerjaan_ibu', 'agama_ibu', 'alamat_ibu',
+    'skp_id',
+];
+
 
      public function skp()
     {

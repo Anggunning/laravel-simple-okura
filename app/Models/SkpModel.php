@@ -29,22 +29,27 @@ class SkpModel extends Model
         'nama', 'nik', 'jenis_kelamin', 'tempat_lahir','status',
         'tanggal_lahir', 'kewarganegaraan', 'pekerjaan', 'agama',
         'alamat', 'status_kawin', 'ktp', 'kk', 'pengantar_rt_rw',
-        'foto', 'status_perkawinan_id', 'orang_tua_id'
+        'foto', 'status_perkawinan_id', 'orang_tua_id', 'user_id'
     ];
 
     public function statusPerkawinan()
-    {
-        return $this->belongsTo(StatusPerkawinanModel::class, 'status_perkawinan_id');
-    }
+{
+    return $this->belongsTo(StatusPerkawinanModel::class, 'status_perkawinan_id');
+}
 
     public function orangTua()
-    {
-        return $this->hasOne(OrangTuaModel::class, 'skp_id');
-    }
+{
+    return $this->hasOne(OrangTuaModel::class, 'skp_id');
+}
 
     public function riwayat_skp()
     {
         return $this->hasMany(RiwayatskpModel::class, 'skp_id');
     }
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
     
 }

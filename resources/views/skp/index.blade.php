@@ -13,7 +13,7 @@
                 </a>
             </li>
             <li class="breadcrumb-item active d-inline-flex align-items-center text-success" aria-current="page">
-                <span>Surat Keterangan Pengantar Perkawinana</span>
+                <span>Surat Keterangan Pengantar Perkawinan</span>
             </li>
         </ul>
     </div>
@@ -27,13 +27,7 @@
                   
                   <div class="mb-3 d-flex justify-content-between align-items-center">
                 <!-- Search di kiri -->
-                <div id="sampleTable_filter" class="dataTables_filter mb-0">
-                    <label class="mb-0">
-                        Search:
-                        <input type="search" class="form-control form-control-sm"
-                              placeholder="" aria-controls="sampleTable">
-                    </label>
-                </div>
+            
 
                 {{-- Tombol Tambah Pengajuan --}}
                         @if (auth()->check() && in_array(auth()->user()->role, ['Masyarakat', 'Admin']))
@@ -88,32 +82,43 @@
                     <td>
                         <div class="btn-group">
                             @if (auth()->check() && in_array(auth()->user()->role, ['Masyarakat', 'Admin']))
-                                <a href="#" class="btn btn-white me-2" style="color: #2E8B57;"
-                                    data-bs-toggle="modal" data-bs-target="#modalEditSkp"
-                                    data-id="{{ $item->id }}"
-                                    data-nama="{{ $item->nama }}"
-                                    data-nik="{{ $item->nik }}"
-                                    data-jenis_kelamin="{{ $item->jenis_kelamin }}"
-                                    data-tempat_lahir="{{ $item->tempat_lahir }}"
-                                    data-tanggal_lahir="{{ \Carbon\Carbon::parse($item->tanggal_lahir)->format('Y-m-d') }}"
-                                    data-kewarganegaraan="{{ $item->kewarganegaraan }}"
-                                    data-pekerjaan="{{ $item->pekerjaan }}"
-                                    data-agama="{{ $item->agama }}"
-                                    data-alamat="{{ $item->alamat }}"
-                                    data-status_kawin="{{ $item->status_kawin }}"
-                                    data-status_perkawinan_id="{{ $item->status_perkawinan_id }}">
-                                    <i class="bi bi-pencil-square fs-5"></i>
-                                </a>
+                                @php
+                                                    $isDisabled = in_array($item->status, ['Selesai']);
+                                                @endphp
 
-                                <form action="{{ route('skp.destroy', $item->id) }}" method="POST" style="display:inline;">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-white me-2"
-                                        style="color: #2E8B57;"
-                                        onclick="return confirm('Yakin hapus data?')">
-                                        <i class="bi bi-trash fs-5"></i>
-                                    </button>
-                                </form>
+                                                <a href="#" class="btn btn-white me-2" style="color: #2E8B57;"
+                                                    data-bs-toggle="{{ $isDisabled ? '' : 'modal' }}"
+                                                    data-bs-target="{{ $isDisabled ? '' : '#modalEditPengajuan' }}"
+                                                    data-bs-toggle="modal"
+    data-bs-target="#modalTambahSKP"
+    data-id="{{ $skp->id }}"
+    data-nama="{{ $skp->nama }}"
+    data-nik="{{ $skp->nik }}"
+    data-jenis_kelamin="{{ $skp->jenis_kelamin }}"
+    data-tempat_lahir="{{ $skp->tempat_lahir }}"
+    data-tanggal_lahir="{{ $skp->tanggal_lahir }}"
+    data-agama="{{ $skp->agama }}"
+    data-pekerjaan="{{ $skp->pekerjaan }}"
+    data-alamat="{{ $skp->alamat }}"
+    data-kewarganegaraan="{{ $skp->kewarganegaraan }}"
+    data-status_kawin="{{ $skp->status_kawin }}"
+    data-nama_pasangan_dulu="{{ $skp->nama_pasangan_dulu }}"
+                                                   onclick="{{ $isDisabled ? 'return false;' : '' }}">
+                                                    <i class="bi bi-pencil-square fs-5"
+                                                        style="color: {{ $isDisabled ? '#A9A9A9' : '#2E8B57' }}"></i>
+                                                </a>
+                                                
+                                                <form id="formHapus-{{ $item->id }}"
+                                                    action="{{ route('skp.destroy', $item->id) }}" method="POST"
+                                                    style="display:inline;">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="button" class="btn btn-white me-2"
+                                                        id="btnHapus-{{ $item->id }}" style="color: #2E8B57;"
+                                                        onclick="konfirmasiHapus('{{ $item->id }}')">
+                                                        <i class="bi bi-trash fs-5"></i>
+                                                    </button>
+                                                </form>
                             @endif
 
                             <a class="btn btn-white me-2" style="color: #2E8B57;" href="{{ route('skp.show', $item->id) }}">
@@ -125,11 +130,6 @@
             @endforeach
         </tbody>
     </table>
-</div>
-
-{{-- Paginate --}}
-<div class="d-flex justify-content-center mt-3">
-    {{ $skp->links() }}
 </div>
 
 <!-- Modal Tambah SKP -->
@@ -147,10 +147,7 @@
             </div>
             
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                <button type="submit" class="btn btn-primary">Simpan</button>
-            </div>
+            
         </form>
     </div>
 </div>
@@ -159,10 +156,80 @@
 @endsection
 
 
-@section('scripts')
-    <script type="text/javascript" src="{{ 'template/docs/js/plugins/jquery.dataTables.min.js' }}"></script>
-    <script type="text/javascript" src="{{ 'template/docs/js/plugins/dataTables.bootstrap.min.js' }}"></script>
-    <script type="text/javascript">
-        $('#sampleTable').DataTable();
-    </script>
-@endsection
+@push('scripts')
+   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    @if ($skp->count() > 0)
+            <script>
+                $(document).ready(function() {
+                    $('#skpTable').DataTable({
+                        // paging: true,
+                        // pageLength: 10
+                    });
+                });
+            </script>
+             <script>
+                    document.addEventListener('DOMContentLoaded', function() {
+                        const today = new Date();
+                        const yyyy = today.getFullYear();
+                        const mm = String(today.getMonth() + 1).padStart(2, '0'); // bulan dimulai dari 0
+                        const dd = String(today.getDate()).padStart(2, '0');
+                        const formattedToday = `${yyyy}-${mm}-${dd}`;
+
+                        document.getElementById('tanggal').value = formattedToday;
+                    });
+                </script>
+        @endif<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+                <script>
+                    function konfirmasiHapus(id) {
+                        Swal.fire({
+                            title: 'Yakin ingin menghapus data?',
+                            text: "Data yang dihapus tidak dapat dikembalikan!",
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonColor: '#d33',
+                            cancelButtonColor: '#6c757d',
+                            confirmButtonText: 'Ya, Hapus!'
+                        }).then((result) => {
+                            if (result.isConfirmed) {
+                                const btn = document.getElementById('btnHapus-' + id);
+                                const form = document.getElementById('formHapus-' + id);
+
+                                if (!btn || !form) {
+                                    console.error("❌ Tidak ditemukan: btnHapus-" + id + " atau formHapus-" + id);
+                                    return;
+                                }
+
+                                btn.disabled = true;
+                                btn.innerText = 'Menghapus...';
+                                form.submit();
+                            }
+                        });
+                    }
+                </script>
+                <script>
+                    const nikInput = document.getElementById('nik');
+
+                    nikInput.addEventListener('input', function() {
+                        const val = this.value.trim();
+
+                        if (val === '') {
+                            this.setCustomValidity('Silakan isi NIK');
+                        } else if (!/^\d{16}$/.test(val)) {
+                            this.setCustomValidity('NIK harus terdiri dari 16 digit angka');
+                        } else {
+                            this.setCustomValidity('');
+                        }
+                    });
+
+                    // Trigger validasi ulang saat blur (pindah fokus)
+                    nikInput.addEventListener('blur', function() {
+                        this.reportValidity();
+                    });
+                </script>
+
+
+@endpush

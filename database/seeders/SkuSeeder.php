@@ -17,6 +17,7 @@ class SkuSeeder extends Seeder
         DB::table('sku')->insert([
             [
                 'id' => 'e5f5e556-ecce-11ee-9c0c-4b5a173f5d66',
+                'user_id' => 'e5f5e556-ecce-11ee-9c0c-4b5a173f5d01',
                 'nama' => 'Siti Aminah',
                 'tujuan' => 'Modal Usaha',
                 'jenis_kelamin' => 'Perempuan',
@@ -43,6 +44,7 @@ class SkuSeeder extends Seeder
             ],
             [
                 'id' => 'e5f5e557-ecce-11ee-9c0c-4b5a173f5d67',
+                'user_id' => 'e5f5e556-ecce-11ee-9c0c-4b5a173f5d02',
                 'nama' => 'Rahmat Hidayat',
                 'tujuan' => 'Permodalan Pertanian',
                 'jenis_kelamin' => 'Laki-laki',
@@ -69,6 +71,7 @@ class SkuSeeder extends Seeder
             ],
             [
                 'id' => 'e5f5e558-ecce-11ee-9c0c-4b5a173f5d68',
+                'user_id' => 'e5f5e556-ecce-11ee-9c0c-4b5a173f5d03',
                 'nama' => 'Dewi Lestari',
                 'tujuan' => 'Program Ketahanan Pangan',
                 'jenis_kelamin' => 'Perempuan',
@@ -95,6 +98,7 @@ class SkuSeeder extends Seeder
             ],
             [
                 'id' => 'e5f5e559-ecce-11ee-9c0c-4b5a173f5d69',
+                'user_id' => 'e5f5e556-ecce-11ee-9c0c-4b5a173f5d04',
                 'nama' => 'Andi Setiawan',
                 'tujuan' => 'Pembibitan Sayur Organik',
                 'jenis_kelamin' => 'Laki-laki',
@@ -121,6 +125,7 @@ class SkuSeeder extends Seeder
             ],
             [
                 'id' => 'e5f5e560-ecce-11ee-9c0c-4b5a173f5d70',
+                'user_id' => 'e5f5e556-ecce-11ee-9c0c-4b5a173f5d05',
                 'nama' => 'Nurul Huda',
                 'tujuan' => 'Budidaya Ikan Lele',
                 'jenis_kelamin' => 'Laki-laki',
@@ -148,6 +153,7 @@ class SkuSeeder extends Seeder
 
             [
                 'id' => 'f6f6f666-ecce-11ee-9c0c-4b5a173f5d71',
+                'user_id' => 'e5f5e556-ecce-11ee-9c0c-4b5a173f5d06',
                 'nama' => 'Ahmad Yusuf',
                 'tujuan' => 'Pengajuan SK Usaha',
                 'jenis_kelamin' => 'Laki-laki',
@@ -174,6 +180,7 @@ class SkuSeeder extends Seeder
             ],
             [
                 'id' => 'f7f7f777-ecce-11ee-9c0c-4b5a173f5d72',
+                'user_id' => 'e5f5e556-ecce-11ee-9c0c-4b5a173f5d07',
                 'nama' => 'Dewi Lestari',
                 'tujuan' => 'Legalitas Usaha',
                 'jenis_kelamin' => 'Perempuan',
@@ -200,6 +207,7 @@ class SkuSeeder extends Seeder
             ],
             [
                 'id' => 'f8f8f888-ecce-11ee-9c0c-4b5a173f5d73',
+                'user_id' => 'e5f5e556-ecce-11ee-9c0c-4b5a173f5d08',
                 'nama' => 'Rizky Hidayat',
                 'tujuan' => 'Modal Usaha',
                 'jenis_kelamin' => 'Laki-laki',
@@ -226,6 +234,7 @@ class SkuSeeder extends Seeder
             ],
             [
                 'id' => 'f9f9f999-ecce-11ee-9c0c-4b5a173f5d74',
+                'user_id' => 'e5f5e556-ecce-11ee-9c0c-4b5a173f5d09',
                 'nama' => 'Siti Nurhaliza',
                 'tujuan' => 'Pendataan UMKM',
                 'jenis_kelamin' => 'Perempuan',
@@ -252,6 +261,7 @@ class SkuSeeder extends Seeder
             ],
             [
                 'id' => 'g0g0g000-ecce-11ee-9c0c-4b5a173f5d75',
+                'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791db',
                 'nama' => 'Budi Santoso',
                 'tujuan' => 'Pengajuan Bantuan',
                 'jenis_kelamin' => 'Laki-laki',

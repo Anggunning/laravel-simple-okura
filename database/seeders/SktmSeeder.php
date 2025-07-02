@@ -17,6 +17,7 @@ class SktmSeeder extends Seeder
 
         $data=[ [
             'id' => '585f56ca-ecd1-11ee-95e5-2a57142798db',
+            'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791d1',
             'nama' => "Muhammad Riga",
             'tujuan' => 'Beasiswa Pendidikan',
             'jenis_kelamin' => 'Laki-laki',
@@ -36,6 +37,7 @@ class SktmSeeder extends Seeder
             'updated_at' => now(),
         ],[
             'id' => '0f3b1c70-ecce-11ee-9c0c-4b5a173f5d61',
+            'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791d2',
             'nama' => "Siti Aisyah",
             'tujuan' => 'Keringanan Biaya Rumah Sakit',
             'jenis_kelamin' => 'Perempuan',
@@ -55,6 +57,7 @@ class SktmSeeder extends Seeder
             'updated_at' => now(),
         ],[
             'id' => '1679c5ae-ecce-11ee-9d3b-7a15bc729f72',
+            'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791d3',
             'nama' => "Ahmad Fauzi",
             'tujuan' => 'Bantuan Sosial',
             'jenis_kelamin' => 'Laki-laki',
@@ -74,6 +77,7 @@ class SktmSeeder extends Seeder
             'updated_at' => now(),
         ], [
             'id' => '1e2226e6-ecce-11ee-a551-dc65d81bdab0',
+            'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791d4',
             'nama' => "Lina Marlina",
             'tujuan' => 'Pengajuan KIP Kuliah',
             'jenis_kelamin' => 'Perempuan',
@@ -93,7 +97,8 @@ class SktmSeeder extends Seeder
             'updated_at' => now(),
         ],[
             'id' => '25e3f6bc-ecce-11ee-89f9-8a45e10242a3',
-            'nama' => "Rudi Hartono",
+            'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791db',
+            'nama' => "Budi Hartono",
             'tujuan' => 'Pengajuan Bantuan UKM',
             'jenis_kelamin' => 'Laki-laki',
             'tempatLahir' => 'Magelang',
@@ -112,6 +117,7 @@ class SktmSeeder extends Seeder
             'updated_at' => now(),
         ], [
             'id' => '2d778ccc-ecce-11ee-9876-8b351aa5210e',
+            'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791d5',
             'nama' => "Desi Kartika",
             'tujuan' => 'Beasiswa Sekolah Dasar',
             'jenis_kelamin' => 'Perempuan',
@@ -132,6 +138,7 @@ class SktmSeeder extends Seeder
         ],
         [
             'id' => '34fe4ac8-ecce-11ee-b3d2-f01fa2aa881c',
+            'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791d6',
             'nama' => "Teguh Prakoso",
             'tujuan' => 'Subsidi Listrik',
             'jenis_kelamin' => 'Laki-laki',
@@ -151,6 +158,7 @@ class SktmSeeder extends Seeder
             'updated_at' => now(),
         ],[
             'id' => '3cf9fa38-ecce-11ee-ae23-d083fcb0c4fb',
+            'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791d7',
             'nama' => "Yuni Andriyani",
             'tujuan' => 'Keringanan Biaya Sekolah',
             'jenis_kelamin' => 'Perempuan',
@@ -171,6 +179,7 @@ class SktmSeeder extends Seeder
         ],
         [
             'id' => '447299d8-ecce-11ee-8c11-7076cfa9e9e6',
+            'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791d8',
             'nama' => "Arif Maulana",
             'tujuan' => 'Bantuan Rehabilitasi Rumah',
             'jenis_kelamin' => 'Laki-laki',
@@ -191,6 +200,7 @@ class SktmSeeder extends Seeder
         ],
          [
             'id' => '4be0c0de-ecce-11ee-b70a-4c528e1d1c3f',
+            'user_id' => '585f56ca-ecd1-11ee-95e5-2a57142791d9',
             'nama' => "Nia Ramadhani",
             'tujuan' => 'Keringanan Uang Pangkal Kuliah',
             'jenis_kelamin' => 'Perempuan',

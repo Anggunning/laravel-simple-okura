@@ -18,10 +18,10 @@ return new class extends Migration
             $table->text('keterangan')->nullable();
             $table->date('tanggal');
             $table->timestamp('waktu');
-            $table->text('surat_balasan')->nullable();
             $table->timestamps();
             $table->uuid('skp_id');
             $table->foreign('skp_id')->references('id')->on('skp')->onDelete('cascade');
+            
         });
     }
 

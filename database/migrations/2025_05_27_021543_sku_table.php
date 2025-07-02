@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('tempatLahir');
             $table->date('tanggalLahir');
             $table->string('agama');
-            $table->string('nik');
+            $table->string('nik', 16);
             $table->string('pekerjaan');
             $table->string('jenis_usaha');
             $table->string('tempat_usaha');
@@ -34,7 +34,7 @@ return new class extends Migration
             $table->string('kk')->nullable();
             $table->string('ktp')->nullable();
             $table->string('surat_pernyataan')->nullable();
-
+            $table->uuid('user_id');
             $table->timestamps();
         });
     }

@@ -8,7 +8,8 @@
 
     <!-- Sidebar menu-->
     <div class="app-sidebar__overlay" data-toggle="sidebar"></div>
-    @include('layouts.components.sidebar')
+    {{-- @include('layouts.components.sidebar') --}}
+    @include('test')
     
     <main class="app-content">
         @yield('content')

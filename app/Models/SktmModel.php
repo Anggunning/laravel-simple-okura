@@ -36,6 +36,7 @@ class SktmModel extends Model
         'alamat',
         'tanggal',
         'keterangan',
+        'pekerjaan',
         'status',
         'pengantar_rt_rw',     
         'kk',                   

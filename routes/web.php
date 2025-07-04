@@ -13,6 +13,7 @@ use App\Http\Controllers\SKTidakMampuController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PendudukMiskinController;
 use App\Http\Controllers\PetaPersebaranController;
+use App\Http\Controllers\DokumenController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -61,9 +62,6 @@ Route::get('/sktm/{id}/cetak', [SKTidakMampuController::class, 'cetak'])->name('
 Route::delete('/sktm/destroy/{id}', [SKTidakMampuController::class, 'destroy'])->name('sktm.destroy');
 Route::put('/sktm/update{id}', [SKTidakMampuController::class, 'update'])->name('sktm.update');
 
-
-
-
 Route::get('/sk_usaha', [SKUsahaController::class, 'index'])->name('sku.index')->middleware('auth');
 Route::post('/sku/store', [SKUsahaController::class, 'store'])->name('sku.store');
 Route::get('/sku/{id}', [SKUsahaController::class, 'show'])->name('sku.show');
@@ -79,7 +77,8 @@ Route::get('/skp/{id}', [SKPerkawinanController::class, 'show'])->name('skp.show
 Route::post('/skp/{id}/verifikasi', [SKPerkawinanController::class, 'verifikasi'])->name('skp.verifikasi');
 Route::get('/skp/{id}/cetak', [SKPerkawinanController::class, 'cetak'])->name('skp.cetak');
 Route::delete('/skp/destroy/{id}', [SKPerkawinanController::class, 'destroy'])->name('skp.destroy');
-Route::put('/skp/update{id}', [SKPerkawinanController::class, 'update'])->name('skp.update');
+// Route::put('/skp/update{id}', [SKPerkawinanController::class, 'update'])->name('skp.update');
+Route::put('/skp/{id}', [SKPerkawinanController::class, 'update'])->name('skp.update');
 
 
 // Route::get('/penduduk_miskin', [PendudukMiskinController::class, 'index'])->name('pendudukMiskin.penduduk_miskin');
@@ -103,6 +102,10 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::put('/data_pengguna/{id}', [DataPenggunaController::class, 'update'])->name('data_pengguna.update');
     Route::delete('/data_pengguna/destroy/{id}', [DataPenggunaController::class, 'destroy'])->name('data_pengguna.destroy');
 });
+
+Route::get('/dokumen/{folder}/{filename}', [DokumenController::class, 'show'])
+    ->middleware('auth') // hanya untuk user login
+    ->name('dokumen.show');
 // Route::get('/peta_persebaran', [PetaPersebaranController::class, 'index'])->name('peta_persebaran');
 // Route::get('/data_pengguna', [DataPenggunaController::class, 'index'])->name('data_pengguna');
 

@@ -20,6 +20,7 @@ return new class extends Migration
         $table->string('alamat');
         $table->date('tanggal');
         $table->text('keterangan');
+        $table->string('pekerjaan');
         $table->string('status');
         $table->string('pengantar_rt_rw')->nullable();
         $table->string('kk')->nullable();

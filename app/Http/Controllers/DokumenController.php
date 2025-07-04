@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use File;
 use App\Models\SkuModel;
 use App\Models\SktmModel;
 use Illuminate\Http\Request;
@@ -40,6 +41,23 @@ class DokumenController extends Controller
 
     return $pdf->stream("SKU-{$sku->nama}.pdf"); // akan tampil di tab baru
     // return $pdf->download("SKU-{$sku->nama}.pdf"); // kalau mau langsung download
+}
+
+ public function show($folder, $filename)
+    {
+       // Cek folder valid
+    if (!in_array($folder, ['sku', 'sktm', 'skp','pendudukMiskin'])) {
+        abort(403, 'Folder tidak valid');
+    }
+
+    // Akses dari path private
+    $path = storage_path("app/private/{$folder}/{$filename}");
+
+    if (!\File::exists($path)) {
+        abort(404, 'File tidak ditemukan');
+    }
+
+    return response()->file($path);
 }
 
 }

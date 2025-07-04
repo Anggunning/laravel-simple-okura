@@ -55,12 +55,13 @@ class SKUsahaController extends Controller
         try {
             $data = $request->all();
             // Upload file
-            $data['foto_usaha'] = $request->file('foto_usaha')->store('sku');
-            $data['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('sku');
-            $data['kk'] = $request->file('kk')->store('sku');
-            $data['ktp'] = $request->file('ktp')->store('sku');
-            $data['surat_pernyataan'] = $request->file('surat_pernyataan')->store('sku');
-             $data['tanggal'] = now();
+            $data['foto_usaha'] = $request->file('foto_usaha')->store('sku', 'local');
+            $data['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('sku', 'local');
+            $data['kk'] = $request->file('kk')->store('sku', 'local');
+            $data['ktp'] = $request->file('ktp')->store('sku', 'local');
+            $data['surat_pernyataan'] = $request->file('surat_pernyataan')->store('sku', 'local');
+
+            $data['tanggal'] = now();
             $data['status'] = 'Diajukan';
             $data['user_id'] = auth()->id();
             $sku = SkuModel::create($data);
@@ -110,19 +111,19 @@ class SKUsahaController extends Controller
             ]);
 
             if ($request->hasFile('foto_usaha')) {
-                $validated['foto_usaha'] = $request->file('foto_usaha')->store('dokumen');
+                $validated['foto_usaha'] = $request->file('foto_usaha')->store('sku', 'local');
             }
             if ($request->hasFile('pengantar_rt_rw')) {
-                $validated['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('dokumen');
+                $validated['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('sku', 'local');
             }
             if ($request->hasFile('kk')) {
-                $validated['kk'] = $request->file('kk')->store('dokumen');
+                $validated['kk'] = $request->file('kk')->store('sku', 'local');
             }
             if ($request->hasFile('ktp')) {
-                $validated['ktp'] = $request->file('ktp')->store('dokumen');
+                $validated['ktp'] = $request->file('ktp')->store('sku', 'local');
             }
             if ($request->hasFile('surat_pernyataan')) {
-                $validated['surat_pernyataan'] = $request->file('surat_pernyataan')->store('dokumen');
+                $validated['surat_pernyataan'] = $request->file('surat_pernyataan')->store('sku', 'local');
             }
 
             $sku->update($validated);

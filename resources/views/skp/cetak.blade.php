@@ -158,8 +158,9 @@
         <tr>
             <td style="width:50%"></td>
             <td>
-                Pekanbaru, 02 July 2025<br>
-                LURAH TEBING TINGGI OKURA<br><br><br><br>
+                Pekanbaru,{{ \Carbon\Carbon::now()->translatedFormat('d F Y') }}<br>
+                LURAH TEBING TINGGI OKURA<br><br><br><br><br>
+               
                 <span class="bold underline">RYAN WIBOWO, S.STP, M.Si</span><br>
                 <span>NIP : 19921222 201507 1 001</span>
             </td>

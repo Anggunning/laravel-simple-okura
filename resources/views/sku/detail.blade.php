@@ -75,19 +75,26 @@
                             <div class="col-sm-6">
                                 @foreach ([
             'Foto Usaha' => $sku->foto_usaha,
-            'Surat Pengantar RT/RW' => $sku['pengantar_rt/rw'],
+            'Surat Pengantar RT/RW' => $sku->pengantar_rt_rw,
             'Kartu Keluarga' => $sku->kk,
             'KTP' => $sku->ktp,
-            'Surat Pernyataan' => $sku->pernyataan,
+            'Surat Pernyataan' => $sku->surat_pernyataan,
         ] as $label => $file)
                                     <div class="dokumen-item mb-3">
                                         <label>{{ $label }} <span class="wajib">*</span></label>
-                                        <a href="{{ asset('storage/' . $file) }}" target="_blank" class="lihat-box">
+                                        <a href="{{ route('dokumen.show', ['folder' => 'sku', 'filename' => basename($file)]) }}"target="_blank" class="lihat-box">
                                             <i class="bi bi-cloud-arrow-up"></i>
                                             <span>Lihat File/Foto</span>
                                         </a>
                                     </div>
                                 @endforeach
+                               {{-- <a href="{{ route('dokumen.show', ['folder' => 'sku', 'filename' => basename($file))]) }}"
+   target="_blank" class="lihat-box">
+    <i class="bi bi-cloud-arrow-up">Foto Usaha</i>
+    <span>Lihat File/Foto</span>
+</a> --}}
+
+
                             </div>
                         </div>
 

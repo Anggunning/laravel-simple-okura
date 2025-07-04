@@ -54,6 +54,7 @@
                                 <th>Nama Pemohon</th>
                                 <th>Jenis Usaha</th>
                                 <th>Tempat Usaha</th>
+                                <th>Tujuan</th>
                                 <th>Status</th>
                                 <th>Aksi</th>
                             </tr>
@@ -61,10 +62,13 @@
                         <tbody>
                             @forelse($sku as $item)
                                 <tr>
-                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>
+                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                                         <br><small class="text-muted">{{ \Carbon\Carbon::parse($item->created_at)->format('H:i:s') }}</small>
+                                    </td>
                                     <td>{{ $item->nama }}</td>
                                     <td>{{ $item->jenis_usaha }}</td>
                                     <td>{{ $item->tempat_usaha }}</td>
+                                    <td>{{ $item->tujuan }}</td>
                                     <td>
                                         @php
                                             $badgeClass = match ($item->status) {
@@ -102,6 +106,11 @@
                                                     data-kecamatan="{{ $item->kecamatan }}"
                                                     data-kota="{{ $item->kota }}"
                                                     data-keterangan="{{ e($item->keterangan) }}"
+                                                    data-file_ktp="{{ $item->ktp }}"
+                                                    data-file_kk="{{ $item->kk }}"
+                                                    data-file_surat_pernyataan="{{ $item->surat_pernyataan }}"
+                                                    data-file_pengantar_rt_rw="{{ $item->pengantar_rt_rw }}"
+                                                    data-file_foto_usaha="{{ $item->foto_usaha }}"
                                                     onclick="{{ $isDisabled ? 'return false;' : '' }}">
                                                     <i class="bi bi-pencil-square fs-5"
                                                         style="color: {{ $isDisabled ? '#A9A9A9' : '#2E8B57' }}"></i>
@@ -501,6 +510,7 @@
                                     accept=".jpg,.jpeg,.png">
                                 <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
                                     2MB.</small>
+                                    <div id="link_foto_usaha_lama" class="mt-2"></div>
                             </div>
 
                             <div class="mb-3">
@@ -510,6 +520,7 @@
                                     class="form-control" accept=".jpg,.jpeg,.png,.pdf">
                                 <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
                                     2MB.</small>
+                                    <div id="link_pengantar_rt_rw_lama" class="mt-2"></div>
                             </div>
 
                             <div class="mb-3">
@@ -520,6 +531,7 @@
                                     accept=".jpg,.jpeg,.png,.pdf">
                                 <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
                                     2MB.</small>
+                                    <div id="link_kk_lama" class="mt-2"></div>
                             </div>
 
                             <div class="mb-3">
@@ -530,6 +542,7 @@
                                     accept=".jpg,.jpeg,.png,.pdf">
                                 <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
                                     2MB.</small>
+                                    <div id="link_ktp_lama" class="mt-2"></div>
                             </div>
 
                             <div class="mb-3">
@@ -539,6 +552,7 @@
                                     class="form-control" accept=".jpg,.jpeg,.png,.pdf">
                                 <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
                                     2MB.</small>
+                                    <div id="link_surat_pernyataan_lama" class="mt-2"></div>
                             </div>
                         </div>
 
@@ -623,6 +637,28 @@
                 }
             });
         </script>
+        <script>
+            $('#modalEditSku').on('show.bs.modal', function (event) {
+    const button = $(event.relatedTarget);
+
+    const fileFields = ['ktp', 'kk', 'foto_usaha', 'pengantar_rt_rw', 'surat_pernyataan'];
+    fileFields.forEach(field => {
+        const fileUrl = button.data('file_' + field);
+        const folder = 'sku'; // Ganti sesuai folder, misalnya 'sktm' atau 'skp' kalau form-nya beda
+
+        if (fileUrl) {
+            const fileName = fileUrl.split('/').pop();
+            const link = `<a href="/dokumen/${folder}/${fileName}" target="_blank" class="btn btn-sm btn-outline-primary">
+                            Lihat File Sebelumnya
+                        </a>`;
+            $('#link_' + field + '_lama').html(link);
+        } else {
+            $('#link_' + field + '_lama').html('<span class="text-muted">Tidak ada file sebelumnya</span>');
+        }
+    });
+});
+
+        </script>
 
         </script>
 
@@ -630,6 +666,7 @@
             <script>
                 $(document).ready(function() {
                     $('#skuTable').DataTable({
+                        order: [[0, 'desc']]
                         // paging: true,
                         // pageLength: 10
                     });

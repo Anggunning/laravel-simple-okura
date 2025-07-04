@@ -56,6 +56,7 @@
             'NIK' => $sktm->nik,
             'Alamat' => $sktm->alamat,
             'Tujuan' => $sktm->tujuan,
+            'Pekerjaan' => $sktm->pekerjaan,
             'Keterangan' => $sktm->keterangan,
             'Tanggal Pengajuan' => $tanggalPengajuan,
             'Status' => ucfirst($sktm->status),
@@ -69,22 +70,23 @@
                             </div>
 
                             <!-- Kolom Kanan (Dokumen) -->
-                            <div class="col-sm-6">
+                          
+                                <div class="col-sm-6">
                                 @foreach ([
             'Surat Pengantar RT/RW' => $sktm->pengantar_rt_rw,
             'Kartu Keluarga' => $sktm->kk,
-            'Kartu Tanda Penduduk' => $sktm->ktp,
+            'KTP' => $sktm->ktp,
             'Surat Pernyataan' => $sktm->surat_pernyataan,
         ] as $label => $file)
                                     <div class="dokumen-item mb-3">
                                         <label>{{ $label }} <span class="wajib">*</span></label>
-                                        <a href="{{ asset('storage/' . $file) }}" target="_blank" class="lihat-box">
+                                        <a href="{{ route('dokumen.show', ['folder' => 'sktm', 'filename' => basename($file)]) }}"target="_blank" class="lihat-box">
                                             <i class="bi bi-cloud-arrow-up"></i>
                                             <span>Lihat File/Foto</span>
                                         </a>
                                     </div>
                                 @endforeach
-                            </div>
+                                </div>
                         </div>
                         {{-- tombol verifikasi --}}
                         {{-- @if (auth()->check() && auth()->user()->role === 'Lurah')

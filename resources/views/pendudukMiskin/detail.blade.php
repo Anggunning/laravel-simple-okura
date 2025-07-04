@@ -30,16 +30,13 @@
             {{-- Foto Rumah di Atas --}}
             <div class="text-center mb-4">
                 <h6>Foto Rumah</h6>
-                @if ($pendudukMiskin->foto_rumah && Storage::disk('public')->exists($pendudukMiskin->foto_rumah))
-                    <div class="d-inline-block shadow rounded overflow-hidden" style="max-width: 100%;">
-                        <img src="{{ asset('storage/' . $pendudukMiskin->foto_rumah) }}"
-                            alt="Foto Rumah"
-                            class="img-fluid"
-                            style="max-height: 400px; width: auto;">
-                    </div>
-                @else
-                    <div class="text-muted fst-italic">Tidak ada foto tersedia</div>
-                @endif
+                @if ($pendudukMiskin->foto_rumah)
+    <img src="{{ route('dokumen.show', ['folder' => 'pendudukMiskin', 'filename' => basename($pendudukMiskin->foto_rumah)]) }}" 
+    alt="Foto Rumah" class="img-fluid" style="max-height: 400px;">
+    
+@else
+    <div class="text-muted fst-italic">Tidak ada foto tersedia</div>
+@endif
             </div>
 
           {{-- Data Detail (blok tengah, teks rata kiri) --}}

@@ -20,6 +20,7 @@
   --bs-orange: #fd7e14;
   --bs-yellow: #ffc107;
   --bs-green: #198754;
+  --bs-greenlight : #86efac;
   --bs-teal: #20c997;
   --bs-cyan: #0dcaf0;
   --bs-black: #000;
@@ -15051,7 +15052,7 @@ textarea.form-control-lg {
   }
   
   .card-blue .card-header {
-    background-color: #60a5fa; /* biru muda */
+    background-color: #0dcaf0; /* biru muda */
     color: white;
   }
   

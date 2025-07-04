@@ -65,7 +65,8 @@
             'Alamat' => $skp->alamat,
             'Kewarganegaraan' => $skp->kewarganegaraan,
             'Pekerjaan' => $skp->pekerjaan,
-            'Status Perkawinan' => $skp->status_perkawinan?->status_kawin,
+            'Status Perkawinan' => $skp->statusPerkawinan?->status_kawin,
+            'Keterangan' => $skp->keterangan,
             'Tanggal Pengajuan' => $tanggalPengajuan,
             'Status' => ucfirst($skp->status),
         ] as $label => $value)
@@ -75,16 +76,16 @@
                                     </div>
                                 @endforeach
 
-                                @if (in_array($skp->status_perkawinan?->status_kawin, ['Cerai Hidup', 'Cerai Mati']))
+                                @if (in_array($skp->statusPerkawinan?->status_kawin, ['Cerai Hidup', 'Cerai Mati']))
                                     <div class="row mb-2">
                                         <div class="col-sm-4 fw-bold">Nama Pasangan Sebelumnya</div>
-                                        <div class="col-sm-8">: {{ $skp->status_perkawinan->nama_pasangan_dulu ?? '-' }}
+                                        <div class="col-sm-8">: {{ $skp->statusPerkawinan->nama_pasangan_dulu ?? '-' }}
                                         </div>
                                     </div>
                                     <div class="row mb-2">
                                         <div class="col-sm-4 fw-bold">Jenis Kelamin Pasangan Sebelumnya</div>
                                         <div class="col-sm-8">:
-                                            {{ $skp->status_perkawinan->jenis_kelamin_psgn_dulu ?? '-' }}</div>
+                                            {{ $skp->statusPerkawinan->jenis_kelamin_psgn_dulu ?? '-' }}</div>
                                     </div>
                                 @endif
 
@@ -128,7 +129,7 @@
                                     <div class="dokumen-item mb-3">
                                         <label>{{ $label }}</label>
                                         @if ($file)
-                                            <a href="{{ asset('storage/' . $file) }}" target="_blank" class="lihat-box">
+                                            <a href="{{ route('dokumen.show', ['folder' => 'skp', 'filename' => basename($file)]) }}" target="_blank" class="lihat-box">
                                                 <i class="bi bi-cloud-arrow-up"></i>
                                                 <span>Lihat File</span>
                                             </a>

@@ -8,36 +8,90 @@ use App\Models\SktmModel;
 use App\Models\SkuModel;
 use App\Models\User;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Auth;
 class DashboardController extends Controller
 {
-    public function index()
-    {
-        $tahunIni = now()->year;
 
-        return view('dashboard', [
-            'jumlahPengguna' => User::count(),
-            'jumlahPendudukMiskin' => PendudukMiskinModel::count(),
+public function index()
+{
+    $tahunIni = now()->year;
+    $user = auth()->user();
+    $userId = $user->id;
+    $isMasyarakat = $user->role === 'Masyarakat';
 
-            'sktm' => [
-                'diajukan' => SktmModel::whereYear('created_at', $tahunIni)->where('status', 'diajukan')->count(),
-                'diproses' => SktmModel::whereYear('created_at', $tahunIni)->where('status', 'diproses')->count(),
-                'selesai' => SktmModel::whereYear('created_at', $tahunIni)->where('status', 'selesai')->count(),
-            ],
-            'sku' => [
-                'diajukan' => SkuModel::whereYear('created_at', $tahunIni)->where('status', 'diajukan')->count(),
-                'diproses' => SkuModel::whereYear('created_at', $tahunIni)->where('status', 'diproses')->count(),
-                'selesai' => SkuModel::whereYear('created_at', $tahunIni)->where('status', 'selesai')->count(),
-            ],
-            'skp' => [
-                'diajukan' => SkpModel::whereYear('created_at', $tahunIni)->where('status', 'diajukan')->count(),
-                'diproses' => SkpModel::whereYear('created_at', $tahunIni)->where('status', 'diproses')->count(),
-                'selesai' => SkpModel::whereYear('created_at', $tahunIni)->where('status', 'selesai')->count(),
-            ],
-            'totalPengajuan' => SktmModel::whereYear('created_at', $tahunIni)->count()
-                      + SkuModel::whereYear('created_at', $tahunIni)->count()
-                      + SkpModel::whereYear('created_at', $tahunIni)->count(),
+    // Jika masyarakat → filter user_id, jika admin → tidak filter
+    $riwayat = collect()
+        ->merge(
+            SktmModel::when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->get()->map(function ($item) {
+                return [
+                    'tanggal' => $item->created_at->format('d-m-Y'),
+                    'waktu' => $item->created_at->format('H:i:s'),
+                    'created_at' => $item->created_at,
+                    'jenis' => 'Surat Keterangan Tidak Mampu',
+                    'tujuan' => $item->tujuan ?? '-',
+                    'status' => $item->status,
+                    'link_detail' => route('sktm.show', $item->id),
+                    'link_download' => $item->status === 'Selesai' ? route('sktm.cetak', $item->id) : null,
+                ];
+            })
+        )
+        ->merge(
+            SkuModel::when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->get()->map(function ($item) {
+                return [
+                    'tanggal' => $item->created_at->format('d-m-Y'),
+                    'waktu' => $item->created_at->format('H:i:s'),
+                    'created_at' => $item->created_at,
+                    'jenis' => 'Surat Keterangan Usaha',
+                    'tujuan' => $item->tujuan ?? '-',
+                    'status' => $item->status,
+                    'link_detail' => route('sku.show', $item->id),
+                    'link_download' => $item->status === 'Selesai' ? route('sku.cetak', $item->id) : null,
+                ];
+            })
+        )
+        ->merge(
+            SkpModel::when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->get()->map(function ($item) {
+                return [
+                    'tanggal' => $item->created_at->format('d-m-Y'),
+                    'waktu' => $item->created_at->format('H:i:s'),
+                    'created_at' => $item->created_at,
+                    'jenis' => 'Surat Pengantar Perkawinan',
+                    'tujuan' => $item->tujuan ?? '-',
+                    'status' => $item->status,
+                    'link_detail' => route('skp.show', $item->id),
+                    'link_download' => $item->status === 'Selesai' ? route('skp.cetak', $item->id) : null,
+                ];
+            })
+        )->sortByDesc('created_at')->take(10);
 
-        ]);
-    }
+    return view('dashboard', [
+        'jumlahPengguna' => User::count(),
+        'jumlahPendudukMiskin' => PendudukMiskinModel::count(),
+
+        'sktm' => [
+            'total' => SktmModel::when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+            'diajukan' => SktmModel::whereYear('created_at', $tahunIni)->where('status', 'diajukan')->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+            'diproses' => SktmModel::whereYear('created_at', $tahunIni)->where('status', 'diproses')->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+            'selesai' => SktmModel::whereYear('created_at', $tahunIni)->where('status', 'selesai')->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+        ],
+        'sku' => [
+            'total' => SkuModel::when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+            'diajukan' => SkuModel::whereYear('created_at', $tahunIni)->where('status', 'diajukan')->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+            'diproses' => SkuModel::whereYear('created_at', $tahunIni)->where('status', 'diproses')->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+            'selesai' => SkuModel::whereYear('created_at', $tahunIni)->where('status', 'selesai')->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+        ],
+        'skp' => [
+            'total' => SkpModel::when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+            'diajukan' => SkpModel::whereYear('created_at', $tahunIni)->where('status', 'diajukan')->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+            'diproses' => SkpModel::whereYear('created_at', $tahunIni)->where('status', 'diproses')->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+            'selesai' => SkpModel::whereYear('created_at', $tahunIni)->where('status', 'selesai')->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+        ],
+        'totalPengajuan' =>
+            SktmModel::whereYear('created_at', $tahunIni)->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count()
+            + SkuModel::whereYear('created_at', $tahunIni)->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count()
+            + SkpModel::whereYear('created_at', $tahunIni)->when($isMasyarakat, fn($q) => $q->where('user_id', $userId))->count(),
+
+        'riwayat' => $riwayat,
+    ]);
+}
 }

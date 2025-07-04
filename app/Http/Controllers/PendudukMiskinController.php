@@ -35,7 +35,7 @@ class PendudukMiskinController extends Controller
         
 
         if ($request->hasFile('foto_rumah')) {
-            $data['foto_rumah'] = $request->file('foto_rumah')->store('foto_rumah', 'public');
+            $data['foto_rumah'] = $request->file('foto_rumah')->store('pendudukMiskin', 'local');
         }
 
         PendudukMiskinModel::create($data);
@@ -54,7 +54,7 @@ class PendudukMiskinController extends Controller
         $data->alamat = $request->alamat;
 
         if ($request->hasFile('foto_rumah')) {
-            $file = $request->file('foto_rumah')->store('foto_rumah', 'public');
+            $file = $request->file('foto_rumah')->store('pendudukMiskin', 'local');
             $data->foto_rumah = $file;
         }
 

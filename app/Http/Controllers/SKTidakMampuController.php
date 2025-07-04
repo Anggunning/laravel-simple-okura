@@ -44,6 +44,7 @@ class SKTidakMampuController extends Controller
             'nik' => 'required|digits:16',
             'alamat' => 'required',
             'keterangan' => 'required',
+            'pekerjaan' => 'required',
             'pengantar_rt_rw' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'kk' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -53,10 +54,11 @@ class SKTidakMampuController extends Controller
         try {
             $data = $request->all();
 
-            $data['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('sktm', 'public');
-            $data['kk'] = $request->file('kk')->store('sktm', 'public');
-            $data['ktp'] = $request->file('ktp')->store('sktm', 'public');
-            $data['surat_pernyataan'] = $request->file('surat_pernyataan')->store('sktm', 'public');
+            $data['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('sktm', 'local');
+            $data['kk'] = $request->file('kk')->store('sktm', 'local');
+            $data['ktp'] = $request->file('ktp')->store('sktm', 'local');
+            $data['surat_pernyataan'] = $request->file('surat_pernyataan')->store('sktm', 'local');
+
             $data['user_id'] = auth()->id();
             $data['tanggal'] = now();
             $data['status'] = 'Diajukan';
@@ -105,16 +107,16 @@ class SKTidakMampuController extends Controller
             ]);
 
             if ($request->hasFile('pengantar_rt_rw')) {
-                $validated['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('dokumen');
+                $validated['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('sktm', 'local');
             }
             if ($request->hasFile('kk')) {
-                $validated['kk'] = $request->file('kk')->store('dokumen');
+                $validated['kk'] = $request->file('kk')->store('sktm', 'local');
             }
             if ($request->hasFile('ktp')) {
-                $validated['ktp'] = $request->file('ktp')->store('dokumen');
+                $validated['ktp'] = $request->file('ktp')->store('sktm', 'local');
             }
             if ($request->hasFile('surat_pernyataan')) {
-                $validated['surat_pernyataan'] = $request->file('surat_pernyataan')->store('dokumen');
+                $validated['surat_pernyataan'] = $request->file('surat_pernyataan')->store('sktm', 'local');
             }
 
             $sktm->update($validated);

@@ -9,8 +9,10 @@ use Illuminate\Http\Request;
 use App\Models\OrangTuaModel;
 use App\Models\RiwayatskpModel;
 use Barryvdh\DomPDF\Facade\Pdf;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\StatusPerkawinanModel;
+use Illuminate\Support\Facades\Storage;
 
 class SKPerkawinanController extends Controller
 {
@@ -18,29 +20,31 @@ class SKPerkawinanController extends Controller
     {
         $user = auth()->user();
         if ($user->role === 'Masyarakat') {
-            $skp = SkpModel::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
+            $skp = SkpModel::with(['statusPerkawinan', 'orangTua']) 
+            ->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
             // dd("User ID: " . $user->id, $skp); // Untuk cek isi data
         } else {
-            $skp = SkpModel::all();
+            $skp = SkpModel::with(['statusPerkawinan', 'orangTua'])->orderBy('created_at', 'desc')->get();
+            
         }
-
         return view('skp.index', compact('skp'));
     }
     public function store(Request $request)
     {
         $request->validate([
             // Data Pemohon
-            'nama' => 'required',
-            'nik' => 'required',
-            'jenis_kelamin' => 'required',
-            'tempat_lahir' => 'required',
+            'nama' => 'required|string',
+            'nik' => 'required|digits:16',
+            'jenis_kelamin' => 'required|string',
+            'tempat_lahir' => 'required|string',
             'tanggal_lahir' => 'required|date',
-            'agama' => 'required',
-            'pekerjaan' => 'required',
+            'agama' => 'required|string',
+            'pekerjaan' => 'required|string',
             'status_kawin' => 'required|in:Belum Menikah,Cerai Mati,Cerai Hidup',
-            'alamat' => 'required',
-            'kewarganegaraan' => 'required',
-            'keterangan' => 'nullable',
+            'alamat' => 'required|string',
+            'kewarganegaraan' => 'required|string',
+            'keterangan' => 'required|string',
+            
 
             // Dokumen
             'ktp' => 'required|file|mimes:jpg,jpeg,png,pdf',
@@ -49,24 +53,28 @@ class SKPerkawinanController extends Controller
             'foto' => 'required|file|mimes:jpg,jpeg,png,pdf',
 
             // Data Orang Tua - Ayah
-            'nama_ayah' => 'required',
-            'nik_ayah' => 'required',
-            'agama_ayah' => 'required',
-            'kewarganegaraan_ayah' => 'required',
-            'pekerjaan_ayah' => 'required',
-            'alamat_ayah' => 'required',
+            'nama_ayah' => 'required|string',
+            'nik_ayah' => 'required|digits:16',
+            'tempat_lahir_ayah' => 'required|string',
+            'tanggal_lahir_ayah' => 'required|string|date',
+            'agama_ayah' => 'required|string',
+            'kewarganegaraan_ayah' => 'required|string',
+            'pekerjaan_ayah' => 'required|string',
+            'alamat_ayah' => 'required|string',
 
             // Data Orang Tua - Ibu
-            'nama_ibu' => 'required',
-            'nik_ibu' => 'required',
-            'agama_ibu' => 'required',
-            'kewarganegaraan_ibu' => 'required',
-            'pekerjaan_ibu' => 'required',
-            'alamat_ibu' => 'required',
+            'nama_ibu' => 'required|string',
+            'nik_ibu' => 'required|digits:16',
+            'tempat_lahir_ibu' => 'required|string',
+            'tanggal_lahir_ibu' => 'required|string|date',
+            'agama_ibu' => 'required|string',
+            'kewarganegaraan_ibu' => 'required|string',
+            'pekerjaan_ibu' => 'required|string',
+            'alamat_ibu' => 'required|string',
         ]);
 
         try {
-            $data = $request->all();
+           $data = $request->all();
 
             // 1. Simpan data status perkawinan
             $statusPerkawinan = StatusPerkawinanModel::create([
@@ -81,11 +89,12 @@ class SKPerkawinanController extends Controller
             ]);
 
             // 2. Upload file
-            $data['ktp'] = $request->file('ktp')->store('sktm');
-            $data['kk'] = $request->file('kk')->store('sktm');
-            $data['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('sktm');
-            $data['foto'] = $request->file('foto')->store('sktm');
+            $data['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('skp', 'local');
+            $data['kk'] = $request->file('kk')->store('skp', 'local');
+            $data['ktp'] = $request->file('ktp')->store('skp', 'local');
+            $data['foto'] = $request->file('foto')->store('skp','local');
             $data['user_id'] = auth()->id();
+
             // 3. Cek duplikat NIK
             if (SkpModel::where('nik', $request->nik)->exists()) {
                 return redirect()->back()->withInput()->withErrors(['nik' => 'NIK sudah pernah digunakan.']);
@@ -104,6 +113,7 @@ class SKPerkawinanController extends Controller
                 'pekerjaan' => $request->pekerjaan,
                 'agama' => $request->agama,
                 'alamat' => $request->alamat,
+                'keterangan' => $request->keterangan,
                 'status_kawin' => $request->status_kawin,
                 'ktp' => $data['ktp'],
                 'kk' => $data['kk'],
@@ -152,10 +162,13 @@ class SKPerkawinanController extends Controller
             
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         } catch (\Exception $e) {
-    dd($e->getMessage()); 
+    Log::error('Gagal simpan SKP: ' . $e->getMessage());
+    return redirect()->back()
+        ->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data.'])
+        ->withInput()
+        ->with('form', 'tambah');
         }
-    }
-
+}
 public function update(Request $request, $id)
 {
     try {
@@ -213,12 +226,23 @@ public function update(Request $request, $id)
             }
         }
 
-        // 4. Upload file jika ada
-        foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
-            if ($request->hasFile($file)) {
-                $validated[$file] = $request->file($file)->store('sktm');
-            }
+
+        // 4. Upload file jika ada, kalau tidak ada tetap gunakan nilai lama
+foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
+    if ($request->hasFile($file)) {
+        // Hapus file lama jika perlu
+        if ($skp->$file && \Storage::exists($skp->$file)) {
+            Storage::delete($skp->$file);
         }
+
+        // Simpan file baru
+        $validated[$file] = $request->file($file)->store('skp','local');
+    } else {
+        // Gunakan data lama agar tidak hilang
+        $validated[$file] = $skp->$file;
+    }
+}
+
 
         // 5. Update SKP
         $skp->update($validated);
@@ -253,7 +277,7 @@ public function update(Request $request, $id)
 
     public function show($id)
     {
-        $skp = SkpModel::with(['riwayat_skp', 'orangTua', 'status_perkawinan'])->findOrFail($id);
+        $skp = SkpModel::with(['riwayat_skp', 'orangTua', 'statusPerkawinan'])->findOrFail($id);
 
         return view('skp.detail', compact('skp'));
     }

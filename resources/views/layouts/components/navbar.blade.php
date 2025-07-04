@@ -1,5 +1,12 @@
-<header class="app-header"><a class="app-header__logo" href="index.html">Simpel Okura</a>
-      <!-- Sidebar toggle button--><a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
+<header class="app-header">
+  {{-- <a class="app-header__logo" href="index.html">Simpel Okura</a> --}}
+  <a class="app-header__logo d-flex align-items-center gap-2" href="{{ route('dashboard') }}">
+    <img src="{{ asset('pekanbaru.png') }}" alt="Logo Pekanbaru" style="height: 30px;">
+    Simpel Okura
+</a>
+
+      <!-- Sidebar toggle button-->
+      <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
       <!-- Navbar Right Menu-->
       <ul class="app-nav">
         {{-- <li class="app-search">
@@ -11,7 +18,6 @@
         <!-- User Menu-->
         <li class="dropdown"><a class="app-nav__item" href="#" data-bs-toggle="dropdown" aria-label="Open Profile Menu"><i class="bi bi-person fs-4"></i></a>
           <ul class="dropdown-menu settings-menu dropdown-menu-right">
-            <li><a class="dropdown-item" href="page-user.html"><i class="bi bi-person me-2 fs-5"></i> Profile</a>
             
             <li>
                 <form method="POST" action="{{ route('logout') }}">

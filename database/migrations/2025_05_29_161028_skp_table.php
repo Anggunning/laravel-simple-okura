@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('agama');
             $table->string('status');
             $table->text('alamat');
+            $table->text('keterangan');
             $table->string('status_kawin');
 
             $table->string('ktp')->nullable(); // path file

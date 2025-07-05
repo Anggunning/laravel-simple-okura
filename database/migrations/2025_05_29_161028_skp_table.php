@@ -22,14 +22,15 @@ return new class extends Migration
             $table->string('pekerjaan');
             $table->string('agama');
             $table->string('status');
+            $table->string('alasan')->nullable();
             $table->text('alamat');
-            $table->text('keterangan');
+            $table->text('keterangan')->nullable();
             $table->string('status_kawin');
 
-            $table->string('ktp')->nullable(); // path file
-            $table->string('kk')->nullable(); // path file
-            $table->string('pengantar_rt_rw')->nullable(); // path file
-            $table->string('foto')->nullable(); // path file
+            $table->string('ktp');
+            $table->string('kk');
+            $table->string('pengantar_rt_rw');
+            $table->string('foto');
 
             $table->timestamps();
             $table->uuid('user_id');

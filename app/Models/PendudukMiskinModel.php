@@ -15,6 +15,7 @@ class PendudukMiskinModel extends Model
         'alamat',
         'nama_kepala_keluarga',
         'jml_agt_keluarga',
+        'status',
         'kelompokPKH',
         'longitude',
         'latitude',

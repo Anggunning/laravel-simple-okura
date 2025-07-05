@@ -22,9 +22,6 @@
             </li>
         </ul>
 
-
-
-
     </div>
     <div class="title">
         <h4>Detail Pengajuan Surat Keterangan Tidak Mampu</h4>
@@ -67,11 +64,32 @@
                                         <div class="col-sm-8">: {{ $value }}</div>
                                     </div>
                                 @endforeach
+                                @if ($sktm->status === 'Ditolak')
+                                    @php
+                                        $riwayatDitolak = $sktm->riwayat_sktm->where('status', 'Ditolak')->last();
+                                    @endphp
+                                    @if ($riwayatDitolak)
+                                        <div class="row mb-2">
+                                            <div class="col-sm-4 fw-bold">Alasan Penolakan</div>
+                                            <div class="col-sm-8">: {{ $riwayatDitolak->alasan ?? '-' }}</div>
+                                        </div>
+                                    @endif
+                                @endif
+                                @if ($sktm->status === 'Selesai')
+                                    @php
+                                        $riwayatSelesai = $sktm->riwayat_sktm->where('status', 'Selesai')->last();
+                                    @endphp
+                                    @if ($riwayatSelesai)
+                                        <div class="row mb-2">
+                                            <div class="col-sm-4 fw-bold">Keterangan</div>
+                                            <div class="col-sm-8">: {{ $riwayatSelesai->alasan ?? '-' }}</div>
+                                        </div>
+                                    @endif
+                                @endif
                             </div>
 
                             <!-- Kolom Kanan (Dokumen) -->
-                          
-                                <div class="col-sm-6">
+                            <div class="col-sm-6">
                                 @foreach ([
             'Surat Pengantar RT/RW' => $sktm->pengantar_rt_rw,
             'Kartu Keluarga' => $sktm->kk,
@@ -80,39 +98,44 @@
         ] as $label => $file)
                                     <div class="dokumen-item mb-3">
                                         <label>{{ $label }} <span class="wajib">*</span></label>
-                                        <a href="{{ route('dokumen.show', ['folder' => 'sktm', 'filename' => basename($file)]) }}"target="_blank" class="lihat-box">
+                                        <a href="{{ route('dokumen.show', ['folder' => 'sktm', 'filename' => basename($file)]) }}"target="_blank"
+                                            class="lihat-box">
                                             <i class="bi bi-cloud-arrow-up"></i>
                                             <span>Lihat File/Foto</span>
                                         </a>
                                     </div>
                                 @endforeach
-                                </div>
+                            </div>
                         </div>
-                        {{-- tombol verifikasi --}}
-                        {{-- @if (auth()->check() && auth()->user()->role === 'Lurah')
-                            @if ($sktm->status === 'Diproses')
-                                <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
-                            @else
-                                <form id="verifikasiForm" action="{{ route('sktm.verifikasi', $sktm->id) }}" method="POST"
-                                    style="display: inline;">
-                                    @csrf
-                                    <button type="button" class="btn btn-success"
-                                        onclick="verifikasiConfirm()">Verifikasi</button>
-                                </form>
-                            @endif
-                        @endif --}}
 
-                        {{-- Tombol Verifikasi --}}
+                        {{-- Tombol Aksi --}}
                         @if (auth()->check())
                             {{-- ADMIN & SEKRETARIS --}}
                             @if (in_array(auth()->user()->role, ['Admin', 'Sekretaris']))
                                 @if ($sktm->status === 'Diajukan')
+                                    {{-- Tombol Verifikasi --}}
                                     <form id="verifikasiFormAdmin" action="{{ route('sktm.verifikasi', $sktm->id) }}"
                                         method="POST" style="display:inline;">
                                         @csrf
                                         <button type="button" id="btnVerifikasiAdmin" class="btn btn-success"
-                                            onclick="verifikasiAdminConfirm()">Verifikasi</button>
+                                            onclick="verifikasiAdminConfirm()">
+                                            Verifikasi
+                                        </button>
                                     </form>
+
+                                    {{-- Tombol Tolak --}}
+                                    <button id="btnTolak-{{ $sktm->id }}" type="button" class="btn btn-danger"
+                                        onclick="konfirmasiTolak('{{ $sktm->id }}')">
+                                        <i class="bi bi-x-circle"></i> Tolak
+                                    </button>
+                                    <form id="formTolak-{{ $sktm->id }}" action="{{ route('sktm.tolak', $sktm->id) }}"
+                                        method="POST" style="display: none;">
+                                        @csrf
+                                        <input type="hidden" name="status" value="Ditolak">
+                                        <input type="hidden" name="alasan" id="inputAlasan-{{ $sktm->id }}">
+                                    </form>
+                                @elseif ($sktm->status === 'Ditolak')
+                                    <button class="btn btn-secondary" disabled>Sudah Ditolak</button>
                                 @else
                                     <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
                                 @endif
@@ -124,15 +147,19 @@
                                         method="POST" style="display:inline;">
                                         @csrf
                                         <button type="button" id="btnVerifikasiLurah" class="btn btn-success"
-                                            onclick="verifikasiLurahConfirm()">Verifikasi</button>
+                                            onclick="verifikasiLurahConfirm()">
+                                            Verifikasi
+                                        </button>
                                     </form>
                                 @elseif ($sktm->status === 'Selesai')
                                     <button class="btn btn-secondary" disabled>Sudah Disahkan</button>
+                                @elseif ($sktm->status === 'Ditolak')
+                                    <button class="btn btn-secondary" disabled>Surat Ditolak</button>
                                 @endif
                             @endif
                         @endif
 
-                     {{-- Tombol Cetak jika status selesai --}}
+                        {{-- Tombol Cetak (hanya jika status selesai) --}}
                         @if (auth()->check() && $sktm->status === 'Selesai')
                             <a href="{{ route('sktm.cetak', $sktm->id) }}" target="_blank" class="btn btn-success">
                                 <i class="bi bi-printer"></i> Cetak Surat
@@ -169,9 +196,11 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
     {{-- JS Verifikasi --}}
     <script>
@@ -211,7 +240,42 @@
             });
         }
     </script>
-    
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function konfirmasiTolak(id) {
+            Swal.fire({
+                title: 'Tolak Pengajuan Surat',
+                input: 'textarea',
+                inputLabel: 'Alasan Penolakan',
+                inputPlaceholder: 'Tulis alasan penolakan di sini...',
+                inputAttributes: {
+                    'aria-label': 'Alasan penolakan'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Tolak',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                preConfirm: (alasan) => {
+                    if (!alasan || alasan.trim() === '') {
+                        Swal.showValidationMessage('Alasan penolakan wajib diisi!');
+                    }
+                    return alasan;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const alasan = result.value;
+                    document.getElementById('inputAlasan-' + id).value = alasan;
+                    document.getElementById('btnTolak-' + id).disabled = true;
+                    document.getElementById('btnTolak-' + id).innerText = 'Memproses...';
+                    document.getElementById('formTolak-' + id).submit();
+                }
+            });
+        }
+    </script>
+
+
 
     <script>
         $(document).ready(function() {

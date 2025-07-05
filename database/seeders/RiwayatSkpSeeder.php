@@ -18,9 +18,8 @@ class RiwayatSkpSeeder extends Seeder
                 'id' => 'aaa1b101-d066-11ee-8bb8-744ca1759401',
                 'status' => 'Diproses',
                 'peninjau' => 'Admin',
+                'alasan' => 'Sedang diproses',
                 'keterangan' => 'Dokumen belum lengkap',
-                'tanggal' => '2024-06-01',
-                'waktu' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
                 'skp_id' => '8881c2f2-d066-11ee-8bb8-744ca1759401', // Budi Santoso
@@ -29,9 +28,8 @@ class RiwayatSkpSeeder extends Seeder
                 'id' => 'aaa1b102-d066-11ee-8bb8-744ca1759402',
                 'status' => 'Diajukan',
                 'peninjau' => 'Lurah',
+                'alasan' => null,
                 'keterangan' => 'Sudah sesuai persyaratan',
-                'tanggal' => '2024-06-02',
-                'waktu' => now(),
                 'created_at' => now(),
                 'updated_at' => now(),
                 'skp_id' => '8881c578-d066-11ee-8bb8-744ca1759402', // Sari Lestari
@@ -40,9 +38,18 @@ class RiwayatSkpSeeder extends Seeder
                 'id' => 'aaa1b103-d066-11ee-8bb8-744ca1759403',
                 'status' => 'Selesai',
                 'peninjau' => 'Admin',
+                'alasan' => 'Surat sudah selesai. Silahkan print atau ambil di kantor lurah.',
                 'keterangan' => 'Data pekerjaan tidak sesuai',
-                'tanggal' => '2024-06-03',
-                'waktu' => now(),
+                'created_at' => now(),
+                'updated_at' => now(),
+                'skp_id' => '8881c70e-d066-11ee-8bb8-744ca1759403', // Andi Gunawan
+            ],
+            [
+                'id' => 'aaa1b103-d066-11ee-8bb8-744ca1759477',
+                'status' => 'Ditolak',
+                'peninjau' => 'Admin',
+                'alasan' => 'Data KK tidak valid',
+                'keterangan' => 'Data pekerjaan tidak sesuai',
                 'created_at' => now(),
                 'updated_at' => now(),
                 'skp_id' => '8881c70e-d066-11ee-8bb8-744ca1759403', // Andi Gunawan

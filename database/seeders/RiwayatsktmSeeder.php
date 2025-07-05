@@ -22,9 +22,9 @@ class RiwayatsktmSeeder extends Seeder
                 'status' => 'Diajukan',
                 'peninjau' => 'Masyarakat',
                 'keterangan' => 'Pengajuan oleh masyarakat',
-                'tanggal' => Carbon::now()->subDays(10)->toDateString(),
+                'tanggal' => Carbon::now()->toDateString(),
                 'waktu' => Carbon::now()->subDays(10),
-                'surat_balasan' => null
+                'alasan' => null
             ],
             [
                 'id' => '2b2b2b22-dc01-11ee-a1a1-0011a1a1a1a2',
@@ -32,9 +32,9 @@ class RiwayatsktmSeeder extends Seeder
                 'status' => 'Diajukan',
                 'peninjau' => 'Admin',
                 'keterangan' => 'Pengajuan melalui admin',
-                'tanggal' => Carbon::now()->subDays(9)->toDateString(),
+                'tanggal' => Carbon::now()->toDateString(),
                 'waktu' => Carbon::now()->subDays(9),
-                'surat_balasan' => null
+                'alasan' => null
             ],
             [
                 'id' => '3c3c3c33-dc01-11ee-a1a1-0011a1a1a1a3',
@@ -42,9 +42,9 @@ class RiwayatsktmSeeder extends Seeder
                 'status' => 'Diproses',
                 'peninjau' => 'Admin',
                 'keterangan' => 'Verifikasi data awal',
-                'tanggal' => Carbon::now()->subDays(8)->toDateString(),
+                'tanggal' => Carbon::now()->toDateString(),
                 'waktu' => Carbon::now()->subDays(8),
-                'surat_balasan' => null
+                'alasan' => null
             ],
             [
                 'id' => '4d4d4d44-dc01-11ee-a1a1-0011a1a1a1a4',
@@ -52,19 +52,19 @@ class RiwayatsktmSeeder extends Seeder
                 'status' => 'Diproses',
                 'peninjau' => 'Sekretaris',
                 'keterangan' => 'Pengecekan dokumen',
-                'tanggal' => Carbon::now()->subDays(7)->toDateString(),
+                'tanggal' => Carbon::now()->toDateString(),
                 'waktu' => Carbon::now()->subDays(7),
-                'surat_balasan' => null
+                'alasan' => null
             ],
             [
                 'id' => '5e5e5e55-dc01-11ee-a1a1-0011a1a1a1a5',
                 'sktm_id' => '25e3f6bc-ecce-11ee-89f9-8a45e10242a3',
-                'status' => 'Selesai',
+                'status' => 'Ditolak',
                 'peninjau' => 'Lurah',
-                'keterangan' => 'Pengesahan oleh lurah',
-                'tanggal' => Carbon::now()->subDays(6)->toDateString(),
+                'keterangan' => 'Ditolak oleh lurah',
+                'tanggal' => Carbon::now()->toDateString(),
                 'waktu' => Carbon::now()->subDays(6),
-                'surat_balasan' => null
+                'alasan' => 'Salah inputan KK'
             ],
             [
                 'id' => '6f6f6f66-dc01-11ee-a1a1-0011a1a1a1a6',
@@ -72,9 +72,9 @@ class RiwayatsktmSeeder extends Seeder
                 'status' => 'Diajukan',
                 'peninjau' => 'Masyarakat',
                 'keterangan' => 'Pengajuan ulang dari warga',
-                'tanggal' => Carbon::now()->subDays(5)->toDateString(),
+                'tanggal' => Carbon::now()->toDateString(),
                 'waktu' => Carbon::now()->subDays(5),
-                'surat_balasan' => null
+                'alasan' => null
             ],
             [
                 'id' => '7g7g7g77-dc01-11ee-a1a1-0011a1a1a1a7',
@@ -82,9 +82,9 @@ class RiwayatsktmSeeder extends Seeder
                 'status' => 'Diproses',
                 'peninjau' => 'Admin',
                 'keterangan' => 'Admin proses berkas',
-                'tanggal' => Carbon::now()->subDays(4)->toDateString(),
+                'tanggal' => Carbon::now()->toDateString(),
                 'waktu' => Carbon::now()->subDays(4),
-                'surat_balasan' => null
+                'alasan' => null
             ],
             [
                 'id' => '8h8h8h88-dc01-11ee-a1a1-0011a1a1a1a8',
@@ -92,29 +92,29 @@ class RiwayatsktmSeeder extends Seeder
                 'status' => 'Selesai',
                 'peninjau' => 'Lurah',
                 'keterangan' => 'Ditandatangani lurah',
-                'tanggal' => Carbon::now()->subDays(3)->toDateString(),
+                'tanggal' => Carbon::now()->toDateString(),
                 'waktu' => Carbon::now()->subDays(3),
-                'surat_balasan' => null
+                'alasan' => 'Surat sudah selesai. Silahkan print atau ambil di kantor lurah.'
             ],
             [
                 'id' => '9i9i9i99-dc01-11ee-a1a1-0011a1a1a1a9',
                 'sktm_id' => '447299d8-ecce-11ee-8c11-7076cfa9e9e6',
-                'status' => 'Diajukan',
+                'status' => 'Ditolak',
                 'peninjau' => 'Admin',
-                'keterangan' => 'Admin input data baru',
-                'tanggal' => Carbon::now()->subDays(2)->toDateString(),
+                'keterangan' => 'File KK tidak valid',
+                'tanggal' => Carbon::now()->toDateString(),
                 'waktu' => Carbon::now()->subDays(2),
-                'surat_balasan' => null
+                'alasan' => "Data KK tidak valid"
             ],
             [
                 'id' => 'a0a0a0a0-dc01-11ee-a1a1-0011a1a1a1a0',
                 'sktm_id' => '4be0c0de-ecce-11ee-b70a-4c528e1d1c3f',
                 'status' => 'Diproses',
                 'peninjau' => 'Sekretaris',
-                'keterangan' => 'Sekretaris mengecek ulang',
-                'tanggal' => Carbon::now()->subDay()->toDateString(),
+                'keterangan' => 'Sekretaris mengecek ulang',               
+                'tanggal' => Carbon::now()->toDateString(),
                 'waktu' => Carbon::now()->subDay(),
-                'surat_balasan' => null
+                'alasan' => null
             ],
         ];
         RiwayatsktmModel::insert($data);

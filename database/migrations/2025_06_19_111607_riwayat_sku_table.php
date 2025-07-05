@@ -15,10 +15,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('status');
             $table->string('peninjau');
-            $table->text('keterangan')->nullable();
             $table->date('tanggal');
             $table->timestamp('waktu');
-            $table->text('surat_balasan')->nullable();
+            $table->text('keterangan');
+            $table->text('alasan')->nullable();
             $table->timestamps();
             $table->uuid('sku_id');
             $table->foreign('sku_id')->references('id')->on('sku')->onDelete('cascade');

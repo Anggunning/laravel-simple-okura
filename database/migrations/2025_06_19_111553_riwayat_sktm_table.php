@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('riwayat_sktm', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('status');
+            $table->text('status');
             $table->string('peninjau');
-            $table->text('keterangan')->nullable();
             $table->date('tanggal');
             $table->timestamp('waktu');
-            $table->text('surat_balasan')->nullable();
+            $table->text('keterangan');
+            $table->text('alasan')->nullable();
             $table->timestamps();
             $table->uuid('sktm_id');
             $table->foreign('sktm_id')->references('id')->on('sktm')->onDelete('cascade');

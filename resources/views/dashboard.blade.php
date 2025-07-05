@@ -16,7 +16,7 @@
 
     </div>
     <div class="title">
-        <h4>Dashboard</h4>
+       
     </div>
     <div class="row">
         @if (auth()->user()->role !== 'Masyarakat')

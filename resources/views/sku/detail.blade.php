@@ -47,54 +47,69 @@
                                     );
                                     $tanggalPengajuan = \Carbon\Carbon::parse($sku->tanggal)->translatedFormat('d F Y');
                                 @endphp
-
                                 @foreach ([
-            'Nama Pemohon' => $sku->nama,
-            'Jenis Kelamin' => $sku->jenis_kelamin,
-            'Tempat, Tanggal Lahir' => $sku->tempatLahir . ', ' . $tanggalLahir,
-            'Agama' => $sku->agama,
-            'NIK' => $sku->nik,
-            'Alamat' => $sku->alamat,
-            'Jenis Usaha' => $sku->jenis_usaha,
-            'Tempat Usaha' => $sku->tempat_usaha,
-            'Kelurahan' => $sku->kelurahan,
-            'Kecamatan' => $sku->kecamatan,
-            'Kota' => $sku->kota,
-            'Keterangan' => $sku->keterangan,
-            'Tanggal Pengajuan' => $tanggalPengajuan,
-            'Status' => ucfirst($sku->status),
-        ] as $label => $value)
+                                            'Nama Pemohon' => $sku->nama,
+                                            'Jenis Kelamin' => $sku->jenis_kelamin,
+                                            'Tempat, Tanggal Lahir' => $sku->tempatLahir . ', ' . $tanggalLahir,
+                                            'Agama' => $sku->agama,
+                                            'NIK' => $sku->nik,
+                                            'Alamat' => $sku->alamat,
+                                            'Jenis Usaha' => $sku->jenis_usaha,
+                                            'Tempat Usaha' => $sku->tempat_usaha,
+                                            'Kelurahan' => $sku->kelurahan,
+                                            'Kecamatan' => $sku->kecamatan,
+                                            'Kota' => $sku->kota,
+                                            'Keterangan' => $sku->keterangan,
+                                            'Tanggal Pengajuan' => $tanggalPengajuan,
+                                            'Status' => ucfirst($sku->status),
+                                        ] as $label => $value)
                                     <div class="row mb-2">
                                         <div class="col-sm-4 fw-bold">{{ $label }}</div>
                                         <div class="col-sm-8">: {{ $value }}</div>
                                     </div>
                                 @endforeach
+                                @if ($sku->status === 'Ditolak')
+                                    @php
+                                        $riwayatDitolak = $sku->riwayat_sku->where('status', 'Ditolak')->last();
+                                    @endphp
+                                    @if ($riwayatDitolak)
+                                        <div class="row mb-2">
+                                            <div class="col-sm-4 fw-bold">Alasan Penolakan</div>
+                                            <div class="col-sm-8">: {{ $riwayatDitolak->alasan ?? '-' }}</div>
+                                        </div>
+                                    @endif
+                                @endif
+                                @if ($sku->status === 'Selesai')
+                                    @php
+                                        $riwayatSelesai = $sku->riwayat_sku->where('status', 'Selesai')->last();
+                                    @endphp
+                                    @if ($riwayatSelesai)
+                                        <div class="row mb-2">
+                                            <div class="col-sm-4 fw-bold">Keterangan</div>
+                                            <div class="col-sm-8">: {{ $riwayatSelesai->alasan ?? '-' }}</div>
+                                        </div>
+                                    @endif
+                                @endif
                             </div>
 
                             <!-- Kolom Kanan (Dokumen) -->
                             <div class="col-sm-6">
                                 @foreach ([
-            'Foto Usaha' => $sku->foto_usaha,
-            'Surat Pengantar RT/RW' => $sku->pengantar_rt_rw,
-            'Kartu Keluarga' => $sku->kk,
-            'KTP' => $sku->ktp,
-            'Surat Pernyataan' => $sku->surat_pernyataan,
-        ] as $label => $file)
+                                            'Foto Usaha' => $sku->foto_usaha,
+                                            'Surat Pengantar RT/RW' => $sku->pengantar_rt_rw,
+                                            'Kartu Keluarga' => $sku->kk,
+                                            'KTP' => $sku->ktp,
+                                            'Surat Pernyataan' => $sku->surat_pernyataan,
+                                        ] as $label => $file)
                                     <div class="dokumen-item mb-3">
                                         <label>{{ $label }} <span class="wajib">*</span></label>
-                                        <a href="{{ route('dokumen.show', ['folder' => 'sku', 'filename' => basename($file)]) }}"target="_blank" class="lihat-box">
+                                        <a href="{{ route('dokumen.show', ['folder' => 'sku', 'filename' => basename($file)]) }}"target="_blank"
+                                            class="lihat-box">
                                             <i class="bi bi-cloud-arrow-up"></i>
                                             <span>Lihat File/Foto</span>
                                         </a>
                                     </div>
                                 @endforeach
-                               {{-- <a href="{{ route('dokumen.show', ['folder' => 'sku', 'filename' => basename($file))]) }}"
-   target="_blank" class="lihat-box">
-    <i class="bi bi-cloud-arrow-up">Foto Usaha</i>
-    <span>Lihat File/Foto</span>
-</a> --}}
-
-
                             </div>
                         </div>
 
@@ -109,24 +124,43 @@
                                         <button type="button" id="btnVerifikasiAdmin" class="btn btn-success"
                                             onclick="verifikasiAdminConfirm()">Verifikasi</button>
                                     </form>
+
+                                    {{-- Tombol Tolak --}}
+                                    <button id="btnTolak-{{ $sku->id }}" type="button" class="btn btn-danger"
+                                        onclick="konfirmasiTolak('{{ $sku->id }}')">
+                                        <i class="bi bi-x-circle"></i> Tolak
+                                    </button>
+                                    <form id="formTolak-{{ $sku->id }}" action="{{ route('sku.tolak', $sku->id) }}"
+                                        method="POST" style="display: none;">
+                                        @csrf
+                                        <input type="hidden" name="status" value="Ditolak">
+                                        <input type="hidden" name="alasan" id="inputAlasan-{{ $sku->id }}">
+                                    </form>
+                                @elseif ($sku->status === 'Ditolak')
+                                    <button class="btn btn-secondary" disabled>Sudah Ditolak</button>
                                 @else
                                     <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
                                 @endif
+                            @else
+                                <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
+                            @endif
 
-                                {{-- LURAH --}}
-                            @elseif (auth()->user()->role === 'Lurah')
-                                @if ($sku->status === 'Diproses')
-                                    <form id="verifikasiFormLurah" action="{{ route('sku.verifikasi', $sku->id) }}"
-                                        method="POST" style="display:inline;">
-                                        @csrf
-                                        <button type="button" id="btnVerifikasiLurah" class="btn btn-success"
-                                            onclick="verifikasiLurahConfirm()">Verifikasi</button>
-                                    </form>
-                                @elseif ($sku->status === 'Selesai')
+                            {{-- LURAH --}}
+                        @elseif (auth()->user()->role === 'Lurah')
+                            @if ($sku->status === 'Diproses')
+                                <form id="verifikasiFormLurah" action="{{ route('sku.verifikasi', $sku->id) }}"
+                                    method="POST" style="display:inline;">
+                                    @csrf
+                                    <button type="button" id="btnVerifikasiLurah" class="btn btn-success"
+                                        onclick="verifikasiLurahConfirm()">Verifikasi</button>
+                                </form>
+                            @elseif ($sku->status === 'Selesai')
                                     <button class="btn btn-secondary" disabled>Sudah Disahkan</button>
-                                @endif
+                            @elseif ($sku->status === 'Ditolak')
+                                    <button class="btn btn-secondary" disabled>Surat Ditolak</button>
                             @endif
                         @endif
+                   
 
                         {{-- Tombol Cetak jika status selesai --}}
                         @if (auth()->check() && $sku->status === 'Selesai')
@@ -134,7 +168,6 @@
                                 <i class="bi bi-printer"></i> Cetak Surat
                             </a>
                         @endif
-
                     </div>
 
 
@@ -160,7 +193,6 @@
                             @endforelse
                         </ul>
                     </div>
-
                 </section>
             </div>
         </div>
@@ -168,9 +200,12 @@
 @endsection
 
 @push('scripts')
-    <script src="{{ asset('js/jquery-3.7.0.min.js') }}"></script>
-    <script src="{{ asset('js/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/main.js') }}"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
 
     {{-- JS Verifikasi --}}
     <script>
@@ -242,4 +277,39 @@
             });
         });
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        function konfirmasiTolak(id) {
+            Swal.fire({
+                title: 'Tolak Pengajuan Surat',
+                input: 'textarea',
+                inputLabel: 'Alasan Penolakan',
+                inputPlaceholder: 'Tulis alasan penolakan di sini...',
+                inputAttributes: {
+                    'aria-label': 'Alasan penolakan'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Tolak',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                preConfirm: (alasan) => {
+                    if (!alasan || alasan.trim() === '') {
+                        Swal.showValidationMessage('Alasan penolakan wajib diisi!');
+                    }
+                    return alasan;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const alasan = result.value;
+                    document.getElementById('inputAlasan-' + id).value = alasan;
+                    document.getElementById('btnTolak-' + id).disabled = true;
+                    document.getElementById('btnTolak-' + id).innerText = 'Memproses...';
+                    document.getElementById('formTolak-' + id).submit();
+                }
+            });
+        }
+    </script>
+
 @endpush

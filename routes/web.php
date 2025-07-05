@@ -56,7 +56,12 @@ Route::get('/sk_tidak_mampu', [SKTidakMampuController::class, 'index'])->name('s
 Route::post('/sktm/store', [SKTidakMampuController::class, 'store'])->name('sktm.store');
 Route::get('/sktm/{id}', [SKTidakMampuController::class, 'show'])->name('sktm.show');
 Route::post('/sktm/{id}/verifikasi', [SKTidakMampuController::class, 'verifikasi'])->name('sktm.verifikasi');
+Route::post('/sktm/{id}/tolak', [SKTidakMampuController::class, 'tolak'])->name('sktm.tolak');
 Route::get('/sktm/{id}/cetak', [SKTidakMampuController::class, 'cetak'])->name('sktm.cetak');
+Route::post('/sktm/draf', [SKTidakMampuController::class, 'storeDraf'])->name('sktm.draf.store');
+Route::get('/sktm/draf', [SKTidakMampuController::class, 'getDraf'])->name('sktm.draf.get');
+Route::get('/draf/preview/{field}', [SKTidakMampuController::class, 'previewDrafFile'])->name('draf.preview');
+
 // Route::get('/sktm/cetak/{id}', [SKTidakMampuController::class, 'cetak'])->name('sktm.cetak');
 
 Route::delete('/sktm/destroy/{id}', [SKTidakMampuController::class, 'destroy'])->name('sktm.destroy');
@@ -66,6 +71,7 @@ Route::get('/sk_usaha', [SKUsahaController::class, 'index'])->name('sku.index')-
 Route::post('/sku/store', [SKUsahaController::class, 'store'])->name('sku.store');
 Route::get('/sku/{id}', [SKUsahaController::class, 'show'])->name('sku.show');
 Route::post('/sku/{id}/verifikasi', [SKUsahaController::class, 'verifikasi'])->name('sku.verifikasi');
+Route::post('/sku/{id}/tolak', [SKUsahaController::class, 'tolak'])->name('sku.tolak');
 Route::get('/sku/{id}/cetak', [SKUsahaController::class, 'cetak'])->name('sku.cetak');
 Route::delete('/sku/destroy/{id}', [SKUsahaController::class, 'destroy'])->name('sku.destroy');
 Route::put('/sku/update{id}', [SKUsahaController::class, 'update'])->name('sku.update');
@@ -88,7 +94,7 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::post('/pendudukMiskin/store', [PendudukMiskinController::class, 'store'])->name('pendudukMiskin.store');
 Route::get('/pendudukMiskin/{id}', [PendudukMiskinController::class, 'show'])->name('pendudukMiskin.show');
 Route::delete('/pendudukMiskin/destroy/{id}', [PendudukMiskinController::class, 'destroy'])->name('pendudukMiskin.destroy');
-Route::put('/pendudukMiskin/update{id}', [PendudukMiskinController::class, 'update'])->name('pendudukMiskin.update');
+Route::put('/pendudukMiskin/update/{id}', [PendudukMiskinController::class, 'update'])->name('pendudukMiskin.update');
 
 });
 

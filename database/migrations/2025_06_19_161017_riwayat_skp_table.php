@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('status');
             $table->string('peninjau');
             $table->text('keterangan')->nullable();
-            $table->date('tanggal');
-            $table->timestamp('waktu');
+            $table->string('alasan');
             $table->timestamps();
             $table->uuid('skp_id');
             $table->foreign('skp_id')->references('id')->on('skp')->onDelete('cascade');

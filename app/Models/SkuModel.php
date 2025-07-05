@@ -38,6 +38,7 @@ class SkuModel extends Model
         'alamat',
         'keterangan',
         'status',
+        'alasan',
         'foto_usaha',
         'pengantar_rt_rw',
         'kk',

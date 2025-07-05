@@ -11,10 +11,10 @@ class PendudukMiskinController extends Controller
 {
     public function index()
     {
-        // return view('penduduk_miskin');
-        // $data = PendudukMiskinModel::orderBy('created_at', 'desc')->paginate(8);
-    $data = PendudukMiskinModel::orderBy('created_at', 'desc')->get();
-        return view('pendudukMiskin.index', compact('data'));
+        $dataMiskin = PendudukMiskinModel::where('status', 'Miskin')->orderBy('created_at', 'desc')->get();
+        $dataMenengah = PendudukMiskinModel::where('status', 'Menengah')->orderBy('created_at', 'desc')->get();
+
+        return view('pendudukMiskin.index', compact('dataMiskin', 'dataMenengah'));
     }
 
     public function store(Request $request)
@@ -31,9 +31,9 @@ class PendudukMiskinController extends Controller
         ]);
 
         $data = $request->all();
-        
-        
 
+        $data['status'] = 'Miskin';
+        // dd($data); 
         if ($request->hasFile('foto_rumah')) {
             $data['foto_rumah'] = $request->file('foto_rumah')->store('pendudukMiskin', 'local');
         }
@@ -43,30 +43,18 @@ class PendudukMiskinController extends Controller
     }
 
     public function update(Request $request, $id)
-{
-    try {
-        $data = PendudukMiskinModel::findOrFail($id);
+    {
 
-        $data->nama = $request->nama;
-        $data->nama_kepala_keluarga = $request->nama_kepala_keluarga;
-        $data->jml_agt_keluarga = $request->jml_agt_keluarga;
-        $data->kelompokPKH = $request->kelompokPKH;
-        $data->alamat = $request->alamat;
+        $request->validate([
+            'status' => 'required|in:Menengah,Miskin',
+        ]);
 
-        if ($request->hasFile('foto_rumah')) {
-            $file = $request->file('foto_rumah')->store('pendudukMiskin', 'local');
-            $data->foto_rumah = $file;
-        }
+        $penduduk = PendudukMiskinModel::findOrFail($id);
+        $penduduk->status = $request->status;
+        $penduduk->save();
 
-        $data->save();
-
-        return redirect()->route('pendudukMiskin.index')->with('success', 'Data berhasil diperbarui');
-    } catch (\Exception $e) {
-        // Log jika perlu
-
-        return redirect()->route('pendudukMiskin.index')->with('error', 'Terjadi kesalahan saat memperbarui data.');
+        return redirect()->route('pendudukMiskin.index')->with('success', 'Status penduduk berhasil diubah menjadi ' . $request->status . '.');
     }
-}
 
     public function show($id)
     {
@@ -87,14 +75,12 @@ class PendudukMiskinController extends Controller
                 'title' => 'Delete Surat Keterangan Usaha',
                 'text' => 'Data berhasil dihapus!'
             ]);
-
         } catch (Exception $e) {
             return redirect()->back()->with('alert', [
                 'type' => 'error',
                 'title' => 'Delete Pengajuan',
-                'text' => $e -> getMessage()
+                'text' => $e->getMessage()
             ]);
         }
     }
-    
 }

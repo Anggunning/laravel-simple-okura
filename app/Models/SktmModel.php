@@ -34,10 +34,10 @@ class SktmModel extends Model
         'agama',
         'nik',
         'alamat',
-        'tanggal',
         'keterangan',
         'pekerjaan',
         'status',
+        'alasan',
         'pengantar_rt_rw',     
         'kk',                   
         'ktp',                 
@@ -54,6 +54,7 @@ class SktmModel extends Model
 {
    return $this->hasMany(RiwayatsktmModel::class, 'sktm_id', 'id');
 }
+
 
 public function user()
 {

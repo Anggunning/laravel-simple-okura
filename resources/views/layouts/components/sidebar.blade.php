@@ -1,11 +1,12 @@
 <aside class="app-sidebar">
-    {{-- <div class="app-sidebar__user"><img class="app-sidebar__user-avatar" src="https://randomuser.me/api/portraits/men/1.jpg" alt="User Image">
-        <div>
-          <p class="app-sidebar__user-name">John Doe</p>
-          <p class="app-sidebar__user-designation">Frontend Developer</p>
+       <div class="app-sidebar__user d-flex align-items-center">
+    <i class="bi bi-person-circle fs-1 me-3 text-white"></i>
+    <div>
+          <p class="app-sidebar__user-name">{{ auth()->user()->username }}</p>
+          <p class="app-sidebar__user-designation">{{ auth()->user()->role }}</p>
         </div>
-      </div> --}}
-    <ul class="app-menu">
+      </div>
+       <ul class="app-menu">
         <li>
             <a class="app-menu__item" href="{{ route('dashboard') }}">
                 <i class="app-menu__icon bi bi-speedometer"></i>
@@ -67,4 +68,4 @@
  @endif
 
     </ul>
-</aside>
+    </aside>

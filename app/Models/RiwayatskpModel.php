@@ -25,8 +25,11 @@ class RiwayatskpModel extends Model
         });
     }
     protected $fillable = [
-        'status', 'peninjau', 'keterangan', 'tanggal',
-        'waktu', 'skp_id'
+        'status', 
+        'peninjau',
+        'keterangan', 
+        'alasan', 
+        'skp_id'
     ];
 
     public function skp()

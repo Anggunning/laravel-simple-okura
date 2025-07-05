@@ -29,7 +29,7 @@ class RiwayatsktmModel extends Model
         'peninjau',
         'tanggal',
         'waktu',
-        'surat_balasan',
+        'alasan',
         'sktm_id',
        
     ];

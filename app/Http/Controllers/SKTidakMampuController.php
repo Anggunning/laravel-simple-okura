@@ -7,30 +7,81 @@ use App\Models\SktmModel;
 use Illuminate\Support\Str;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\RiwayatsktmModel;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\RiwayatPengajuanModel;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 class SKTidakMampuController extends Controller
 {
     public function index()
     {
-        // $sktm = SktmModel::orderBy('created_at', 'desc')->paginate(6);
-        //    $sktm = SktmModel::orderBy('created_at', 'desc')->get();
-
-        //     // dd($sktm);
-        //     return view('sktm.index', compact('sktm'));
         $user = auth()->user();
+
         if ($user->role === 'Masyarakat') {
-            $sktm = SktmModel::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
-            // dd("User ID: " . $user->id, $sktm); // Untuk cek isi data
+            // Untuk user masyarakat: hanya data mereka sendiri
+            $sktmBelumSelesai = SktmModel::whereNotIn('status', ['Selesai', 'Ditolak'])
+                ->get()
+                ->sort(function ($a, $b) {
+                    $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+                    $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+
+                    if ($aPrioritas === 0 && $bPrioritas === 0) {
+                        $aPrioritas = $a->status === 'Diajukan' ? 1 : 0;
+                        $bPrioritas = $b->status === 'Diajukan' ? 1 : 0;
+                    }
+
+                    return $bPrioritas <=> $aPrioritas ?: strtotime($b->created_at) <=> strtotime($a->created_at);
+                })
+                ->values();
+
+
+            $sktmSelesai = SktmModel::with(['riwayat_sktm'])
+            ->where('status', 'Selesai')
+                ->orderBy('created_at', 'desc')
+                ->get();
+            // dd($sktmSelesai);
+
+            $sktmDitolak = SktmModel::with(['riwayat_sktm'])->where('status', 'Ditolak')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } elseif ($user->role === 'Lurah') {
+            // Lurah: hanya lihat Diproses, Selesai, Ditolak
+            $sktmBelumSelesai = SktmModel::where('status', 'Diproses')->orderBy('created_at', 'desc')->get();
+            $sktmSelesai = SktmModel::where('status', 'Selesai')->orderBy('created_at', 'desc')->get();
+            $sktmDitolak = SktmModel::where('status', 'Ditolak')->orderBy('created_at', 'desc')->get();
         } else {
-            $sktm = SktmModel::all();
+            $sktmBelumSelesai = SktmModel::whereNotIn('status', ['Selesai', 'Ditolak'])
+                ->get()
+                ->sort(function ($a, $b) {
+                    $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+                    $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+
+                    if ($aPrioritas === 0 && $bPrioritas === 0) {
+                        $aPrioritas = $a->status === 'Diajukan' ? 1 : 0;
+                        $bPrioritas = $b->status === 'Diajukan' ? 1 : 0;
+                    }
+
+                    return $bPrioritas <=> $aPrioritas ?: strtotime($b->created_at) <=> strtotime($a->created_at);
+                })
+                ->values();
+
+
+            $sktmSelesai = SktmModel::where('status', 'Selesai')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $sktmDitolak = SktmModel::with(['riwayat_sktm'])
+                ->where('status', 'Ditolak')
+                ->orderBy('created_at', 'desc')
+                ->get();
         }
 
-        return view('sktm.index', compact('sktm'));
+        return view('sktm.index', compact('sktmBelumSelesai', 'sktmSelesai', 'sktmDitolak'));
     }
     public function store(Request $request)
     {
@@ -43,7 +94,6 @@ class SKTidakMampuController extends Controller
             'agama' => 'required',
             'nik' => 'required|digits:16',
             'alamat' => 'required',
-            'keterangan' => 'required',
             'pekerjaan' => 'required',
             'pengantar_rt_rw' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'kk' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -72,8 +122,10 @@ class SKTidakMampuController extends Controller
                 'status' => 'Diajukan',
                 'peninjau' => '-',
                 'keterangan' => 'Surat diajukan oleh pemohon',
-                'surat_balasan' => null,
+                'alasan' => null,
             ]);
+            // Hapus draf
+            SktmModel::where('user_id', auth()->id())->where('status', 'draf')->delete();
 
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         } catch (\Exception $e) {
@@ -85,107 +137,81 @@ class SKTidakMampuController extends Controller
     }
 
 
-    public function update(Request $request, $id)
+    
+    public function storeDraf(Request $request)
     {
         try {
-            $sktm = SktmModel::findOrFail($id);
+            $userId = auth()->id();
 
-            $validated = $request->validate([
-                'nama' => 'required|string|max:255',
-                'tujuan' => 'required|string|max:255',
-                'jenis_kelamin' => 'required|string',
-                'tempatLahir' => 'required|string|max:255',
-                'tanggalLahir' => 'required|date',
-                'agama' => 'required|string|max:255',
-                'nik' => 'required|string|max:16',
-                'alamat' => 'required|string',
-                'keterangan' => 'required|string',
-                'pengantar_rt_rw' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-                'kk' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-                'ktp' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-                'surat_pernyataan' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-            ]);
+            $draf = SktmModel::updateOrCreate(
+                ['user_id' => $userId, 'status' => 'draf'],
+                $request->except(['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan']) + ['status' => 'draf']
+            );
 
-            if ($request->hasFile('pengantar_rt_rw')) {
-                $validated['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('sktm', 'local');
-            }
-            if ($request->hasFile('kk')) {
-                $validated['kk'] = $request->file('kk')->store('sktm', 'local');
-            }
-            if ($request->hasFile('ktp')) {
-                $validated['ktp'] = $request->file('ktp')->store('sktm', 'local');
-            }
-            if ($request->hasFile('surat_pernyataan')) {
-                $validated['surat_pernyataan'] = $request->file('surat_pernyataan')->store('sktm', 'local');
+            foreach (['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'] as $file) {
+                if ($request->hasFile($file)) {
+                    $path = $request->file($file)->store("draf/{$userId}", 'local');
+                    $draf->$file = $path;
+                }
             }
 
-            $sktm->update($validated);
+            $draf->save();
 
-            return redirect()->back()->with('success', 'Data berhasil diubah');
+            return response()->json(['success' => true]);
         } catch (\Exception $e) {
-            return redirect()->back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: ' . $e->getMessage()]);
+            // Debug log
+            \Log::error('❌ storeDraf error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
         }
     }
+
+
+    public function getDraf()
+    {
+        $draf = SktmModel::where('user_id', auth()->id())->where('status', 'draf')->first();
+        return response()->json($draf);
+    }
+
+
+    public function previewDrafFile($field)
+    {
+        $allowed = ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'];
+        if (!in_array($field, $allowed)) abort(403);
+
+        $draf = SktmModel::where('user_id', auth()->id())->where('status', 'draf')->firstOrFail();
+        $path = $draf->$field;
+
+        if (!Storage::disk('local')->exists($path)) abort(404);
+
+        $mime = Storage::disk('local')->mimeType($path);
+        $content = Storage::disk('local')->get($path);
+
+        return Response::make($content, 200, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
+        ]);
+    }
+
+
+
 
     public function show($id)
     {
         $sktm = SktmModel::with('riwayat_sktm')->findOrFail($id);
+
         return view('sktm.detail', compact('sktm'));
     }
-
-    // public function verifikasi($id)
-    // {
-    //     try {
-    //         $sktm = SktmModel::findOrFail($id);
-    //         if ($sktm->status !== 'Diproses') {
-    //         $sktm->status = 'Diproses';
-    //         $sktm->save();
-    //     }
-
-    //         return redirect()->back()->with('success', 'Surat berhasil diverifikasi!');
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->with('error', 'Gagal Verifikasi: ' . $e->getMessage());
-    //     }
-    // }
-
-
-    // Method verifikasi
-    // public function verifikasi($id)
-    // {
-    //     try {
-    //         $sktm = SktmModel::findOrFail($id);
-    //         $sktm->status = 'Diproses'; // Atau 'Diverifikasi', sesuaikan
-    //         $sktm->save();
-
-    //         // Tambah data riwayat
-    //         RiwayatPengajuanModel::create([
-    //             'sktm_id' => $sktm->id,
-    //             'tanggal' => now()->toDateString(),
-    //             'waktu' => now(),
-    //             'status' => 'Diproses',
-    //             'peninjau' => Auth::user()->name ?? 'Lurah',
-    //             'keterangan' => 'Surat telah diverifikasi oleh Lurah',
-    //             'surat_balasan' => null,
-    //         ]);
-
-    //         // return redirect()->back()->with('success', 'Surat berhasil diverifikasi.');
-    //         return redirect()->route('sktm.show', $sktm->id)->with('success', 'Surat berhasil diverifikasi.');
-    //     } catch (\Exception $e) {
-    //         return redirect()->back()->with('error', 'Terjadi kesalahan saat verifikasi: ' . $e->getMessage());
-    //     }
-    // }
-    public function verifikasi($id)
+    public function verifikasi(Request $request, $id)
     {
         try {
             $sktm = SktmModel::findOrFail($id);
             $user = Auth::user();
 
-            // ADMIN MEMPROSES
-            if (in_array($user->role, ['Admin', 'Sekretaris'])) {
-                if ($sktm->status !== 'Diajukan') {
-                    return redirect()->back()->with('error', 'Surat tidak dalam status Diajukan.');
-                }
-
+            // === JIKA ADMIN MEMPROSES ===
+            if (in_array($user->role, ['Admin', 'Sekretaris']) && $sktm->status === 'Diajukan') {
                 $sktm->status = 'Diproses';
                 $sktm->save();
 
@@ -196,18 +222,14 @@ class SKTidakMampuController extends Controller
                     'status' => 'Diproses',
                     'peninjau' => $user->role,
                     'keterangan' => 'Surat telah diverifikasi oleh Admin',
-                    'surat_balasan' => null,
+                    'alasan' => null,
                 ]);
 
                 return redirect()->route('sktm.show', $sktm->id)->with('success', 'Surat berhasil diverifikasi oleh Admin.');
             }
 
-            // LURAH MENYELESAIKAN
-            elseif ($user->role === 'Lurah') {
-                if ($sktm->status !== 'Diproses') {
-                    return redirect()->back()->with('error', 'Surat belum diproses oleh Admin.');
-                }
-
+            // === JIKA LURAH MENGESAHKAN ===
+            elseif ($user->role === 'Lurah' && $sktm->status === 'Diproses') {
                 $sktm->status = 'Selesai';
                 $sktm->save();
 
@@ -218,46 +240,56 @@ class SKTidakMampuController extends Controller
                     'status' => 'Selesai',
                     'peninjau' => $user->name ?? 'Lurah',
                     'keterangan' => 'Surat telah disahkan oleh Lurah',
-                    'surat_balasan' => null,
+                    'alasan' => 'Surat sudah selesai. Silahkan print surat atau datang ke kantor lurah',
                 ]);
 
                 return redirect()->route('sktm.show', $sktm->id)->with('success', 'Surat berhasil disahkan oleh Lurah.');
             }
 
-            return redirect()->back()->with('error', 'Anda tidak memiliki akses verifikasi.');
+            return redirect()->back()->with('error', 'Akses verifikasi tidak valid.');
         } catch (\Exception $e) {
-            dd($e->getMessage());
+            logger()->error('Verifikasi SKTM error: ' . $e->getMessage());
+            return redirect()->back()->with('error', 'Terjadi kesalahan saat verifikasi.');
+        }
+    }
+    public function tolak(Request $request, $id)
+    {
+        $sktm = SktmModel::with('riwayat_sktm')->findOrFail($id);
+        $user = Auth::user();
+        if ($request->status === 'Ditolak') {
+            $sktm->status = 'Ditolak';
+            $sktm->save();
+
+            RiwayatsktmModel::create([
+                'sktm_id' => $sktm->id,
+                'waktu' => now(),
+                'tanggal' => now()->toDateString(),
+                'status' => 'Ditolak',
+                'peninjau' => $user->role ?? '-',
+                'keterangan' => 'Surat ditolak oleh Admin',
+                'alasan' => $request->alasan,
+            ]);
+
+            return redirect()->route('sktm.show', $sktm->id)->with('success', 'Surat berhasil ditolak.');
         }
     }
 
 
-    // public function cetak($id)
-    // {
-    //     $sktm = SktmModel::findOrFail($id);
-
-    //     // Optional: batasi akses hanya jika status suratnya 'Selesai'
-    //     if ($sktm->status !== 'Selesai') {
-    //         abort(403, 'Surat belum selesai dan tidak bisa dicetak.');
-    //     }
-
-    //     $pdf = Pdf::loadView('sktm.cetak', compact('sktm'));
-    //     return $pdf->stream('Surat_Keterangan_Tidak_Mampu.pdf');
-    // }
     public function cetak($id)
     {
         // $sku = SkuModel::findOrFail($id);
 
         // // Logika untuk generate surat, bisa return view khusus cetak
         // return view('sku.cetak', compact('sku'));
-         $sktm = SktmModel::findOrFail($id);
+        $sktm = SktmModel::findOrFail($id);
 
-    if ($sktm->status !== 'Selesai') {
-        abort(403, 'Surat hanya bisa dicetak jika statusnya Selesai.');
-    }
+        if ($sktm->status !== 'Selesai') {
+            abort(403, 'Surat hanya bisa dicetak jika statusnya Selesai.');
+        }
 
-    $pdf = Pdf::loadView('sktm.cetak', compact('sktm'));
+        $pdf = Pdf::loadView('sktm.cetak', compact('sktm'));
 
-    return $pdf->stream("sktm-{$sktm->nama}.pdf"); // akan tampil di tab baru
+        return $pdf->stream("sktm-{$sktm->nama}.pdf"); // akan tampil di tab baru
     }
 
 

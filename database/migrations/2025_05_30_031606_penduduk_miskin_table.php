@@ -16,7 +16,8 @@ return new class extends Migration
             $table->string('nama');
             $table->text('alamat');
             $table->string('nama_kepala_keluarga')->nullable();
-            $table->integer('jml_agt_keluarga')->nullable();;
+            $table->integer('jml_agt_keluarga')->nullable();
+            $table->string('status');
             $table->string('kelompokPKH')->nullable();
             $table->decimal('longitude', 10, 7)->nullable();
             $table->decimal('latitude', 10, 7)->nullable();

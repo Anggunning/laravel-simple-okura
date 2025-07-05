@@ -92,7 +92,11 @@
         <tr><td>Pekerjaan</td><td>: {{ $sktm->pekerjaan }}</td></tr>
         <tr><td>Agama</td><td>: {{ $sktm->agama }}</td></tr>
         <tr><td>NIK</td><td>: {{ $sktm->nik }}</td></tr>
-        <tr><td>Alamat</td><td>: {{ $sktm->alamat }}</td></tr>
+        <tr><td>Alamat</td><td>: {{ $sktm->alamat }}
+            <br>&nbsp; Kelurahan Tebing Tinggi Okura 
+            <br>&nbsp; Kecamatan Rumbai Timur 
+            <br>&nbsp; Kota Pekanbaru, Riau
+        </td>
     </table>
 
 
@@ -100,10 +104,11 @@
     Berdasarkan surat pengantar dari RT.{{ $sktm->rt ?? '...' }} /RW.{{ $sktm->rw ?? '...' }} Kelurahan Tebing Tinggi Okura Kecamatan Rumbai Timur Kota Pekanbaru, dan pernyataan dari yang bersangkutan bahwa nama tersebut di atas adalah penduduk yang tergolong 
     <span class="bold">KELUARGA TIDAK MAMPU/MISKIN</span>.</p>
 
-     <p class="mt-2">Adapun Surat Keterangan ini diberikan kepada yang bersangkutan guna untuk: <span class="bold">{{ $sktm->tujuan }} <span class="bold"></span>.</p>
+     <p class="mt-2">Adapun Surat Keterangan ini diberikan kepada yang bersangkutan guna untuk: 
+        <span class="bold">{{ $sktm->tujuan }} <span class="bold"></span>.</p>
 
     <p class="mt-2">Demikian Surat Keterangan ini dibuat dengan sebenarnya, untuk dapat dipergunakan seperlunya.</p>
-    <br><br>
+    <br>
      <table class="spacing" style="width: 100%;">
         <tr>
             <td style="width: 50%"></td>

@@ -30,7 +30,7 @@ class RiwayatskuModel extends Model
         'peninjau',
         'tanggal',
         'waktu',
-        'surat_balasan',
+        'alasan',
         'sku_id',
        
     ];

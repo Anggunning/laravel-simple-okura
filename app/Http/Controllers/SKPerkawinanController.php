@@ -17,18 +17,67 @@ use Illuminate\Support\Facades\Storage;
 class SKPerkawinanController extends Controller
 {
     public function index()
-    {
-        $user = auth()->user();
-        if ($user->role === 'Masyarakat') {
-            $skp = SkpModel::with(['statusPerkawinan', 'orangTua']) 
-            ->where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
-            // dd("User ID: " . $user->id, $skp); // Untuk cek isi data
-        } else {
-            $skp = SkpModel::with(['statusPerkawinan', 'orangTua'])->orderBy('created_at', 'desc')->get();
-            
-        }
-        return view('skp.index', compact('skp'));
+{
+    $user = auth()->user();
+
+    if ($user->role === 'Masyarakat') {
+        // Belum Selesai: status bukan 'Selesai' atau 'Ditolak' (misalnya: Diajukan, Diproses)
+        $skpBelumSelesai = SkpModel::with(['statusPerkawinan', 'orangTua','riwayat_skp'])
+            ->whereNotIn('status', ['Selesai', 'Ditolak'])
+            ->get()
+            ->sort(function ($a, $b) {
+                $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+                $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+
+                if ($aPrioritas === 0 && $bPrioritas === 0) {
+                    $aPrioritas = $a->status === 'Diajukan' ? 1 : 0;
+                    $bPrioritas = $b->status === 'Diajukan' ? 1 : 0;
+                }
+
+                return $bPrioritas <=> $aPrioritas ?: strtotime($b->created_at) <=> strtotime($a->created_at);
+            })
+            ->values();
+
+        $skpSelesai = SkpModel::with(['statusPerkawinan', 'orangTua','riwayat_skp'])
+            ->where('status', 'Selesai')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $skpDitolak = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
+            ->where('status', 'Ditolak')
+            ->orderBy('created_at', 'desc')
+            ->get();
+    } else {
+        $skpBelumSelesai = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
+            ->whereNotIn('status', ['Selesai', 'Ditolak'])
+            ->get()
+            ->sort(function ($a, $b) {
+                $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+                $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+
+                if ($aPrioritas === 0 && $bPrioritas === 0) {
+                    $aPrioritas = $a->status === 'Diajukan' ? 1 : 0;
+                    $bPrioritas = $b->status === 'Diajukan' ? 1 : 0;
+                }
+
+                return $bPrioritas <=> $aPrioritas ?: strtotime($b->created_at) <=> strtotime($a->created_at);
+            })
+            ->values();
+
+        $skpSelesai = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
+            ->where('status', 'Selesai')
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        $skpDitolak = SkpModel::with(['statusPerkawinan', 'orangTua','riwayat_skp' ])
+            ->where('status', 'Ditolak')
+            ->orderBy('created_at', 'desc')
+            ->get();
     }
+
+    return view('skp.index', compact('skpBelumSelesai', 'skpSelesai', 'skpDitolak'));
+}
+
     public function store(Request $request)
     {
         $request->validate([

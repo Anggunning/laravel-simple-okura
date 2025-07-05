@@ -51,11 +51,17 @@
         </div>
         <div class="mb-3 col-md-6">
             <label for="{{ $prefix }}agama" class="form-label">Agama
-                <span class="text-danger">*</span>
-            </label>
-            <input type="text" name="agama" id="{{ $prefix }}agama" class="form-control" required
-                oninvalid="this.setCustomValidity('Silakan isi agama')" oninput="this.setCustomValidity('')"
-                placeholder="Masukkan agama">
+                <span class="text-danger">*</span></label>
+            <select name="agama" class="form-select" required
+                oninvalid="this.setCustomValidity('Silakan pilih agama')" oninput="this.setCustomValidity('')">
+                <option value="" disabled selected hidden>Agama</option>
+                <option value="Islam">Islam</option>
+                <option value="Kristen Protestan">Kristen Protestan</option>
+                <option value="Katolik">Katolik</option>
+                <option value="Hindu">Hindu</option>
+                <option value="Buddha">Buddha</option>
+                <option value="Konghuchu">Konghuchu</option>
+            </select>
         </div>
     </div>
 
@@ -132,43 +138,45 @@
     {{-- Upload File --}}
     <div class="row">
 
-    {{-- KTP --}}
-    <div class="mb-3 col-md-6">
-        <label for="{{ $prefix }}ktp" class="form-label">KTP <span class="text-danger">*</span></label>
-        <input type="file" name="ktp" id="{{ $prefix }}ktp" class="form-control"
-            accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
-        <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
-        <div id="link_ktp_lama" class="mt-2"></div>
-    </div>
+        {{-- KTP --}}
+        <div class="mb-3 col-md-6">
+            <label for="{{ $prefix }}ktp" class="form-label">KTP <span class="text-danger">*</span></label>
+            <input type="file" name="ktp" id="{{ $prefix }}ktp" class="form-control"
+                accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
+            <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
+            <div id="link_ktp_lama" class="mt-2"></div>
+        </div>
 
-    {{-- KK --}}
-    <div class="mb-3 col-md-6">
-        <label for="{{ $prefix }}kk" class="form-label">Kartu Keluarga <span class="text-danger">*</span></label>
-        <input type="file" name="kk" id="{{ $prefix }}kk" class="form-control"
-            accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
-        <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
-        <div id="link_kk_lama" class="mt-2"></div>
-    </div>
+        {{-- KK --}}
+        <div class="mb-3 col-md-6">
+            <label for="{{ $prefix }}kk" class="form-label">Kartu Keluarga <span
+                    class="text-danger">*</span></label>
+            <input type="file" name="kk" id="{{ $prefix }}kk" class="form-control"
+                accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
+            <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
+            <div id="link_kk_lama" class="mt-2"></div>
+        </div>
 
-    {{-- Surat Pengantar RT/RW --}}
-    <div class="mb-3 col-md-6">
-        <label for="{{ $prefix }}pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span class="text-danger">*</span></label>
-        <input type="file" name="pengantar_rt_rw" id="{{ $prefix }}pengantar_rt_rw" class="form-control"
-            accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
-        <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
-        <div id="link_pengantar_rt_rw_lama" class="mt-2"></div>
-    </div>
+        {{-- Surat Pengantar RT/RW --}}
+        <div class="mb-3 col-md-6">
+            <label for="{{ $prefix }}pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span
+                    class="text-danger">*</span></label>
+            <input type="file" name="pengantar_rt_rw" id="{{ $prefix }}pengantar_rt_rw"
+                class="form-control" accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
+            <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
+            <div id="link_pengantar_rt_rw_lama" class="mt-2"></div>
+        </div>
 
-    {{-- Foto --}}
-    <div class="mb-3 col-md-6">
-        <label for="{{ $prefix }}foto" class="form-label">Foto <span class="text-danger">*</span></label>
-        <input type="file" name="foto" id="{{ $prefix }}foto" class="form-control"
-            accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
-        <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
-        <div id="link_foto_lama" class="mt-2"></div>
-    </div>
+        {{-- Foto --}}
+        <div class="mb-3 col-md-6">
+            <label for="{{ $prefix }}foto" class="form-label">Foto <span class="text-danger">*</span></label>
+            <input type="file" name="foto" id="{{ $prefix }}foto" class="form-control"
+                accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
+            <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
+            <div id="link_foto_lama" class="mt-2"></div>
+        </div>
 
-</div>
+    </div>
 
 </div>
 
@@ -344,57 +352,57 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-    
-       <script>
-document.addEventListener('DOMContentLoaded', function () {
-    function setupPasanganForm(prefix = '') {
-        const statusKawin = document.getElementById(prefix + 'status_kawin');
-        const jenisKelamin = document.getElementById(prefix + 'jenis_kelamin');
-        const formNamaPasangan = document.getElementById('formNamaPasangan');
-        const formJKPasangan = document.getElementById('formJenisKelaminPasanganDulu');
-        const inputJKPasangan = document.getElementById(prefix + 'jenis_kelamin_psgn_dulu');
-        const inputNamaPasangan = document.getElementById(prefix + 'nama_pasangan_dulu');
 
-        function updateForm() {
-            const status = statusKawin?.value;
-            const jk = jenisKelamin?.value;
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            function setupPasanganForm(prefix = '') {
+                const statusKawin = document.getElementById(prefix + 'status_kawin');
+                const jenisKelamin = document.getElementById(prefix + 'jenis_kelamin');
+                const formNamaPasangan = document.getElementById('formNamaPasangan');
+                const formJKPasangan = document.getElementById('formJenisKelaminPasanganDulu');
+                const inputJKPasangan = document.getElementById(prefix + 'jenis_kelamin_psgn_dulu');
+                const inputNamaPasangan = document.getElementById(prefix + 'nama_pasangan_dulu');
 
-            if (status === 'Cerai Hidup' || status === 'Cerai Mati') {
-                formNamaPasangan.style.display = 'block';
-                formJKPasangan.style.display = 'block';
-                inputJKPasangan.value = jk === 'Laki-laki' ? 'Perempuan' : jk === 'Perempuan' ? 'Laki-laki' : '';
-            } else {
-                formNamaPasangan.style.display = 'none';
-                formJKPasangan.style.display = 'none';
-                inputJKPasangan.value = '';
-                inputNamaPasangan.value = '';
+                function updateForm() {
+                    const status = statusKawin?.value;
+                    const jk = jenisKelamin?.value;
+
+                    if (status === 'Cerai Hidup' || status === 'Cerai Mati') {
+                        formNamaPasangan.style.display = 'block';
+                        formJKPasangan.style.display = 'block';
+                        inputJKPasangan.value = jk === 'Laki-laki' ? 'Perempuan' : jk === 'Perempuan' ?
+                            'Laki-laki' : '';
+                    } else {
+                        formNamaPasangan.style.display = 'none';
+                        formJKPasangan.style.display = 'none';
+                        inputJKPasangan.value = '';
+                        inputNamaPasangan.value = '';
+                    }
+                }
+
+                if (statusKawin && jenisKelamin) {
+                    statusKawin.addEventListener('change', updateForm);
+                    jenisKelamin.addEventListener('change', updateForm);
+                }
+
+                // Jalankan saat awal tampil
+                updateForm();
             }
-        }
 
-        if (statusKawin && jenisKelamin) {
-            statusKawin.addEventListener('change', updateForm);
-            jenisKelamin.addEventListener('change', updateForm);
-        }
+            // Saat modal Tambah tampil
+            const modalTambah = document.getElementById('modalTambahSKP');
+            modalTambah?.addEventListener('show.bs.modal', function() {
+                setupPasanganForm('');
+            });
 
-        // Jalankan saat awal tampil
-        updateForm();
-    }
-
-    // Saat modal Tambah tampil
-    const modalTambah = document.getElementById('modalTambahSKP');
-    modalTambah?.addEventListener('show.bs.modal', function () {
-        setupPasanganForm('');
-    });
-
-    // Saat modal Edit tampil
-    const modalEdit = document.getElementById('modalEditSKP');
-    modalEdit?.addEventListener('show.bs.modal', function () {
-        setupPasanganForm('edit_');
-    });
-});
-
+            // Saat modal Edit tampil
+            const modalEdit = document.getElementById('modalEditSKP');
+            modalEdit?.addEventListener('show.bs.modal', function() {
+                setupPasanganForm('edit_');
+            });
+        });
     </script>
-    
+
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -488,31 +496,31 @@ document.addEventListener('DOMContentLoaded', function () {
             // Ganti label & tombol
             // modal.find('#' + prefix + '.modal-title').text('Edit SKP');
             // modal.find('#' + prefix + 'button[type=submit]').text('Update');
-            
+
 
             modal.modal('show');
             const folder = 'skp';
 
-        const fileKtp = $(this).data('file_ktp');
-        const fileKk = $(this).data('file_kk');
-        const fileRtRw = $(this).data('file_pengantar_rt_rw');
-        const fileFoto = $(this).data('file_foto');
+            const fileKtp = $(this).data('file_ktp');
+            const fileKk = $(this).data('file_kk');
+            const fileRtRw = $(this).data('file_pengantar_rt_rw');
+            const fileFoto = $(this).data('file_foto');
 
-        const buildFileLink = (filename) => {
-            if (!filename) return '<span class="text-muted">Tidak ada file sebelumnya</span>';
-            const file = filename.split('/').pop();
-            return `<a href="/dokumen/${folder}/${file}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File Sebelumnya</a>`;
-        }
+            const buildFileLink = (filename) => {
+                if (!filename) return '<span class="text-muted">Tidak ada file sebelumnya</span>';
+                const file = filename.split('/').pop();
+                return `<a href="/dokumen/${folder}/${file}" target="_blank" class="btn btn-sm btn-outline-primary">Lihat File Sebelumnya</a>`;
+            }
 
-        modal.find('#link_ktp_lama').html(buildFileLink(fileKtp));
-        modal.find('#link_kk_lama').html(buildFileLink(fileKk));
-        modal.find('#link_pengantar_rt_rw_lama').html(buildFileLink(fileRtRw));
-        modal.find('#link_foto_lama').html(buildFileLink(fileFoto));
+            modal.find('#link_ktp_lama').html(buildFileLink(fileKtp));
+            modal.find('#link_kk_lama').html(buildFileLink(fileKk));
+            modal.find('#link_pengantar_rt_rw_lama').html(buildFileLink(fileRtRw));
+            modal.find('#link_foto_lama').html(buildFileLink(fileFoto));
 
 
         });
     </script>
-                  {{-- <script>
+    {{-- <script>
             $('#modalEditSKP').on('show.bs.modal', function (event) {
     const button = $(event.relatedTarget);
 

@@ -14,17 +14,62 @@ use Illuminate\Support\Facades\Auth;
 class SKUsahaController extends Controller
 {
     public function index()
-{
-    $user = auth()->user();
-    if ($user->role === 'Masyarakat') {
-        $sku = SkuModel::where('user_id', $user->id)->orderBy('created_at', 'desc')->get();
-        // dd("User ID: " . $user->id, $sku); // Untuk cek isi data
-    } else {
-        $sku = SkuModel::all();
-    }
+    {
+        $user = auth()->user();
 
-    return view('sku.index', compact('sku'));
-}
+        if ($user->role === 'Masyarakat') {
+            // Untuk user masyarakat: hanya data mereka sendiri
+            $skuBelumSelesai = SkuModel::whereNotIn('status', ['Selesai', 'Ditolak'])->get()
+                ->sort(function ($a, $b) {
+                    $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+                    $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+                    if ($aPrioritas === 0 && $bPrioritas === 0) {
+                        $aPrioritas = $a->status === 'Diajukan' ? 1 : 0;
+                        $bPrioritas = $b->status === 'Diajukan' ? 1 : 0;
+                    }
+                    return $bPrioritas <=> $aPrioritas ?: strtotime($b->created_at) <=> strtotime($a->created_at);
+                })
+                ->values();
+
+            $skuSelesai = SkuModel::where('status', 'Selesai')
+                ->orderBy('created_at', 'desc')->get();
+            // dd($skuSelesai);
+
+            $skuDitolak = SkuModel::with(['riwayat_sku'])->where('status', 'Ditolak')
+                ->orderBy('created_at', 'desc')->get();
+        } elseif ($user->role === 'Lurah') {
+            // Lurah: hanya lihat Diproses, Selesai, Ditolak
+            $skuBelumSelesai = SkuModel::where('status', 'Diproses')->orderBy('created_at', 'desc')->get();
+            $skuSelesai = SkuModel::where('status', 'Selesai')->orderBy('created_at', 'desc')->get();
+            $skuDitolak = SkuModel::where('status', 'Ditolak')->orderBy('created_at', 'desc')->get();
+        } else {
+            $skuBelumSelesai = SkuModel::whereNotIn('status', ['Selesai', 'Ditolak'])
+                ->get()
+                ->sort(function ($a, $b) {
+                    $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+                    $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+
+                    if ($aPrioritas === 0 && $bPrioritas === 0) {
+                        $aPrioritas = $a->status === 'Diajukan' ? 1 : 0;
+                        $bPrioritas = $b->status === 'Diajukan' ? 1 : 0;
+                    }
+
+                    return $bPrioritas <=> $aPrioritas ?: strtotime($b->created_at) <=> strtotime($a->created_at);
+                })
+                ->values();
+
+            $skuSelesai = SkuModel::where('status', 'Selesai')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $skuDitolak = SkuModel::with(['riwayat_sku'])
+                ->where('status', 'Ditolak')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
+        return view('sku.index', compact('skuBelumSelesai', 'skuSelesai', 'skuDitolak'));
+    }
 
     // Menyimpan pengajuan baru
     public function store(Request $request)
@@ -44,7 +89,6 @@ class SKUsahaController extends Controller
             'kelurahan' => 'required|string',
             'kecamatan' => 'required|string',
             'kota' => 'required|string',
-            'keterangan' => 'required|string',
             'foto_usaha' => 'required|file|mimes:jpg,jpeg,png',
             'pengantar_rt_rw' => 'required|file|mimes:jpg,jpeg,png,pdf',
             'kk' => 'required|file|mimes:jpg,jpeg,png,pdf',
@@ -71,15 +115,15 @@ class SKUsahaController extends Controller
                 'tanggal' => now()->toDateString(),
                 'waktu' => now(),
                 'status' => 'Diajukan',
-                'peninjau' => '-', // atau sesuaikan nama peninjau jika ada login user
+                'peninjau' => '-', 
                 'keterangan' => 'Surat diajukan oleh pemohon',
-                'surat_balasan' => null
+                'alasan' => null
             ]);
 
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         } catch (\Exception $e) {
-    dd($e->getMessage());
-}
+            dd($e->getMessage());
+        }
     }
 
     public function update(Request $request, $id)
@@ -104,10 +148,10 @@ class SKUsahaController extends Controller
                 'kota' => 'required|string',
                 'keterangan' => 'required|string',
                 'foto_usaha' => 'nullable|file|mimes:jpg,jpeg,png',
-            'pengantar_rt_rw' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-            'kk' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-            'ktp' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
-            'surat_pernyataan' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+                'pengantar_rt_rw' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+                'kk' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+                'ktp' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
+                'surat_pernyataan' => 'nullable|file|mimes:jpg,jpeg,png,pdf',
             ]);
 
             if ($request->hasFile('foto_usaha')) {
@@ -135,60 +179,83 @@ class SKUsahaController extends Controller
     }
 
     public function verifikasi($id)
-{
-    try {
-        $sku = SkuModel::findOrFail($id);
+    {
+        try {
+            $sku = SkuModel::findOrFail($id);
+            $user = Auth::user();
+
+            // ADMIN MEMPROSES
+            if (in_array($user->role, ['Admin', 'Sekretaris'])) {
+                if ($sku->status !== 'Diajukan') {
+                    return redirect()->back()->with('error', 'Surat tidak dalam status Diajukan.');
+                }
+
+                $sku->status = 'Diproses';
+                $sku->save();
+
+                RiwayatskuModel::create([
+                    'sku_id' => $sku->id,
+                    'tanggal' => now()->toDateString(),
+                    'waktu' => now(),
+                    'status' => 'Diproses',
+                    'peninjau' => $user->name ?? 'Admin',
+                    'keterangan' => 'Surat telah diverifikasi oleh Admin',
+                    'surat_balasan' => null,
+                ]);
+
+                return redirect()->route('sku.show', $sku->id)->with('success', 'Surat berhasil diverifikasi oleh Admin.');
+            }
+
+            // LURAH MENYELESAIKAN
+            elseif ($user->role === 'Lurah') {
+                if ($sku->status !== 'Diproses') {
+                    return redirect()->back()->with('error', 'Surat belum diproses oleh Admin.');
+                }
+
+                $sku->status = 'Selesai';
+                $sku->save();
+
+                RiwayatskuModel::create([
+                    'sku_id' => $sku->id,
+                    'tanggal' => now()->toDateString(),
+                    'waktu' => now(),
+                    'status' => 'Selesai',
+                     'peninjau' => $user->name ?? 'Lurah',
+                    'keterangan' => 'Surat telah disahkan oleh Lurah',
+                    'alasan' => 'Surat sudah selesai. Silahkan print surat atau datang ke kantor lurah',
+                ]);
+
+                return redirect()->route('sku.show', $sku->id)->with('success', 'Surat berhasil disahkan oleh Lurah.');
+            }
+
+            return redirect()->back()->with('error', 'Anda tidak memiliki akses verifikasi.');
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+        }
+    }
+
+    public function tolak(Request $request, $id)
+    {
+        $sku = SkuModel::with('riwayat_sku')->findOrFail($id);
         $user = Auth::user();
-
-        // ADMIN MEMPROSES
-         if (in_array($user->role, ['Admin', 'Sekretaris'])) {
-            if ($sku->status !== 'Diajukan') {
-                return redirect()->back()->with('error', 'Surat tidak dalam status Diajukan.');
-            }
-
-            $sku->status = 'Diproses';
+        if ($request->status === 'Ditolak') {
+            $sku->status = 'Ditolak';
             $sku->save();
 
             RiwayatskuModel::create([
                 'sku_id' => $sku->id,
-                'tanggal' => now()->toDateString(),
                 'waktu' => now(),
-                'status' => 'Diproses',
-                'peninjau' => $user->name ?? 'Admin',
-                'keterangan' => 'Surat telah diverifikasi oleh Admin',
-                'surat_balasan' => null,
+                'tanggal' => now()->toDateString(),
+                'status' => 'Ditolak',
+                'peninjau' => $user->role ?? '-',
+                'keterangan' => 'Surat ditolak oleh Admin',
+                'alasan' => $request->alasan,
             ]);
 
-            return redirect()->route('sku.show', $sku->id)->with('success', 'Surat berhasil diverifikasi oleh Admin.');
+            return redirect()->route('sku.show', $sku->id)->with('success', 'Surat berhasil ditolak.');
         }
+    }
 
-        // LURAH MENYELESAIKAN
-        elseif ($user->role === 'Lurah') {
-            if ($sku->status !== 'Diproses') {
-                return redirect()->back()->with('error', 'Surat belum diproses oleh Admin.');
-            }
-
-            $sku->status = 'Selesai';
-            $sku->save();
-
-            RiwayatskuModel::create([
-                'sku_id' => $sku->id,
-                'tanggal' => now()->toDateString(),
-                'waktu' => now(),
-                'status' => 'Selesai',
-                'peninjau' => $user->name ?? 'Lurah',
-                'keterangan' => 'Surat telah disahkan oleh Lurah',
-                'surat_balasan' => null,
-            ]);
-
-            return redirect()->route('sku.show', $sku->id)->with('success', 'Surat berhasil disahkan oleh Lurah.');
-        }
-
-        return redirect()->back()->with('error', 'Anda tidak memiliki akses verifikasi.');
-    } catch (\Exception $e) {
-    dd($e->getMessage());
-}
-}
 
     public function show($id)
     {
@@ -196,25 +263,25 @@ class SKUsahaController extends Controller
         return view('sku.detail', compact('sku'));
     }
 
-    
+
     public function cetak($id)
     {
         // $sku = SkuModel::findOrFail($id);
 
         // // Logika untuk generate surat, bisa return view khusus cetak
         // return view('sku.cetak', compact('sku'));
-         $sku = SkuModel::findOrFail($id);
+        $sku = SkuModel::findOrFail($id);
 
-    if ($sku->status !== 'Selesai') {
-        abort(403, 'Surat hanya bisa dicetak jika statusnya Selesai.');
+        if ($sku->status !== 'Selesai') {
+            abort(403, 'Surat hanya bisa dicetak jika statusnya Selesai.');
+        }
+
+        $pdf = Pdf::loadView('sku.cetak', compact('sku'));
+
+        return $pdf->stream("SKU-{$sku->nama}.pdf"); // akan tampil di tab baru
     }
 
-    $pdf = Pdf::loadView('sku.cetak', compact('sku'));
 
-    return $pdf->stream("SKU-{$sku->nama}.pdf"); // akan tampil di tab baru
-    }
-
-    
     public function destroy($id)
     {
         // User::findOrFail($id)->delete();
@@ -229,12 +296,11 @@ class SKUsahaController extends Controller
                 'title' => 'Delete Surat Keterangan Usaha',
                 'text' => 'Data berhasil dihapus!'
             ]);
-
         } catch (Exception $e) {
             return redirect()->back()->with('alert', [
                 'type' => 'error',
                 'title' => 'Delete Pengajuan',
-                'text' => $e -> getMessage()
+                'text' => $e->getMessage()
             ]);
         }
     }

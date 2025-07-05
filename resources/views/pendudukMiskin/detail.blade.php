@@ -48,6 +48,7 @@
             'Nama Kepala Keluarga' => $pendudukMiskin->nama_kepala_keluarga ?? 'Tidak punya kepala keluarga / cerai',
             'Jumlah Anggota Keluarga' => $pendudukMiskin->jml_agt_keluarga . ' Orang',
             'Kelompok PKH' => $pendudukMiskin->kelompokPKH,
+            'Status Penduduk' => $pendudukMiskin->status,
         ] as $label => $value)
             <div class="row mb-2 mx-auto">
                 <div class="col-5 text-start fw-semibold">{{ $label }}</div>

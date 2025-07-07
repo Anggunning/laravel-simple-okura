@@ -14,7 +14,7 @@
     </div>
 
     <div class="title">
-        <h4>Peta Persebaran Penduduk Miskin</h4>
+        {{-- <h4>Peta Persebaran Penduduk Miskin</h4> --}}
     </div>
 
     <div class="row">
@@ -88,11 +88,14 @@ const fotoUrl = filename ? `/dokumen/pendudukMiskin/${filename}` : null;
 const popupContent = `
     <div style="width: 250px; font-size: 14px; font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif">
         <strong style="font-size: 16px; ">${item.nama}</strong><br>
-        ${fotoUrl ? `<img src="${fotoUrl}" alt="Foto Rumah" style="width: 100%; height: auto; margin: 6px 0; border-radius: 8px; box-shadow: 0 0 4px rgba(0,0,0,0.3);">` : '<span class="text-muted">Tidak ada foto</span>'}
+        ${fotoUrl ?  `<img src="${fotoUrl}" alt="Foto Rumah" style="width: 100%; height: auto; margin: 6px 0; border-radius: 8px; box-shadow: 0 0 4px rgba(0,0,0,0.3);">` : '<span class="text-muted">Tidak ada foto</span>'}
         <p style="margin: 0;"><strong>Alamat:</strong> ${item.alamat}</p>
         <p style="margin: 0;"><strong>Kepala Keluarga:</strong> ${item.nama_kepala_keluarga}</p>
         <p style="margin: 0;"><strong>Jumlah Anggota Keluarga:</strong> ${item.jml_agt_keluarga}</p>
         <p style="margin: 0;"><strong>Kelompok:</strong> ${item.kelompokPKH}</p>
+        <div style="margin-top: 8px;">
+            <a href="/pendudukMiskin/${item.id}" class="btn btn-sm btn-primary" style="text-decoration: none; color: white;">View More</a>
+        </div>
     </div>
 `;
 
@@ -142,4 +145,11 @@ markers.push(marker);
             legend.addTo(map);
         });
     </script>
+
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
 @endpush

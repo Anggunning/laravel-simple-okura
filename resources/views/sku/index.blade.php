@@ -62,12 +62,12 @@
                                     <table class="table table-hover table-bordered" id="skuTableBelumSelesai">
                                         <thead>
                                             <tr>
-                                                <th>No</th>
-                                                <th>Tanggal Pengajuan</th>
+                                                <th>No</th>                                             
                                                 <th>Nama Pemohon</th>
                                                 <th>Jenis Usaha</th>
                                                 <th>Alamat Usaha</th>
                                                 <th>Tujuan Pengajuan</th>
+                                                <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
                                                 <th class="text-center align-middle">Aksi</th>
                                             </tr>
@@ -87,12 +87,13 @@
                                                     @endphp
                                                     <tr class="{{ $highlightMerah ? 'table-danger' : '' }}">
                                                     <td></td>
-                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>
+                                                    
                                                     <td>{{ $item->nama }}</td>
                                                     <td>{{ $item->jenis_usaha }}</td>
                                                     <td>{{ $item->tempat_usaha }}</td>
                                                     <td>{{ $item->tujuan }}</td>
-                                                    <td>
+                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>
+                                                    <td class="text-center align-middle">
                                                         @php
                                                             $badgeClass = match ($item->status) {
                                                                 'Diajukan' => 'bg-secondary text-dark',
@@ -137,11 +138,12 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Tanggal Pengajuan</th>
+                                                
                                                 <th>Nama Pemohon</th>
                                                 <th>Jenis Usaha</th>
                                                 <th>Tujuan Pengajuan</th>
                                                 <th>Keterangan</th>
+                                                <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
                                                 <th class="text-center align-middle">Aksi</th>
                                             </tr>
@@ -161,12 +163,11 @@
                                                 <tr class="{{ $highlightMerah ? 'baris-lewat' : '' }}">
 
                                                     <td></td>
-                                                    <td>
-                                                        {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                    </td>
+                                                    
                                                     <td>{{ $item->nama }}</td>
                                                     <td>{{ $item->jenis_usaha }}</td>
                                                     <td>{{ $item->tujuan }}</td>
+                                                    
                                                     @php
                                                         $riwayatSelesai = $item->riwayat_sku
                                                             ->where('status', 'Selesai')
@@ -174,6 +175,9 @@
                                                     @endphp
                                                     <td>{{ $riwayatSelesai?->alasan ?? '-' }}</td>
                                                     <td>
+                                                        {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                                                    </td>
+                                                    <td class="text-center align-middle">
                                                         @php
                                                             $badgeClass = match ($item->status) {
                                                                 'Diajukan' => 'bg-secondary text-dark',
@@ -218,11 +222,12 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                <th>Tanggal Pengajuan</th>
+                                               
                                                 <th>Nama Pemohon</th>
                                                 <th>Jenis Usaha</th>
                                                 <th>Tujuan Pengajuan</th>
                                                 <th>Alasan Penolakan</th>
+                                                <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
                                                 <th class="text-center align-middle">Aksi</th>
                                             </tr>
@@ -235,18 +240,20 @@
                                             @if ($user->role !== 'Masyarakat' || $item->user_id === $user->id)
                                                 <tr>
                                                     <td></td>
-                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                    </td>
+                                                    
                                                     <td>{{ $item->nama }}</td>
                                                     <td>{{ $item->jenis_usaha }}</td>
                                                     <td>{{ $item->tujuan }}</td>
+                                                    
                                                     @php
                                                         $riwayatDitolak = $item->riwayat_sku
                                                             ->where('status', 'Ditolak')
                                                             ->last();
                                                         @endphp
                                                         <td>{{ $riwayatDitolak?->alasan ?? '-' }}</td>
-                                                    <td>
+                                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                                                    </td>
+                                                    <td class="text-center align-middle">
                                                         @php
                                                             $badgeClass = match ($item->status) {
                                                                 'Diajukan' => 'bg-secondary text-dark',
@@ -294,7 +301,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form action="{{ route('sku.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="formPengajuanSKU" action="{{ route('sku.store') }}" method="POST" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTambahLabel">Tambah Pengajuan Surat</h5>
@@ -374,9 +381,26 @@
                             <label for="alamat" class="form-label">Alamat
                                 <span class="text-danger">*</span>
                             </label>
-                            <textarea name="alamat" class="form-control" rows="2" required placeholder="Masukkan Alamat"
+                            <textarea name="alamat" class="form-control" rows="1" required placeholder="Masukkan Alamat"
                                 oninvalid="this.setCustomValidity('Silakan isi alamat')" oninput="this.setCustomValidity('')"></textarea>
                         </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="rt" class="form-label">RT <span class="text-danger">*</span></label>
+                                <input type="text" name="rt" id="rt" class="form-control" required
+                                    maxlength="3" pattern="^\d{3}$" placeholder="Contoh: 001"
+                                    oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 001')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="rw" class="form-label">RW <span class="text-danger">*</span></label>
+                                <input type="text" name="rw" id="rw" class="form-control" required
+                                    maxlength="3" pattern="^\d{3}$" placeholder="Contoh: 002"
+                                    oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 002')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+
                         <div class="mb-3">
                             <label for="pekerjaan" class="form-label">Pekerjaan
                                 <span class="text-danger">*</span>
@@ -433,9 +457,9 @@
                                 oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
-                            <label for="keterangan" class="form-label">Keterangan</label></label>
-                            <textarea name="keterangan" class="form-control" rows="3" required placeholder="Masukkan Keterangan(optional)">
-                            </textarea>
+                            <label for="keterangan" class="form-label">Keterangan </label>
+                            <textarea name="keterangan" class="form-control" rows="2"  
+                            placeholder="Masukkan Keterangan (optional)"></textarea>
                         </div>
                         <div class="mb-3">
                             <label for="foto_usaha" class="form-label">Foto Usaha <span
@@ -494,6 +518,7 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                        <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai Draf</button>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>
@@ -564,6 +589,150 @@
             inisialisasiDataTable('#skuTableDitolak');
         });
     </script>
+
+<script>
+    $(document).ready(function () {
+        // Setup CSRF
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        // Ambil draf saat modal SKU dibuka
+        $('#modalTambahPengajuan').on('shown.bs.modal', function () {
+            $.get("{{ route('sku.getDraf') }}", function (data) {
+                if (data) {
+                    const form = $('#formPengajuanSKU');
+
+                    form.find('input[name="nama"]').val(data.nama);
+                    form.find('input[name="tujuan"]').val(data.tujuan);
+                    form.find('input[name="pekerjaan"]').val(data.pekerjaan);
+                    form.find('select[name="jenis_kelamin"]').val(data.jenis_kelamin);
+                    form.find('input[name="tempatLahir"]').val(data.tempatLahir);
+                    form.find('input[name="tanggalLahir"]').val(data.tanggalLahir);
+                    form.find('select[name="agama"]').val(data.agama);
+                    form.find('input[name="nik"]').val(data.nik);
+                    form.find('textarea[name="alamat"]').val(data.alamat);
+                    form.find('input[name="rt"]').val(data.rt);
+                    form.find('input[name="rw"]').val(data.rw);
+                    form.find('textarea[name="keterangan"]').val(data.keterangan);
+                    form.find('input[name="jenis_usaha"]').val(data.jenis_usaha);
+                    form.find('input[name="tempat_usaha"]').val(data.tempat_usaha);
+                    form.find('input[name="kelurahan"]').val(data.kelurahan);
+                    form.find('input[name="kecamatan"]').val(data.kecamatan);
+                    form.find('input[name="kota"]').val(data.kota);
+
+                    // File preview
+                    ['foto_usaha', 'ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function (field) {
+                        if (data[field]) {
+                            const preview = `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                            form.find(`input[name="${field}"]`).after(preview);
+                        }
+                    });
+                }
+            }).fail(function () {
+                console.warn("❌ Tidak bisa ambil data draf.");
+            });
+        });
+
+        // Simpan draf
+        $('#btnSimpanDraf').on('click', function () {
+            const form = $('#formPengajuanSKU')[0];
+            const formData = new FormData(form);
+
+            $.ajax({
+                url: "{{ route('sku.storeDraf') }}",
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    alert('✅ Draf berhasil disimpan!');
+                    $('#modalTambahPengajuan').modal('hide');
+
+                    // Cleanup modal state
+                    $('#modalTambahPengajuan').on('hidden.bs.modal', function () {
+                        $('body').removeClass('modal-open').css('overflow', '');
+                        $('.modal-backdrop').remove();
+                    });
+                },
+                error: function (xhr) {
+                    let msg = '❌ Gagal menyimpan draf.';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        msg += "\n" + xhr.responseJSON.error;
+                    }
+                    alert(msg);
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+@if (isset($drafToLoad))
+<script>
+    $(document).ready(function () {
+        const draf = @json($drafToLoad);
+        const form = $('#formPengajuanSKU');
+
+        form.find('input[name="nama"]').val(draf.nama);
+        form.find('input[name="tujuan"]').val(draf.tujuan);
+        form.find('input[name="pekerjaan"]').val(draf.pekerjaan);
+        form.find('select[name="jenis_kelamin"]').val(draf.jenis_kelamin);
+        form.find('input[name="tempatLahir"]').val(draf.tempatLahir);
+        form.find('input[name="tanggalLahir"]').val(draf.tanggalLahir);
+        form.find('select[name="agama"]').val(draf.agama);
+        form.find('input[name="nik"]').val(draf.nik);
+        form.find('textarea[name="alamat"]').val(draf.alamat);
+        form.find('input[name="rt"]').val(draf.rt);
+        form.find('input[name="rw"]').val(draf.rw);
+        form.find('textarea[name="keterangan"]').val(draf.keterangan);
+        form.find('input[name="jenis_usaha"]').val(draf.jenis_usaha);
+        form.find('input[name="tempat_usaha"]').val(draf.tempat_usaha);
+        form.find('input[name="kelurahan"]').val(draf.kelurahan);
+        form.find('input[name="kecamatan"]').val(draf.kecamatan);
+        form.find('input[name="kota"]').val(draf.kota);
+
+        ['foto_usaha', 'ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function (field) {
+            if (draf[field]) {
+                const preview = `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                form.find(`input[name="${field}"]`).after(preview);
+            }
+        });
+
+        $('#modalTambahPengajuan').modal('show');
+    });
+</script>
+@endif
+
+
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('formPengajuanSKU');
+
+        form.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Yakin mau menyimpan?',
+                text: 'Pastikan semua data sudah benar.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#d33',       // warna merah (seperti tombol "Tolak")
+                cancelButtonColor: '#6c757d',     // abu Bootstrap
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
+
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>

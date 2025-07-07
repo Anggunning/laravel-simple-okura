@@ -30,6 +30,8 @@ class SkpSeeder extends Seeder
                 'status' => 'Diproses',
                 'keterangan' => 'Permohonan Pernikahan.',
                 'alamat' => 'Jl. Nelayan, Rumbai Pesisir, Riau',
+                'rt' => '004',
+                'rw' => '005',
                 'status_kawin' => 'Cerai Mati',
                 'ktp' => 'data1.jpg',
                 'kk' => 'data1.jpg',
@@ -54,6 +56,8 @@ class SkpSeeder extends Seeder
                 'status' => 'Diajukan',
                 'keterangan' => 'Permohonan Pernikahan.',
                 'alamat' => 'Jl. Teratai, Rumbai Pesisir, Riau',
+                'rt' => '004',
+                'rw' => '005',
                 'status_kawin' => 'Cerai Hidup',
                 'ktp' => 'data2.jpg',
                 'kk' => 'data2.jpg',
@@ -74,10 +78,12 @@ class SkpSeeder extends Seeder
                 'kewarganegaraan' => 'Indonesia',
                 'pekerjaan' => 'Mahasiswa',
                 'agama' => 'Kristen',
-                'alasan' => 'Data KK tidak valid',
+                'alasan' => '-',
                 'status' => 'Selesai',
                 'keterangan' => 'Permohonan Pernikahan.',
                 'alamat' => 'Jl. Pelajar, Rumbai Pesisir, Riau',
+                'rt' => '004',
+                'rw' => '005',
                 'status_kawin' => 'Belum Pernah Menikah',
                 'ktp' => 'data3.jpg',
                 'kk' => 'data3.jpg',
@@ -91,7 +97,7 @@ class SkpSeeder extends Seeder
                 'id' => '8881c70e-d066-09ee-8bb8-744ca1759403',
                 'user_id' => '585f56ca-ecd1-11ee-95e5-2a57132791db',
                 'nama' => 'Andi',
-                'nik' => '3456789012345678',
+                'nik' => '3456709012345678',
                 'jenis_kelamin' => 'Laki-laki',
                 'tempat_lahir' => 'Rumbai Pesisir',
                 'tanggal_lahir' => '1998-12-05',
@@ -102,6 +108,8 @@ class SkpSeeder extends Seeder
                 'status' => 'Ditolak',
                 'keterangan' => 'Permohonan Pernikahan.',
                 'alamat' => 'Jl. Pelajar, Rumbai Pesisir, Riau',
+                'rt' => '004',
+                'rw' => '005',
                 'status_kawin' => 'Belum Pernah Menikah',
                 'ktp' => 'data3.jpg',
                 'kk' => 'data3.jpg',
@@ -110,7 +118,8 @@ class SkpSeeder extends Seeder
                 'created_at' => now(),
                 'updated_at' => now(),
                 'status_perkawinan_id' => '7174b28a-d066-11ee-8bb8-744ca1759436',
-        ];
+        ]
+    ];
 
         DB::table('skp')->insert($data);
     }

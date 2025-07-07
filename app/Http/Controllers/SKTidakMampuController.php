@@ -12,19 +12,31 @@ use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\RiwayatsktmModel;
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
+
 use App\Models\RiwayatPengajuanModel;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Response;
 
 class SKTidakMampuController extends Controller
 {
-    public function index()
-    {
+   public function index(Request $request)
+{
+    
         $user = auth()->user();
+        $drafToLoad = null;
+
+    if ($request->has('draf')) {
+    $drafToLoad = SktmModel::where('id', $request->get('draf'))
+        ->where('status', 'draf')
+        ->where('user_id', $user->id)
+        ->first();
+}
+
+
 
         if ($user->role === 'Masyarakat') {
             // Untuk user masyarakat: hanya data mereka sendiri
-            $sktmBelumSelesai = SktmModel::whereNotIn('status', ['Selesai', 'Ditolak'])
+            $sktmBelumSelesai = SktmModel::whereNotIn('status', ['Selesai', 'Ditolak', 'draf'])
                 ->get()
                 ->sort(function ($a, $b) {
                     $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
@@ -41,7 +53,7 @@ class SKTidakMampuController extends Controller
 
 
             $sktmSelesai = SktmModel::with(['riwayat_sktm'])
-            ->where('status', 'Selesai')
+                ->where('status', 'Selesai')
                 ->orderBy('created_at', 'desc')
                 ->get();
             // dd($sktmSelesai);
@@ -49,6 +61,7 @@ class SKTidakMampuController extends Controller
             $sktmDitolak = SktmModel::with(['riwayat_sktm'])->where('status', 'Ditolak')
                 ->orderBy('created_at', 'desc')
                 ->get();
+                
         } elseif ($user->role === 'Lurah') {
             // Lurah: hanya lihat Diproses, Selesai, Ditolak
             $sktmBelumSelesai = SktmModel::where('status', 'Diproses')->orderBy('created_at', 'desc')->get();
@@ -81,7 +94,7 @@ class SKTidakMampuController extends Controller
                 ->get();
         }
 
-        return view('sktm.index', compact('sktmBelumSelesai', 'sktmSelesai', 'sktmDitolak'));
+        return view('sktm.index', compact('sktmBelumSelesai', 'sktmSelesai', 'sktmDitolak','drafToLoad'));
     }
     public function store(Request $request)
     {
@@ -95,6 +108,8 @@ class SKTidakMampuController extends Controller
             'nik' => 'required|digits:16',
             'alamat' => 'required',
             'pekerjaan' => 'required',
+            'rt' => 'required|max:3',
+            'rw' => 'required|max:3',
             'pengantar_rt_rw' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'kk' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -137,10 +152,12 @@ class SKTidakMampuController extends Controller
     }
 
 
-    
+
     public function storeDraf(Request $request)
     {
         try {
+            \Log::info('✅ Request masuk ke storeDraf:', $request->all());
+
             $userId = auth()->id();
 
             $draf = SktmModel::updateOrCreate(
@@ -159,7 +176,6 @@ class SKTidakMampuController extends Controller
 
             return response()->json(['success' => true]);
         } catch (\Exception $e) {
-            // Debug log
             \Log::error('❌ storeDraf error: ' . $e->getMessage());
             return response()->json([
                 'success' => false,
@@ -169,11 +185,25 @@ class SKTidakMampuController extends Controller
     }
 
 
+
+
     public function getDraf()
     {
-        $draf = SktmModel::where('user_id', auth()->id())->where('status', 'draf')->first();
-        return response()->json($draf);
+        $draf = SktmModel::where('status', 'draf')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
+        return view(
+            'dashboard.sktm-draf',
+            [
+                'draf' => $draf,
+                'jenis_surat' => 'Surat Keterangan Tidak Mampu'
+            ]
+        );
     }
+
+
 
 
     public function previewDrafFile($field)
@@ -194,6 +224,7 @@ class SKTidakMampuController extends Controller
             'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
         ]);
     }
+
 
 
 

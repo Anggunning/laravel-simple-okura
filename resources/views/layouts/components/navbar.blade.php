@@ -16,6 +16,7 @@
         <!--Notification Menu-->
         
         <!-- User Menu-->
+        @if(Auth::check())
         <li class="dropdown"><a class="app-nav__item" href="#" data-bs-toggle="dropdown" aria-label="Open Profile Menu"><i class="bi bi-person fs-4"></i></a>
           <ul class="dropdown-menu settings-menu dropdown-menu-right">
             
@@ -29,5 +30,6 @@
             </li>
           </ul>
         </li>
+        @endif
       </ul>
     </header>

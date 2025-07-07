@@ -25,6 +25,8 @@ class OrangTuaSeeder extends Seeder
                 'pekerjaan_ayah' => 'Petani',
                 'agama_ayah' => 'Islam',
                 'alamat_ayah' => 'Jl. Nelayan, Rumbai Pesisir, Riau',
+                'rt_ayah' => '004',
+                'rw_ayah' => '005',
 
                 'nama_ibu' => 'Sri Wahyuni',
                 'nik_ibu' => '2222222222222222',
@@ -34,7 +36,8 @@ class OrangTuaSeeder extends Seeder
                 'pekerjaan_ibu' => 'Ibu Rumah Tangga',
                 'agama_ibu' => 'Islam',
                 'alamat_ibu' => 'Jl. Nelayan, Rumbai Pesisir, Riau',
-
+                'rt_ibu' => '004',
+                'rw_ibu' => '005',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -49,6 +52,8 @@ class OrangTuaSeeder extends Seeder
                 'pekerjaan_ayah' => 'Nelayan',
                 'agama_ayah' => 'Islam',
                 'alamat_ayah' => 'Jl. Teratai, Rumbai Pesisir, Riau',
+                'rt_ayah' => '004',
+                'rw_ayah' => '005',
 
                 'nama_ibu' => 'Murniati',
                 'nik_ibu' => '4444444444444444',
@@ -58,7 +63,8 @@ class OrangTuaSeeder extends Seeder
                 'pekerjaan_ibu' => 'Ibu Rumah Tangga',
                 'agama_ibu' => 'Islam',
                 'alamat_ibu' => 'Jl. Teratai, Rumbai Pesisir, Riau',
-
+                'rt_ibu' => '004',
+                'rw_ibu' => '005',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
@@ -73,6 +79,8 @@ class OrangTuaSeeder extends Seeder
                 'pekerjaan_ayah' => 'Guru',
                 'agama_ayah' => 'Kristen',
                 'alamat_ayah' => 'Jl. Pelajar, Rumbai Pesisir, Riau',
+                'rt_ayah' => '004',
+                'rw_ayah' => '005',
 
                 'nama_ibu' => 'Maria Magdalena',
                 'nik_ibu' => '6666666666666666',
@@ -82,10 +90,39 @@ class OrangTuaSeeder extends Seeder
                 'pekerjaan_ibu' => 'Ibu Rumah Tangga',
                 'agama_ibu' => 'Kristen',
                 'alamat_ibu' => 'Jl. Pelajar, Rumbai Pesisir, Riau',
-
+                'rt_ibu' => '004',
+                'rw_ibu' => '005',
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
+             [
+                'id' => '1191a333-d066-11ee-8bb8-744ca1759403',
+                'skp_id' => '8881c70e-d066-09ee-8bb8-744ca1759403', // Andi Gunawan
+                'nama_ayah' => 'Bambang',
+                'nik_ayah' => '5511555555555555',
+                'tempat_lahir_ayah' => 'Rumbai Pesisir',
+                'tanggal_lahir_ayah' => '1963-07-10',
+                'kewarganegaraan_ayah' => 'Indonesia',
+                'pekerjaan_ayah' => 'Guru',
+                'agama_ayah' => 'Kristen',
+                'alamat_ayah' => 'Jl. Pelajar, Rumbai Pesisir, Riau',
+                'rt_ayah' => '004',
+                'rw_ayah' => '005',
+
+                'nama_ibu' => 'Rina',
+                'nik_ibu' => '6666336666666666',
+                'tempat_lahir_ibu' => 'Rumbai Pesisir',
+                'tanggal_lahir_ibu' => '1967-11-02',
+                'kewarganegaraan_ibu' => 'Indonesia',
+                'pekerjaan_ibu' => 'Ibu Rumah Tangga',
+                'agama_ibu' => 'Kristen',
+                'alamat_ibu' => 'Jl. Pelajar, Rumbai Pesisir, Riau',
+                'rt_ibu' => '004',
+                'rw_ibu' => '005',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ],
+            
         ]);
     }
 }

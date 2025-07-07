@@ -38,15 +38,8 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Route::get('/dashboard', function () {
-//     return view('dashboard'); // ganti sesuai nama view
-// })->middleware('auth');
-// Route::get('dashboard', function () {
-//     return view('dashboard');
-// });
-// Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-// routes/web.php ✅ BENAR
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
+
 // Route::get('/dokumen/sktm/{tipe}/{filename}', [DokumenSKTMController::class, 'view'])
 //     ->middleware('auth')
 //     ->name('dokumen.sktm.view');
@@ -58,14 +51,13 @@ Route::get('/sktm/{id}', [SKTidakMampuController::class, 'show'])->name('sktm.sh
 Route::post('/sktm/{id}/verifikasi', [SKTidakMampuController::class, 'verifikasi'])->name('sktm.verifikasi');
 Route::post('/sktm/{id}/tolak', [SKTidakMampuController::class, 'tolak'])->name('sktm.tolak');
 Route::get('/sktm/{id}/cetak', [SKTidakMampuController::class, 'cetak'])->name('sktm.cetak');
-Route::post('/sktm/draf', [SKTidakMampuController::class, 'storeDraf'])->name('sktm.draf.store');
-Route::get('/sktm/draf', [SKTidakMampuController::class, 'getDraf'])->name('sktm.draf.get');
+Route::post('/sktm/draf', [SKTidakMampuController::class, 'storeDraf'])->name('sktm.storeDraf');
 Route::get('/draf/preview/{field}', [SKTidakMampuController::class, 'previewDrafFile'])->name('draf.preview');
-
-// Route::get('/sktm/cetak/{id}', [SKTidakMampuController::class, 'cetak'])->name('sktm.cetak');
+Route::get('/sktm/draf', [SKTidakMampuController::class, 'getDraf'])->name('sktm.getDraf');
 
 Route::delete('/sktm/destroy/{id}', [SKTidakMampuController::class, 'destroy'])->name('sktm.destroy');
 Route::put('/sktm/update{id}', [SKTidakMampuController::class, 'update'])->name('sktm.update');
+
 
 Route::get('/sk_usaha', [SKUsahaController::class, 'index'])->name('sku.index')->middleware('auth');
 Route::post('/sku/store', [SKUsahaController::class, 'store'])->name('sku.store');
@@ -75,6 +67,9 @@ Route::post('/sku/{id}/tolak', [SKUsahaController::class, 'tolak'])->name('sku.t
 Route::get('/sku/{id}/cetak', [SKUsahaController::class, 'cetak'])->name('sku.cetak');
 Route::delete('/sku/destroy/{id}', [SKUsahaController::class, 'destroy'])->name('sku.destroy');
 Route::put('/sku/update{id}', [SKUsahaController::class, 'update'])->name('sku.update');
+Route::post('/sku/draf', [SKUsahaController::class, 'storeDraf'])->name('sku.storeDraf');
+Route::get('/draf/preview/{field}', [SKUsahaController::class, 'previewDrafFile'])->name('draf.preview');
+Route::get('/sku/draf', [SKUsahaController::class, 'getDraf'])->name('sku.getDraf');
 
 
 Route::get('/sk_perkawinan', [SKPerkawinanController::class, 'index'])->name('skp.index')->middleware('auth');
@@ -82,6 +77,7 @@ Route::post('/skp/store', [SKPerkawinanController::class, 'store'])->name('skp.s
 Route::get('/skp/{id}', [SKPerkawinanController::class, 'show'])->name('skp.show');
 Route::post('/skp/{id}/verifikasi', [SKPerkawinanController::class, 'verifikasi'])->name('skp.verifikasi');
 Route::get('/skp/{id}/cetak', [SKPerkawinanController::class, 'cetak'])->name('skp.cetak');
+Route::post('/skp/{id}/tolak', [SKPerkawinanController::class, 'tolak'])->name('skp.tolak');
 Route::delete('/skp/destroy/{id}', [SKPerkawinanController::class, 'destroy'])->name('skp.destroy');
 // Route::put('/skp/update{id}', [SKPerkawinanController::class, 'update'])->name('skp.update');
 Route::put('/skp/{id}', [SKPerkawinanController::class, 'update'])->name('skp.update');
@@ -89,7 +85,7 @@ Route::put('/skp/{id}', [SKPerkawinanController::class, 'update'])->name('skp.up
 
 // Route::get('/penduduk_miskin', [PendudukMiskinController::class, 'index'])->name('pendudukMiskin.penduduk_miskin');
 // Route::post('/pendudukMiskin/store', [PendudukMiskinController::class, 'store'])->name('pendudukMiskin.store');
-Route::middleware(['auth', 'role:Admin'])->group(function () {
+Route::middleware(['auth', 'role:Admin,Lurah,Sekretaris'])->group(function () {
     Route::get('/penduduk_miskin', [PendudukMiskinController::class, 'index'])->name('pendudukMiskin.index');
     Route::post('/pendudukMiskin/store', [PendudukMiskinController::class, 'store'])->name('pendudukMiskin.store');
 Route::get('/pendudukMiskin/{id}', [PendudukMiskinController::class, 'show'])->name('pendudukMiskin.show');

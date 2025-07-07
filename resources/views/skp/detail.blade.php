@@ -53,45 +53,74 @@
                                         'd F Y',
                                     );
                                 @endphp
-
+                                @php
+                                    $rtRw =
+                                        $skp->rt && $skp->rw
+                                            ? 'RT.' .
+                                                str_pad($skp->rt, 3, '0', STR_PAD_LEFT) .
+                                                ' / RW.' .
+                                                str_pad($skp->rw, 3, '0', STR_PAD_LEFT)
+                                            : '-';
+                                @endphp
                                 <!-- DATA PEMOHON -->
                                 <h5 class="fw-bold mb-3">Data Pemohon</h5>
-                                @foreach ([
-            'Nama Pemohon' => $skp->nama,
-            'NIK' => $skp->nik,
-            'Jenis Kelamin' => $skp->jenis_kelamin,
-            'Tempat, Tanggal Lahir' => $skp->tempat_lahir . ', ' . $tanggalLahir,
-            'Agama' => $skp->agama,
-            'Alamat' => $skp->alamat,
-            'Kewarganegaraan' => $skp->kewarganegaraan,
-            'Pekerjaan' => $skp->pekerjaan,
-            'Status Perkawinan' => $skp->statusPerkawinan?->status_kawin,
-            'Keterangan' => $skp->keterangan,
-            'Tanggal Pengajuan' => $tanggalPengajuan,
-            'Status' => ucfirst($skp->status),
-        ] as $label => $value)
-                                    <div class="row mb-2">
-                                        <div class="col-sm-4 fw-bold">{{ $label }}</div>
-                                        <div class="col-sm-8">: {{ $value }}</div>
-                                    </div>
-                                @endforeach
+                                <br>
+                               @foreach ([
+    'Nama Pemohon' => $skp->nama,
+    'NIK' => $skp->nik,
+    'Jenis Kelamin' => $skp->jenis_kelamin,
+    'Tempat, Tanggal Lahir' => $skp->tempat_lahir . ', ' . $tanggalLahir,
+    'Agama' => $skp->agama,
+    'Alamat' => $skp->alamat . ', ' . $rtRw,
+    'Kewarganegaraan' => $skp->kewarganegaraan,
+    'Pekerjaan' => $skp->pekerjaan,
+    'Status Perkawinan' => $skp->statusPerkawinan?->status_kawin,
+    '__PASANGAN__' => '', // placeholder
+    'Keterangan' => $skp->keterangan,
+    'Tanggal Pengajuan' => $tanggalPengajuan,
+    'Status' => ucfirst($skp->status),
+] as $label => $value)
 
-                                @if (in_array($skp->statusPerkawinan?->status_kawin, ['Cerai Hidup', 'Cerai Mati']))
-                                    <div class="row mb-2">
-                                        <div class="col-sm-4 fw-bold">Nama Pasangan Sebelumnya</div>
-                                        <div class="col-sm-8">: {{ $skp->statusPerkawinan->nama_pasangan_dulu ?? '-' }}
-                                        </div>
-                                    </div>
-                                    <div class="row mb-2">
-                                        <div class="col-sm-4 fw-bold">Jenis Kelamin Pasangan Sebelumnya</div>
-                                        <div class="col-sm-8">:
-                                            {{ $skp->statusPerkawinan->jenis_kelamin_psgn_dulu ?? '-' }}</div>
-                                    </div>
-                                @endif
+    @if ($label === '__PASANGAN__' && in_array($skp->statusPerkawinan?->status_kawin, ['Cerai Hidup', 'Cerai Mati']))
+        <div class="row mb-2">
+            <div class="col-sm-5 fw-bold">Nama Pasangan Sebelumnya</div>
+            <div class="col-sm-7">: {{ $skp->statusPerkawinan->nama_pasangan_dulu ?? '-' }}</div>
+        </div>
+        <div class="row mb-2">
+            <div class="col-sm-5 fw-bold">Jenis Kelamin Pasangan Sebelumnya</div>
+            <div class="col-sm-7">: {{ $skp->statusPerkawinan->jenis_kelamin_psgn_dulu ?? '-' }}</div>
+        </div>
+    @elseif($label !== '__PASANGAN__')
+        <div class="row mb-2">
+            <div class="col-sm-5 fw-bold">{{ $label }}</div>
+            <div class="col-sm-7">: {{ $value }}</div>
+        </div>
+    @endif
+
+@endforeach
+
 
                                 <!-- PEMISAH -->
                                 <br>
                                 <h5 class="fw-bold mb-3">Data Orang Tua</h5>
+                                <br>
+                                @php
+                                    $rtRw_ayah =
+                                        $skp->orangTua->rt_ayah && $skp->orangTua->rw_ayah
+                                            ? 'RT.' .
+                                                str_pad($skp->orangTua->rt_ayah, 3, '0', STR_PAD_LEFT) .
+                                                ' / RW.' .
+                                                str_pad($skp->orangTua->rw_ayah, 3, '0', STR_PAD_LEFT)
+                                            : '-';
+
+                                    $rtRw_ibu =
+                                        $skp->orangTua->rt_ibu && $skp->orangTua->rw_ibu
+                                            ? 'RT.' .
+                                                str_pad($skp->orangTua->rt_ibu, 3, '0', STR_PAD_LEFT) .
+                                                ' / RW.' .
+                                                str_pad($skp->orangTua->rw_ibu, 3, '0', STR_PAD_LEFT)
+                                            : '-';
+                                @endphp
 
                                 <!-- DATA AYAH & IBU -->
                                 @foreach ([
@@ -100,17 +129,17 @@
             'Agama Ayah' => $skp->orangTua->agama_ayah,
             'Kewarganegaraan Ayah' => $skp->orangTua->kewarganegaraan_ayah,
             'Pekerjaan Ayah' => $skp->orangTua->pekerjaan_ayah,
-            'Alamat Ayah' => $skp->orangTua->alamat_ayah,
+            'Alamat' => $skp->alamat . ', ' . $rtRw_ayah,
             'Nama Ibu' => $skp->orangTua->nama_ibu,
             'NIK Ibu' => $skp->orangTua->nik_ibu,
             'Agama Ibu' => $skp->orangTua->agama_ibu,
             'Kewarganegaraan Ibu' => $skp->orangTua->kewarganegaraan_ibu,
             'Pekerjaan Ibu' => $skp->orangTua->pekerjaan_ibu,
-            'Alamat Ibu' => $skp->orangTua->alamat_ibu,
+            'Alamat Ibu' => $skp->alamat . ', ' . $rtRw_ibu,
         ] as $label => $value)
                                     <div class="row mb-2">
-                                        <div class="col-sm-4 fw-bold">{{ $label }}</div>
-                                        <div class="col-sm-8">: {{ $value }}</div>
+                                        <div class="col-sm-5 fw-bold">{{ $label }}</div>
+                                        <div class="col-sm-7">: {{ $value }}</div>
                                     </div>
                                 @endforeach
 
@@ -129,7 +158,8 @@
                                     <div class="dokumen-item mb-3">
                                         <label>{{ $label }}</label>
                                         @if ($file)
-                                            <a href="{{ route('dokumen.show', ['folder' => 'skp', 'filename' => basename($file)]) }}" target="_blank" class="lihat-box">
+                                            <a href="{{ route('dokumen.show', ['folder' => 'skp', 'filename' => basename($file)]) }}"
+                                                target="_blank" class="lihat-box">
                                                 <i class="bi bi-cloud-arrow-up"></i>
                                                 <span>Lihat File</span>
                                             </a>
@@ -152,6 +182,19 @@
                                         <button type="button" id="btnVerifikasiAdmin" class="btn btn-success"
                                             onclick="verifikasiAdminConfirm()">Verifikasi</button>
                                     </form>
+                                    {{-- Tombol Tolak --}}
+                                    <button id="btnTolak-{{ $skp->id }}" type="button" class="btn btn-danger"
+                                        onclick="konfirmasiTolak('{{ $skp->id }}')">
+                                        <i class="bi bi-x-circle"></i> Tolak
+                                    </button>
+                                    <form id="formTolak-{{ $skp->id }}" action="{{ route('skp.tolak', $skp->id) }}"
+                                        method="POST" style="display: none;">
+                                        @csrf
+                                        <input type="hidden" name="status" value="Ditolak">
+                                        <input type="hidden" name="alasan" id="inputAlasan-{{ $skp->id }}">
+                                    </form>
+                                @elseif ($skp->status === 'Ditolak')
+                                    <button class="btn btn-secondary" disabled>Sudah Ditolak</button>
                                 @else
                                     <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
                                 @endif
@@ -163,10 +206,14 @@
                                         method="POST" style="display:inline;">
                                         @csrf
                                         <button type="button" id="btnVerifikasiLurah" class="btn btn-success"
-                                            onclick="verifikasiLurahConfirm()">Verifikasi</button>
+                                            onclick="verifikasiLurahConfirm()">
+                                            Verifikasi
+                                        </button>
                                     </form>
                                 @elseif ($skp->status === 'Selesai')
                                     <button class="btn btn-secondary" disabled>Sudah Disahkan</button>
+                                @elseif ($skp->status === 'Ditolak')
+                                    <button class="btn btn-secondary" disabled>Surat Ditolak</button>
                                 @endif
                             @endif
                         @endif
@@ -178,6 +225,15 @@
                             </a>
                         @endif
                     </div>
+@php
+    function formatRiwayatKeterangan($riwayat) {
+        return match ($riwayat->status) {
+            'Ditolak' => 'Alasan Penolakan: ' . ($riwayat->alasan ?? 'Tidak ada keterangan'),
+            'Selesai' => 'Catatan Verifikasi: ' . ($riwayat->alasan ?? 'Tidak ada keterangan'),
+            default => $riwayat->alasan ?? 'Tidak ada keterangan',
+        };
+    }
+@endphp
 
                     {{-- TAB: Riwayat Pengajuan --}}
                     <div class="card-body d-none" id="tabContentRiwayat">
@@ -191,8 +247,9 @@
                                     </span>
                                     <div class="status"><strong>{{ $riwayat->status }}</strong></div>
                                     <div class="desc">
-                                        {{ $riwayat->keterangan ?? 'Tidak ada keterangan' }}
-                                    </div>
+    {{ formatRiwayatKeterangan($riwayat) }}
+</div>
+
                                 </li>
                             @empty
                                 <li>
@@ -252,6 +309,38 @@
         }
     </script>
 
+    <script>
+        function konfirmasiTolak(id) {
+            Swal.fire({
+                title: 'Tolak Pengajuan Surat',
+                input: 'textarea',
+                inputLabel: 'Alasan Penolakan',
+                inputPlaceholder: 'Tulis alasan penolakan di sini...',
+                inputAttributes: {
+                    'aria-label': 'Alasan penolakan'
+                },
+                showCancelButton: true,
+                confirmButtonText: 'Tolak',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                preConfirm: (alasan) => {
+                    if (!alasan || alasan.trim() === '') {
+                        Swal.showValidationMessage('Alasan penolakan wajib diisi!');
+                    }
+                    return alasan;
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    const alasan = result.value;
+                    document.getElementById('inputAlasan-' + id).value = alasan;
+                    document.getElementById('btnTolak-' + id).disabled = true;
+                    document.getElementById('btnTolak-' + id).innerText = 'Memproses...';
+                    document.getElementById('formTolak-' + id).submit();
+                }
+            });
+        }
+    </script>
 
 
     <script>

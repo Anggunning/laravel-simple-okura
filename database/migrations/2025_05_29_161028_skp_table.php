@@ -21,9 +21,11 @@ return new class extends Migration
             $table->string('kewarganegaraan');
             $table->string('pekerjaan');
             $table->string('agama');
-            $table->string('status');
+            $table->enum('status', ['Diajukan', 'Diproses', 'Selesai', 'Ditolak'])->default('Diajukan');
             $table->string('alasan')->nullable();
             $table->text('alamat');
+             $table->string('rt', 3)->nullable();
+            $table->string('rw', 3)->nullable();
             $table->text('keterangan')->nullable();
             $table->string('status_kawin');
 

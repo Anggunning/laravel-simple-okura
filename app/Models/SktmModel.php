@@ -34,6 +34,8 @@ class SktmModel extends Model
         'agama',
         'nik',
         'alamat',
+        'rt',
+        'rw',
         'keterangan',
         'pekerjaan',
         'status',

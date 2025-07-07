@@ -1,7 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
     @include('layouts.components.header')
-   
+   <meta name="csrf-token" content="{{ csrf_token() }}">
+
   <body class="app sidebar-mini">
     <!-- Navbar-->
     @include('layouts.components.navbar')

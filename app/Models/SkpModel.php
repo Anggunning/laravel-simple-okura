@@ -27,7 +27,7 @@ class SkpModel extends Model
 
     protected $fillable = [
         'nama', 'nik', 'jenis_kelamin', 'tempat_lahir', 'status', 'alasan',
-        'tanggal_lahir', 'kewarganegaraan', 'pekerjaan', 'agama',
+        'tanggal_lahir', 'kewarganegaraan', 'pekerjaan', 'agama', 'rt','rw',
         'alamat', 'status_kawin', 'ktp', 'kk', 'pengantar_rt_rw','keterangan',
         'foto', 'status_perkawinan_id', 'orang_tua_id', 'user_id'
     ];

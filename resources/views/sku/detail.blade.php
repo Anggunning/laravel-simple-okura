@@ -47,6 +47,9 @@
                                     );
                                     $tanggalPengajuan = \Carbon\Carbon::parse($sku->tanggal)->translatedFormat('d F Y');
                                 @endphp
+                                   @php
+                            $rtRw = $sku->rt && $sku->rw ? $sku->rt . '/' . $sku->rw : '-';
+                        @endphp
                                 @foreach ([
                                             'Nama Pemohon' => $sku->nama,
                                             'Jenis Kelamin' => $sku->jenis_kelamin,
@@ -54,6 +57,7 @@
                                             'Agama' => $sku->agama,
                                             'NIK' => $sku->nik,
                                             'Alamat' => $sku->alamat,
+                                            'RT/RW' => $rtRw,
                                             'Jenis Usaha' => $sku->jenis_usaha,
                                             'Tempat Usaha' => $sku->tempat_usaha,
                                             'Kelurahan' => $sku->kelurahan,
@@ -171,6 +175,15 @@
                     </div>
 
 
+                    @php
+    function formatRiwayatKeterangan($riwayat) {
+        return match ($riwayat->status) {
+            'Ditolak' => 'Alasan Penolakan: ' . ($riwayat->alasan ?? 'Tidak ada keterangan'),
+            'Selesai' => 'Catatan Verifikasi: ' . ($riwayat->alasan ?? 'Tidak ada keterangan'),
+            default => $riwayat->alasan ?? 'Tidak ada keterangan',
+        };
+    }
+@endphp
                     {{-- TAB: Riwayat Pengajuan --}}
                     <div class="card-body d-none" id="tabContentRiwayat">
                         <h5 class="fw-bold mb-4">Riwayat Pengajuan Surat</h5>
@@ -183,7 +196,7 @@
                                     </span>
                                     <div class="status"><strong>{{ $riwayat->status }}</strong></div>
                                     <div class="desc">
-                                        {{ $riwayat->keterangan ?? 'Tidak ada keterangan' }}
+                                        {{ formatRiwayatKeterangan($riwayat) }}
                                     </div>
                                 </li>
                             @empty

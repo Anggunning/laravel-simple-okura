@@ -730,7 +730,7 @@ class PendudukMiskinSeeder extends Seeder
     'nama' => 'Suprapti',
     'alamat' => 'Jl. Raja Panjang Okura',
     'nama_kepala_keluarga' => 'Gitok',
-    'status' => 'Miskin',
+    'status' => 'Menengah',
     'jml_agt_keluarga' => 4,
     'kelompokPKH' => 'Karmi',
     'longitude' => 101.542223,

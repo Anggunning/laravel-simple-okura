@@ -13,29 +13,35 @@ return new class extends Migration
     {
        Schema::create('sku', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nama');
-            $table->string('tujuan');
-            $table->string('jenis_kelamin');
-            $table->string('tempatLahir');
-            $table->date('tanggalLahir');
-            $table->string('agama');
+            $table->string('nama')->nullable();
+            $table->string('tujuan')->nullable();
+            $table->string('jenis_kelamin')->nullable();
+            $table->string('tempatLahir')->nullable();
+            $table->date('tanggalLahir')->nullable();
+            $table->string('agama')->nullable();
             $table->string('nik', 16);
-            $table->string('pekerjaan');
-            $table->string('jenis_usaha');
-            $table->string('tempat_usaha');
-            $table->string('kelurahan');
-            $table->string('kecamatan');
-            $table->string('kota');
-            $table->string('alamat');
+            $table->string('pekerjaan')->nullable();
+            $table->string('jenis_usaha')->nullable();
+            $table->string('tempat_usaha')->nullable();
+            $table->string('kelurahan')->nullable();
+            $table->string('kecamatan')->nullable();
+            $table->string('kota')->nullable();
+            $table->string('alamat')->nullable();
+            $table->string('rt', 3)->nullable();
+            $table->string('rw', 3)->nullable();
             $table->text('keterangan')->nullable();
-            $table->enum('status', ['Diajukan', 'Diproses', 'Selesai', 'Ditolak'])->default('Diajukan');
+            $table->enum('status', ['Diajukan', 'Diproses', 'Selesai', 'Ditolak', 'draf'])->default('Diajukan');
+
             $table->text('alasan')->nullable();
-            $table->string('foto_usaha');
-            $table->string('pengantar_rt_rw');
-            $table->string('kk');
-            $table->string('ktp');
-            $table->string('surat_pernyataan');
+            $table->string('foto_usaha')->nullable();
+            $table->string('pengantar_rt_rw')->nullable();
+            $table->string('kk')->nullable();
+            $table->string('ktp')->nullable();
+            $table->string('surat_pernyataan')->nullable();
             $table->uuid('user_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+
             $table->timestamps();
         });
     }

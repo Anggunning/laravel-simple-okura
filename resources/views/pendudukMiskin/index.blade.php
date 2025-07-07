@@ -34,10 +34,12 @@
                 <div class="tile-body">
                     <div class="mb-3 d-flex justify-content-between align-items-center">
                         <!-- Tombol Tambah di kanan -->
+                        @if (auth()->check() && in_array(auth()->user()->role, ['Admin','Sekretaris']))
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#modalTambahPenduduk">
                             <i class="bi bi-plus-circle"></i> Tambah Data
                         </a>
+                        @endif
                     </div>
 
                     <!-- Konten Tab -->
@@ -51,11 +53,10 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Penduduk</th>
-                                                <th>Alamat</th>
-                                                <th>Jumlah Anggota</th>
+                                                <th>Alamat Penduduk</th>
+                                                <th>Jumlah Anggota Keluarga</th>
                                                 <th>Kelompok PKH</th>
                                                 <th>Status</th>
-                                                <th>Foto Rumah</th>
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -69,15 +70,7 @@
                                                     <td>{{ $item->jml_agt_keluarga }} Orang</td>
                                                     <td>{{ $item->kelompokPKH }}</td>
                                                     <td>{{ $item->status }}</td>
-                                                    <td>
-                                                        @if ($item->foto_rumah)
-                                                            <img src="{{ route('dokumen.show', ['folder' => 'pendudukMiskin', 'filename' => basename($item->foto_rumah)]) }}"
-                                                                alt="Foto Rumah"
-                                                                style="width: 80px; height: auto; border-radius: 5px;">
-                                                        @else
-                                                            <span class="text-muted">Tidak ada foto</span>
-                                                        @endif
-                                                    </td>
+                                                    
                                                     <td>
                                                         <div class="btn-group">
                                                             @if (auth()->check() && in_array(auth()->user()->role, ['Admin']))
@@ -88,11 +81,12 @@
                                                                     data-status="{{ $item->status }}">
                                                                     <i class="bi bi-pencil-square fs-5"></i>
                                                                 </a>
+                                                                 @endif
                                                                 <a class="btn btn-white me-2" style="color: #2E8B57;"
                                                                     href="{{ route('pendudukMiskin.show', $item->id) }}">
                                                                     <i class="bi bi-info-circle fs-5"></i>
                                                                 </a>
-                                                            @endif
+                                                           
                                                         </div>
                                                     </td>
                                                 </tr>
@@ -112,11 +106,10 @@
                                             <tr>
                                                 <th>No</th>
                                                 <th>Nama Penduduk</th>
-                                                <th>Alamat</th>
-                                                <th>Jumlah Anggota</th>
+                                                <th>Alamat Penduduk</th>
+                                                <th>Jumlah Anggota Keluarga</th>
                                                 <th>Kelompok PKH</th>
                                                 <th>Status</th>
-                                                {{-- <th>Foto Rumah</th> --}}
                                                 <th>Aksi</th>
                                             </tr>
                                         </thead>
@@ -149,11 +142,12 @@
                                                                     data-status="{{ $item->status }}">
                                                                     <i class="bi bi-pencil-square fs-5"></i>
                                                                 </a>
+                                                                 @endif
                                                                 <a class="btn btn-white me-2" style="color: #2E8B57;"
                                                                     href="{{ route('pendudukMiskin.show', $item->id) }}">
                                                                     <i class="bi bi-info-circle fs-5"></i>
                                                                 </a>
-                                                            @endif
+                                                            
                                                         </div>
                                                     </td>
                                                 </tr>

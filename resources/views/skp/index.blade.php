@@ -47,7 +47,7 @@
                         {{-- Tombol Tambah Pengajuan --}}
                         @if (auth()->check() && in_array(auth()->user()->role, ['Masyarakat', 'Admin']))
                             <a href="#" class="btn btn-primary" data-bs-toggle="modal"
-                                data-bs-target="#modalTambahPengajuan">
+                                data-bs-target="#modalTambahSKP">
                                 <i class="bi bi-plus-circle"></i> Tambah Pengajuan
                             </a>
                         @endif
@@ -62,20 +62,21 @@
                                 <div class="card-body">
                                     <table class="table table-hover table-bordered" id="skpTableBelumSelesai">
                                         <thead>
-                                                <tr>
-                                                    <th>No</th>
-                                                    <th>Tanggal Pengajuan</th>
-                                                    <th>Nama Pemohon</th>
-                                                    <th>Alamat Pemohon</th>
-                                                    <th>Orang Tua Pemohon</th>
-                                                    <th>Tujuan Pengajuan</th>
-                                                    <th class="text-center align-middle">Status</th>
-                                                    <th class="text-center align-middle">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            @php
-                                                $user = auth()->user();
-                                            @endphp
+                                            <tr>
+                                                <th>No</th>
+
+                                                <th>Nama Pemohon</th>
+                                                <th>NIK Pemohon</th>
+                                                <th>Alamat Pemohon</th>
+                                                <th>Orang Tua Pemohon</th>
+                                                <th>Tanggal Pengajuan</th>
+                                                <th class="text-center align-middle">Status</th>
+                                                <th class="text-center align-middle">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        @php
+                                            $user = auth()->user();
+                                        @endphp
                                         <tbody>
                                             @forelse($skpBelumSelesai as $item)
                                                 @if ($user->role !== 'Masyarakat' || $item->user_id === $user->id)
@@ -90,15 +91,17 @@
                                                     <tr class="{{ $highlightMerah ? 'table-danger' : '' }}">
 
                                                         <td></td>
-                                                        <td>
-                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+
                                                         <td>{{ $item->nama }}</td>
+                                                        <td>{{ $item->nik }}</td>
                                                         <td>{{ $item->alamat }}</td>
                                                         <td>{{ $item->orangTua->nama_ayah }} dan
                                                             {{ $item->orangTua->nama_ibu }}</td>
-                                                        <td>{{ $item->tujuan }}</td>
                                                         <td>
+                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                                                        </td>
+
+                                                        <td class="text-center align-middle">
                                                             @php
                                                                 $badgeClass = match ($item->status) {
                                                                     'Diajukan' => 'bg-secondary text-dark',
@@ -134,27 +137,28 @@
                                 </div>
                             </div>
                         </div>
-                    
-                    {{-- TAB 2: Selesai --}}
+
+                        {{-- TAB 2: Selesai --}}
                         <div class="tab-pane fade show" id="selesai" role="tabpanel">
                             <div class="table-responsive">
                                 <div class="card-body">
                                     <table class="table table-hover table-bordered" id="skpTableSelesai">
                                         <thead>
-                                                <tr>
-                                                   <th>No</th>
-                                                    <th>Tanggal Pengajuan</th>
-                                                    <th>Nama Pemohon</th>
-                                                    <th>Alamat Pemohon</th>
-                                                    <th>Tujuan Pengajuan</th>
-                                                    <th>Keterangan</th>
-                                                    <th class="text-center align-middle">Status</th>
-                                                    <th class="text-center align-middle">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            @php
-                                                $user = auth()->user();
-                                            @endphp
+                                            <tr>
+                                                <th>No</th>
+                                                
+                                                <th>Nama Pemohon</th>
+                                                <th>Alamat Pemohon</th>
+                                                <th>Orang Tua Pemohon</th>
+                                                <th>Keterangan</th>
+                                                <th>Tanggal Pengajuan</th>
+                                                <th class="text-center align-middle">Status</th>
+                                                <th class="text-center align-middle">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        @php
+                                            $user = auth()->user();
+                                        @endphp
                                         <tbody>
                                             @forelse($skpSelesai as $item)
                                                 @if ($user->role !== 'Masyarakat' || $item->user_id === $user->id)
@@ -169,20 +173,22 @@
                                                     <tr class="{{ $highlightMerah ? 'table-danger' : '' }}">
 
                                                         <td></td>
-                                                        <td>
-                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+                                                        
                                                         <td>{{ $item->nama }}</td>
                                                         <td>{{ $item->alamat }}</td>
-                                                        <td>{{ $item->tujuan }}</td>
+                                                        <td>{{ $item->orangTua->nama_ayah }} dan
+                                                            {{ $item->orangTua->nama_ibu }}</td>
+                                                       
                                                         @php
                                                             $riwayatSelesai = $item->riwayat_skp
                                                                 ->where('status', 'Selesai')
                                                                 ->last();
                                                         @endphp
                                                         <td>{{ $riwayatSelesai?->alasan ?? '-' }}</td>
-
-                                                        <td>
+ <td>
+                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                                                        </td>
+                                                        <td class="text-center align-middle">
                                                             @php
                                                                 $badgeClass = match ($item->status) {
                                                                     'Diajukan' => 'bg-secondary text-dark',
@@ -218,56 +224,49 @@
                                 </div>
                             </div>
                         </div>
-                    
 
-                    {{-- TAB 3: Ditolak --}}
+
+                        {{-- TAB 3: Ditolak --}}
                         <div class="tab-pane fade show" id="ditolak" role="tabpanel">
                             <div class="table-responsive">
                                 <div class="card-body">
                                     <table class="table table-hover table-bordered" id="skpTableDitolak">
                                         <thead>
-                                                <tr>
-                                                   <th>No</th>
-                                                    <th>Tanggal Pengajuan</th>
-                                                    <th>Nama Pemohon</th>
-                                                    <th>Alamat Pemohon</th>
-                                                    <th>Tujuan Pengajuan</th>
-                                                    <th>Alasan Penolakan</th>
-                                                    <th class="text-center align-middle">Status</th>
-                                                    <th class="text-center align-middle">Aksi</th>
-                                                </tr>
-                                            </thead>
-                                            @php
-                                                $user = auth()->user();
-                                            @endphp
+                                            <tr>
+                                                <th>No</th>
+                                                
+                                                <th>Nama Pemohon</th>
+                                                <th>Alamat Pemohon</th>
+                                                <th>Orang Tua Pemohon</th>
+                                                <th>Alasan Penolakan</th>
+                                                <th>Tanggal Pengajuan</th>
+                                                <th class="text-center align-middle">Status</th>
+                                                <th class="text-center align-middle">Aksi</th>
+                                            </tr>
+                                        </thead>
+                                        @php
+                                            $user = auth()->user();
+                                        @endphp
                                         <tbody>
                                             @forelse($skpDitolak as $item)
                                                 @if ($user->role !== 'Masyarakat' || $item->user_id === $user->id)
-                                                    @php
-                                                        $lebihDari3Hari = \Carbon\Carbon::parse($item->created_at)->lt(
-                                                            now()->subDays(3),
-                                                        );
-                                                        $highlightMerah =
-                                                            $lebihDari3Hari && $item->status === 'Diajukan';
-
-                                                    @endphp
-                                                    <tr class="{{ $highlightMerah ? 'table-danger' : '' }}">
-
+                                                    <tr>
                                                         <td></td>
-                                                        <td>
-                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+                                                        
                                                         <td>{{ $item->nama }}</td>
                                                         <td>{{ $item->alamat }}</td>
-                                                        <td>{{ $item->tujuan }}</td>
+                                                        <td>{{ $item->orangTua->nama_ayah }} dan
+                                                            {{ $item->orangTua->nama_ibu }}</td>
                                                         @php
                                                             $riwayatDitolak = $item->riwayat_skp
                                                                 ->where('status', 'Ditolak')
                                                                 ->last();
                                                         @endphp
                                                         <td>{{ $riwayatDitolak?->alasan ?? '-' }}</td>
-                                                       
                                                         <td>
+                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                                                        </td>
+                                                        <td class="text-center align-middle">
                                                             @php
                                                                 $badgeClass = match ($item->status) {
                                                                     'Diajukan' => 'bg-secondary text-dark',
@@ -303,8 +302,8 @@
                                 </div>
                             </div>
                         </div>
-                    
                     </div>
+
                 </div>
             </div>
         </div>
@@ -312,7 +311,8 @@
 
 
     <!-- Modal Tambah SKP -->
-    <div class="modal fade" id="modalTambahSKP" tabindex="-1" aria-labelledby="modalTambahSKPLabel" aria-hidden="true">
+    <div class="modal fade" id="modalTambahSKP" tabindex="-1" aria-labelledby="modalTambahSKPLabel"
+        aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <form action="{{ route('skp.store') }}" method="POST" enctype="multipart/form-data" class="modal-content">
                 @csrf
@@ -333,7 +333,7 @@
             </form>
         </div>
     </div>
-{{-- 
+    {{-- 
     <!-- Modal Edit SKP -->
     <div class="modal fade" id="modalEditSKP" tabindex="-1" aria-labelledby="modalEditSKPLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -367,6 +367,7 @@
         function inisialisasiDataTable(idTabel) {
             if ($.fn.DataTable.isDataTable(idTabel)) {
                 $(idTabel).DataTable().destroy();
+                
             }
 
             // Debug: cek jumlah kolom per baris
@@ -384,7 +385,8 @@
                 columnDefs: [{
                     targets: 0,
                     orderable: false,
-                    searchable: false
+                    searchable: false,
+                    
                 }],
             });
 
@@ -453,7 +455,4 @@
             this.reportValidity();
         });
     </script>
-
-
-
 @endpush

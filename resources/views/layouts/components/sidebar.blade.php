@@ -37,7 +37,7 @@
         </li>
         @if (auth()->check())
             {{-- Penduduk Miskin --}}
-            @if (!in_array(auth()->user()->role, ['Masyarakat', 'Lurah', 'Sekretaris']))
+            @if (!in_array(auth()->user()->role, ['Masyarakat']))
                 <li>
                     <a class="app-menu__item" href="{{ route('pendudukMiskin.index') }}">
                         <i class="app-menu__icon bi bi-speedometer"></i>

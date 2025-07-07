@@ -10,6 +10,8 @@ use App\Models\RiwayatskuModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 class SKUsahaController extends Controller
 {
@@ -89,11 +91,13 @@ class SKUsahaController extends Controller
             'kelurahan' => 'required|string',
             'kecamatan' => 'required|string',
             'kota' => 'required|string',
-            'foto_usaha' => 'required|file|mimes:jpg,jpeg,png',
-            'pengantar_rt_rw' => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'kk' => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'ktp' => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'surat_pernyataan' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            'rt' => 'required|max:3',
+            'rw' => 'required|max:3',   
+            'foto_usaha' => 'required|file|mimes:jpg,jpeg,png|max:2048',
+            'pengantar_rt_rw' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'kk' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'surat_pernyataan' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
 
         try {
@@ -125,6 +129,79 @@ class SKUsahaController extends Controller
             dd($e->getMessage());
         }
     }
+
+       public function storeDraf(Request $request)
+    {
+        try {
+            \Log::info('✅ Request masuk ke storeDraf:', $request->all());
+
+            $userId = auth()->id();
+
+            $draf = SkuModel::updateOrCreate(
+                ['user_id' => $userId, 'status' => 'draf'],
+                $request->except(['foto_usaha','ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan']) + ['status' => 'draf']
+            );
+
+            foreach (['foto_usaha','ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'] as $file) {
+                if ($request->hasFile($file)) {
+                    $path = $request->file($file)->store("draf/{$userId}", 'local');
+                    $draf->$file = $path;
+                }
+            }
+
+            $draf->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            \Log::error('❌ storeDraf error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
+
+    public function getDraf()
+    {
+        $draf = SkuModel::where('status', 'draf')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->get();
+
+        return view(
+            'dashboard.sku-draf',
+            [
+                'draf' => $draf,
+                'jenis_surat' => 'Surat Keterangan Usaha'
+            ]
+        );
+    }
+
+
+
+
+    public function previewDrafFile($field)
+    {
+        $allowed = ['foto_usaha','ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'];
+        if (!in_array($field, $allowed)) abort(403);
+
+        $draf = SkuModel::where('user_id', auth()->id())->where('status', 'draf')->firstOrFail();
+        $path = $draf->$field;
+
+        if (!Storage::disk('local')->exists($path)) abort(404);
+
+        $mime = Storage::disk('local')->mimeType($path);
+        $content = Storage::disk('local')->get($path);
+
+        return Response::make($content, 200, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
+        ]);
+    }
+
 
     public function update(Request $request, $id)
     {

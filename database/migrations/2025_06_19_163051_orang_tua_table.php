@@ -23,6 +23,8 @@ return new class extends Migration
         $table->string('pekerjaan_ayah');
         $table->string('agama_ayah');
         $table->text('alamat_ayah');
+        $table->string('rt_ayah', 3)->nullable();
+        $table->string('rw_ayah', 3)->nullable();
 
         // Ibu
         $table->string('nama_ibu');
@@ -33,6 +35,8 @@ return new class extends Migration
         $table->string('pekerjaan_ibu');
         $table->string('agama_ibu');
         $table->text('alamat_ibu');
+        $table->string('rt_ibu', 3)->nullable();
+        $table->string('rw_ibu', 3)->nullable();
 
         $table->timestamps();
         $table->uuid('skp_id');

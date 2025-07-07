@@ -53,6 +53,7 @@ class LoginController extends Controller
         if (Auth::attempt($credentials, $request->remember)) {
             return redirect()->intended('/dashboard'); // Sesuaikan dengan rute setelah login
         }
+        
 
         return back()->withErrors([
             'email' => 'Email atau password salah.',

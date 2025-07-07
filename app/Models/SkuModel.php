@@ -36,6 +36,8 @@ class SkuModel extends Model
         'kecamatan',
         'kota',
         'alamat',
+        'rt',
+        'rw',
         'keterangan',
         'status',
         'alasan',

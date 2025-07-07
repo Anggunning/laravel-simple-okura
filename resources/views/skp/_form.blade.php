@@ -24,7 +24,6 @@
             </label>
             <select name="jenis_kelamin" id="{{ $prefix }}jenis_kelamin" class="form-select" required
                 oninvalid="this.setCustomValidity('Silakan isi jenis kelamin')" oninput="this.setCustomValidity('')">
-                <option value="">Jenis Kelamin</option>
                 <option value="Laki-laki">Laki-laki</option>
                 <option value="Perempuan">Perempuan</option>
             </select>
@@ -114,6 +113,7 @@
                 oninvalid="this.setCustomValidity('Silakan isi alamat')"
                 oninput="this.setCustomValidity('')"placeholder="Masukkan alamat tempat tinggal">
         </div>
+
         <div class="mb-3 col-md-6">
             <label for="{{ $prefix }}kewarganegaraan" class="form-label">Kewarganegaraan
                 <span class="text-danger">*</span>
@@ -123,17 +123,32 @@
                 oninput="this.setCustomValidity('')" placeholder="Contoh: Indonesia">
         </div>
     </div>
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label for="rt" class="form-label">RT <span class="text-danger">*</span></label>
+            <input type="text" name="rt" id="rt" class="form-control" required maxlength="3"
+                pattern="^\d{3}$" placeholder="Contoh: 001"
+                oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 001')"
+                oninput="this.setCustomValidity('')">
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="rw" class="form-label">RW <span class="text-danger">*</span></label>
+            <input type="text" name="rw" id="rw" class="form-control" required maxlength="3"
+                pattern="^\d{3}$" placeholder="Contoh: 002"
+                oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 002')"
+                oninput="this.setCustomValidity('')">
+        </div>
+    </div>
+
 
     <div class="row">
         <div class="mb-3 col-12">
-            <label for="{{ $prefix }}keterangan" class="form-label">Keterangan
-                <span class="text-danger">*</span>
-            </label>
-            <textarea name="keterangan" id="{{ $prefix }}keterangan" class="form-control" rows="2"
-                oninvalid="this.setCustomValidity('Silakan isi keterangan')" oninput="this.setCustomValidity('')"
-                placeholder="Tambahkan keterangan jika diperlukan"></textarea>
+            <label for="{{ $prefix }}keterangan" class="form-label">Keterangan </label>
+            <textarea name="keterangan" id="{{ $prefix }}keterangan" class="form-control" rows="2" 
+                placeholder="Masukkan Keterangan (optional)"></textarea>
         </div>
     </div>
+
 
     {{-- Upload File --}}
     <div class="row">
@@ -181,10 +196,10 @@
 </div>
 
 <div id="{{ $prefix }}sectionDataOrangtua">
-    <h5 class="fw-bold mb-3">Data Orang Tua</h5>
+
 
     {{-- Ayah --}}
-    <h6 class="fw-semibold mt-2 mb-3">Data Ayah</h6>
+
     <div class="row">
         <div class="mb-3 col-md-6">
             <label for="{{ $prefix }}nama_ayah" class="form-label">Nama Ayah
@@ -261,9 +276,25 @@
                 oninput="this.setCustomValidity('')" placeholder="Masukkan alamat ayah">
         </div>
     </div>
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label for="rt_ayah" class="form-label">RT Ayah <span class="text-danger">*</span></label>
+            <input type="text" name="rt_ayah" id="rt_ayah" class="form-control" required maxlength="3"
+                pattern="^\d{3}$" placeholder="Contoh: 001"
+                oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 001')"
+                oninput="this.setCustomValidity('')">
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="rw_ayah" class="form-label">RW Ayah <span class="text-danger">*</span></label>
+            <input type="text" name="rw_ayah" id="rw_ayah" class="form-control" required maxlength="3"
+                pattern="^\d{3}$" placeholder="Contoh: 002"
+                oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 002')"
+                oninput="this.setCustomValidity('')">
+        </div>
+    </div>
 
     {{-- Ibu --}}
-    <h6 class="fw-semibold mt-4 mb-3">Data Ibu</h6>
+    <br>
     <div class="row">
         <div class="mb-3 col-md-6">
             <label for="{{ $prefix }}nama_ibu" class="form-label">Nama Ibu
@@ -332,7 +363,24 @@
                 oninput="this.setCustomValidity('')" placeholder="Masukkan alamat ibu">
         </div>
     </div>
+    <div class="row">
+        <div class="mb-3 col-md-6">
+            <label for="rt_ibu" class="form-label">RT Ibu <span class="text-danger">*</span></label>
+            <input type="text" name="rt_ibu" id="rt_ibu" class="form-control" required maxlength="3"
+                pattern="^\d{3}$" placeholder="Contoh: 001"
+                oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 001')"
+                oninput="this.setCustomValidity('')">
+        </div>
+        <div class="mb-3 col-md-6">
+            <label for="rw_ibu" class="form-label">RW Ibu<span class="text-danger">*</span></label>
+            <input type="text" name="rw_ibu" id="rw_ibu" class="form-control" required maxlength="3"
+                pattern="^\d{3}$" placeholder="Contoh: 002"
+                oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 002')"
+                oninput="this.setCustomValidity('')">
+        </div>
+    </div>
 </div>
+<br>
 {{-- Tombol Navigasi --}}
 <div class="row ">
     <div class="col-7  text-end">
@@ -520,6 +568,32 @@
 
         });
     </script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('formPengajuanSKTM');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Yakin mau menyimpan?',
+                    text: 'Pastikan semua data sudah benar.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Simpan',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#d33', // warna merah (seperti tombol "Tolak")
+                    cancelButtonColor: '#6c757d', // abu Bootstrap
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
+    </script>
+
     {{-- <script>
             $('#modalEditSKP').on('show.bs.modal', function (event) {
     const button = $(event.relatedTarget);

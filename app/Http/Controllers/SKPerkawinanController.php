@@ -91,15 +91,17 @@ class SKPerkawinanController extends Controller
             'pekerjaan' => 'required|string',
             'status_kawin' => 'required|in:Belum Menikah,Cerai Mati,Cerai Hidup',
             'alamat' => 'required|string',
+            'rt' => 'required|max:3',
+            'rw' => 'required|max:3',
             'kewarganegaraan' => 'required|string',
             'keterangan' => 'required|string',
             
 
             // Dokumen
-            'ktp' => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'kk' => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'pengantar_rt_rw' => 'required|file|mimes:jpg,jpeg,png,pdf',
-            'foto' => 'required|file|mimes:jpg,jpeg,png,pdf',
+            'pengantar_rt_rw' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'kk' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
+            'foto' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
 
             // Data Orang Tua - Ayah
             'nama_ayah' => 'required|string',
@@ -110,6 +112,8 @@ class SKPerkawinanController extends Controller
             'kewarganegaraan_ayah' => 'required|string',
             'pekerjaan_ayah' => 'required|string',
             'alamat_ayah' => 'required|string',
+            'rt_ayah' => 'required|max:3',
+            'rw_ayah' => 'required|max:3',
 
             // Data Orang Tua - Ibu
             'nama_ibu' => 'required|string',
@@ -120,6 +124,8 @@ class SKPerkawinanController extends Controller
             'kewarganegaraan_ibu' => 'required|string',
             'pekerjaan_ibu' => 'required|string',
             'alamat_ibu' => 'required|string',
+            'rt_ibu' => 'required|max:3',
+            'rw_ibu' => 'required|max:3',
         ]);
 
         try {
@@ -162,6 +168,8 @@ class SKPerkawinanController extends Controller
                 'pekerjaan' => $request->pekerjaan,
                 'agama' => $request->agama,
                 'alamat' => $request->alamat,
+                'rt' => $request->rt,
+                'rw' => $request->rw,
                 'keterangan' => $request->keterangan,
                 'status_kawin' => $request->status_kawin,
                 'ktp' => $data['ktp'],
@@ -186,6 +194,8 @@ class SKPerkawinanController extends Controller
                 'kewarganegaraan_ayah' => $request->kewarganegaraan_ayah,
                 'pekerjaan_ayah' => $request->pekerjaan_ayah,
                 'alamat_ayah' => $request->alamat_ayah,
+                'rt_ayah' => $request->rt_ayah,
+                'rw_ayah' => $request->rw_ayah,
                 'nama_ibu' => $request->nama_ibu,
                 'nik_ibu' => $request->nik_ibu,
                 'tempat_lahir_ibu' => $request->tempat_lahir_ibu,
@@ -194,6 +204,8 @@ class SKPerkawinanController extends Controller
                 'kewarganegaraan_ibu' => $request->kewarganegaraan_ibu,
                 'pekerjaan_ibu' => $request->pekerjaan_ibu,
                 'alamat_ibu' => $request->alamat_ibu,
+                'rt_ibu' => $request->rt_ibu,
+                'rw_ibu' => $request->rw_ibu,
                 'skp_id' => $skp->id,
             ]);
             
@@ -201,11 +213,10 @@ class SKPerkawinanController extends Controller
             // 6. Simpan riwayat pengajuan
             RiwayatskpModel::create([
                 'skp_id' => $skp->id,
-                'tanggal' => now()->toDateString(),
-                'waktu' => now(),
                 'status' => 'Diajukan',
                 'peninjau' => '-',
                 'keterangan' => 'Surat diajukan oleh pemohon',
+                'alasan' => null,
             ]);
             
             
@@ -232,6 +243,8 @@ public function update(Request $request, $id)
             'pekerjaan' => 'required',
             'status_kawin' => 'required|in:Belum Menikah,Cerai Mati,Cerai Hidup',
             'alamat' => 'required',
+            'rt' => 'required|max:3',
+            'rw' => 'required|max:3',
             'kewarganegaraan' => 'required',
             'keterangan' => 'nullable',
 
@@ -248,12 +261,16 @@ public function update(Request $request, $id)
             'kewarganegaraan_ayah' => 'required',
             'pekerjaan_ayah' => 'required',
             'alamat_ayah' => 'required',
+            'rt_ayah' => 'required|max:3',
+            'rw_ayah' => 'required|max:3',
             'nama_ibu' => 'required',
             'nik_ibu' => 'required',
             'agama_ibu' => 'required',
             'kewarganegaraan_ibu' => 'required',
             'pekerjaan_ibu' => 'required',
             'alamat_ibu' => 'required',
+            'rt_ibu' => 'required|max:3',
+            'rw_ibu' => 'required|max:3',
         ]);
 
         // 2. Ambil data SKP
@@ -386,14 +403,35 @@ foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
             dd($e->getMessage());
         }
     }
+    public function tolak(Request $request, $id)
+    {
+        $skp = skpModel::with('riwayat_skp')->findOrFail($id);
+        $user = Auth::user();
+        if ($request->status === 'Ditolak') {
+            $skp->status = 'Ditolak';
+            $skp->save();
+
+            RiwayatskpModel::create([
+                'skp_id' => $skp->id,
+                'waktu' => now(),
+                'tanggal' => now()->toDateString(),
+                'status' => 'Ditolak',
+                'peninjau' => $user->role ?? '-',
+                'keterangan' => 'Surat ditolak oleh Admin',
+                'alasan' => $request->alasan,
+            ]);
+
+            return redirect()->route('skp.show', $skp->id)->with('success', 'Surat berhasil ditolak.');
+        }
+    }
 
 
     public function cetak($id)
     {
-        // $sku = SkuModel::findOrFail($id);
+        // $skp = skpModel::findOrFail($id);
 
         // // Logika untuk generate surat, bisa return view khusus cetak
-        // return view('sku.cetak', compact('sku'));
+        // return view('skp.cetak', compact('skp'));
          $skp = SkpModel::findOrFail($id);
 
     if ($skp->status !== 'Selesai') {
@@ -414,7 +452,7 @@ foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
             $skp = SkpModel::findOrFail($id);
             $skp->delete();
 
-            // $this->forgetsktm();
+            // $this->forgetskp();
             return redirect()->back()->with('alert', [
                 'type' => 'success',
                 'title' => 'Delete Surat Keterangan Tidak Mampu',

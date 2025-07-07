@@ -4,11 +4,11 @@
     <div class="app-title">
         <ul class="app-breadcrumb breadcrumb">
             <li class="breadcrumb-item"><i class="bi bi-house-door fs-6"></i></li>
-            <li class="breadcrumb-item active"><a href="#">Pengguna</a></li>
+            <li class="breadcrumb-item active"><a href="#">Data Pengguna</a></li>
         </ul>
     </div>
     <div class="title">
-        <h4>Data Pengguna</h4>
+        {{-- <h4>Data Pengguna</h4> --}}
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -25,7 +25,7 @@
                                 </label>
                             </div>
                         </form> --}}
-                         <form method="GET" action="{{ route('dataPengguna.index') }}" class="mb-0">
+                        {{-- <form method="GET" action="{{ route('dataPengguna.index') }}" class="mb-0">
     <div class="dataTables_filter mb-0 ">
         <label class="mb-0">
             Search:
@@ -34,7 +34,7 @@
                 
         </label>
     </div>
-</form>
+</form> --}}
 
                         <!-- Tombol Tambah di kanan -->
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal"
@@ -139,28 +139,28 @@
                         <h5 class="modal-title" id="modalTambahPenggunaLabel">Tambah Pengguna</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                           <div id="formErrorAlert" class="alert alert-danger d-none mx-3 mt-3">
-    <strong>Form belum lengkap!</strong> Mohon isi semua field.
-</div>
+                    <div id="formErrorAlert" class="alert alert-danger d-none mx-3 mt-3">
+                        <strong>Form belum lengkap!</strong> Mohon isi semua field.
+                    </div>
                     <div class="modal-body">
                         <div class="mb-3">
                             <label>Username</label>
                             <input type="text" class="form-control" name="username" required
                                 placeholder="Masukkan nama anda">
-                            
+
                         </div>
 
                         <div class="mb-3">
                             <label>Email</label>
                             <input type="email" class="form-control" name="email" required
                                 placeholder="Masuukkan email anda">
-                                
+
                         </div>
                         <div class="mb-3">
                             <label>Password</label>
                             <input type="password" class="form-control" name="password" required
                                 placeholder="Masukkan password anda">
-                                
+
                         </div>
                         <div class="mb-3">
                             <label>Role</label>
@@ -171,7 +171,7 @@
                                 <option value="Sekretaris">Sekretaris</option>
                                 <option value="Masyarakat">Masyarakat</option>
                             </select>
-                            
+
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -187,7 +187,7 @@
     <div class="modal fade" id="modalEditPengguna" tabindex="-1" aria-labelledby="modalEditPenggunaLabel"
         aria-hidden="true">
         <div class="modal-dialog">
-            <form  method="POST" id="formEditPengguna" novalidate>
+            <form method="POST" id="formEditPengguna" novalidate>
                 @csrf
                 @method('PUT')
                 <div class="modal-content">
@@ -195,7 +195,7 @@
                         <h5 class="modal-title" id="modalEditPenggunaLabel">Edit Pengguna</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-             
+
 
                     <div class="modal-body">
                         <input type="hidden" name="id" id="editUserId">
@@ -242,92 +242,91 @@
 
     <script>
         $('.btn-edit').click(function(e) {
-    e.preventDefault();
+            e.preventDefault();
 
-    let id = $(this).data('id');
-    let username = $(this).data('username');
-    let email = $(this).data('email');
-    let role = $(this).data('role');
+            let id = $(this).data('id');
+            let username = $(this).data('username');
+            let email = $(this).data('email');
+            let role = $(this).data('role');
 
-    $('#editUserId').val(id);
-    $('#editUsername').val(username);
-    $('#editEmail').val(email);
-    $('#editPassword').val(''); // Jangan isi password dari data!
-    $('#editRole').val(role);
+            $('#editUserId').val(id);
+            $('#editUsername').val(username);
+            $('#editEmail').val(email);
+            $('#editPassword').val(''); // Jangan isi password dari data!
+            $('#editRole').val(role);
 
-    // Set action ke form edit
-    let formAction = "{{ url('/data_pengguna') }}/" + id;
-    $('#formEditPengguna').attr('action', formAction);
+            // Set action ke form edit
+            let formAction = "{{ url('/data_pengguna') }}/" + id;
+            $('#formEditPengguna').attr('action', formAction);
 
-    let modalEdit = new bootstrap.Modal(document.getElementById('modalEditPengguna'));
-    modalEdit.show();
-});
-
+            let modalEdit = new bootstrap.Modal(document.getElementById('modalEditPengguna'));
+            modalEdit.show();
+        });
     </script>
     <script>
         $(document).ready(function() {
             // Inisialisasi DataTables
             var table = $('#sampleTable').DataTable({
-                paging: false,
-                ordering: false,
-                info: false,
+                // paging: false,
+                // ordering: false,
+                // info: false,
                 searching: true // WAJIB true agar .search() aktif
             });
 
             // Custom search input
-            $('#myCustomSearch').on('keyup', function() {
-                table.search(this.value).draw();
-            });
+            // $('#myCustomSearch').on('keyup', function() {
+            //     table.search(this.value).draw();
+            // });
 
             // Sembunyikan search bawaan
-            $('#sampleTable_filter').hide();
+            // $('#sampleTable_filter').hide();
         });
     </script>
-   <script>
-    (function () {
-        'use strict';
-        const form = document.getElementById('formTambahPengguna');
-        const alertBox = document.getElementById('formErrorAlert');
+    <script>
+        (function() {
+            'use strict';
+            const form = document.getElementById('formTambahPengguna');
+            const alertBox = document.getElementById('formErrorAlert');
 
-        form.addEventListener('submit', function (event) {
-            if (!form.checkValidity()) {
-                event.preventDefault();
-                event.stopPropagation();
+            form.addEventListener('submit', function(event) {
+                if (!form.checkValidity()) {
+                    event.preventDefault();
+                    event.stopPropagation();
 
-                // Tampilkan alert
-                alertBox.classList.remove('d-none');
+                    // Tampilkan alert
+                    alertBox.classList.remove('d-none');
 
-                // Scroll ke atas modal (agar user lihat alert)
-                const modalBody = form.closest('.modal-content');
-                modalBody.scrollTo({ top: 0, behavior: 'smooth' });
-            } else {
-                alertBox.classList.add('d-none'); // sembunyikan jika valid
-            }
-
-            form.classList.add('was-validated'); // munculkan feedback invalid Bootstrap
-        }, false);
-    })();
-</script>
-           <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Tangkap semua form hapus
-        const hapusButtons = document.querySelectorAll('.btn-hapus');
-
-        hapusButtons.forEach(function (button) {
-            button.addEventListener('click', function (event) {
-                event.preventDefault(); // hentikan submit dulu
-
-                const form = this.closest('form');
-                const nama = this.dataset.nama || 'data ini';
-
-                if (confirm(`Apakah Anda yakin ingin menghapus ${nama}?`)) {
-                    form.submit(); // lanjutkan submit jika konfirmasi OK
+                    // Scroll ke atas modal (agar user lihat alert)
+                    const modalBody = form.closest('.modal-content');
+                    modalBody.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                } else {
+                    alertBox.classList.add('d-none'); // sembunyikan jika valid
                 }
+
+                form.classList.add('was-validated'); // munculkan feedback invalid Bootstrap
+            }, false);
+        })();
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Tangkap semua form hapus
+            const hapusButtons = document.querySelectorAll('.btn-hapus');
+
+            hapusButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault(); // hentikan submit dulu
+
+                    const form = this.closest('form');
+                    const nama = this.dataset.nama || 'data ini';
+
+                    if (confirm(`Apakah Anda yakin ingin menghapus ${nama}?`)) {
+                        form.submit(); // lanjutkan submit jika konfirmasi OK
+                    }
+                });
             });
         });
-    });
-</script>
-
-
-
+    </script>
 @endpush

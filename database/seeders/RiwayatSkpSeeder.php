@@ -28,7 +28,7 @@ class RiwayatSkpSeeder extends Seeder
                 'id' => 'aaa1b102-d066-11ee-8bb8-744ca1759402',
                 'status' => 'Diajukan',
                 'peninjau' => 'Lurah',
-                'alasan' => null,
+                'alasan' => 'Sedang diproses',
                 'keterangan' => 'Sudah sesuai persyaratan',
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -52,7 +52,7 @@ class RiwayatSkpSeeder extends Seeder
                 'keterangan' => 'Data pekerjaan tidak sesuai',
                 'created_at' => now(),
                 'updated_at' => now(),
-                'skp_id' => '8881c70e-d066-11ee-8bb8-744ca1759403', // Andi Gunawan
+                'skp_id' => '8881c70e-d066-09ee-8bb8-744ca1759403', // Andi Gunawan
             ],
         ]);
     }

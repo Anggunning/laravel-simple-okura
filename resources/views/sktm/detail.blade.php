@@ -44,7 +44,9 @@
                             <div class="col-sm-6">
                                 @php $tanggalLahir = \Carbon\Carbon::parse($sktm->tanggalLahir)->translatedFormat('d F Y'); @endphp
                                 @php $tanggalPengajuan = \Carbon\Carbon::parse($sktm->tanggal)->translatedFormat('d F Y'); @endphp
-
+                                @php
+                            $rtRw = $sktm->rt && $sktm->rw ? $sktm->rt . '/' . $sktm->rw : '-';
+                        @endphp
                                 @foreach ([
             'Nama Pemohon' => $sktm->nama,
             'Jenis Kelamin' => $sktm->jenis_kelamin,
@@ -52,6 +54,7 @@
             'Agama' => $sktm->agama,
             'NIK' => $sktm->nik,
             'Alamat' => $sktm->alamat,
+            'RT / RW' => $rtRw,
             'Tujuan' => $sktm->tujuan,
             'Pekerjaan' => $sktm->pekerjaan,
             'Keterangan' => $sktm->keterangan,
@@ -167,6 +170,15 @@
                         @endif
                     </div>
 
+                    @php
+    function formatRiwayatKeterangan($riwayat) {
+        return match ($riwayat->status) {
+            'Ditolak' => 'Alasan Penolakan: ' . ($riwayat->alasan ?? 'Tidak ada keterangan'),
+            'Selesai' => 'Catatan Verifikasi: ' . ($riwayat->alasan ?? 'Tidak ada keterangan'),
+            default => $riwayat->alasan ?? 'Tidak ada keterangan',
+        };
+    }
+@endphp
                     {{-- TAB: Riwayat Pengajuan --}}
                     <div class="card-body d-none" id="tabContentRiwayat">
                         <h5 class="fw-bold mb-4">Riwayat Pengajuan Surat</h5>
@@ -179,7 +191,7 @@
                                     </span>
                                     <div class="status"><strong>{{ $riwayat->status }}</strong></div>
                                     <div class="desc">
-                                        {{ $riwayat->keterangan ?? 'Tidak ada keterangan' }}
+                                        {{ formatRiwayatKeterangan($riwayat) }}
                                     </div>
                                 </li>
                             @empty

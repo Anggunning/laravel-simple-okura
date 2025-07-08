@@ -16,14 +16,23 @@ use Illuminate\Support\Facades\Storage;
 
 class SKPerkawinanController extends Controller
 {
-    public function index()
+    public function index(Request $request)
 {
-    $user = auth()->user();
+     $user = auth()->user();
+        $drafToLoad = null;
+
+    if ($request->has('draf')) {
+    $drafToLoad = SkpModel::where('id', $request->get('draf'))
+        ->where('status', 'draf')
+        ->where('user_id', $user->id)
+        ->first();
+}
+
 
     if ($user->role === 'Masyarakat') {
         // Belum Selesai: status bukan 'Selesai' atau 'Ditolak' (misalnya: Diajukan, Diproses)
         $skpBelumSelesai = SkpModel::with(['statusPerkawinan', 'orangTua','riwayat_skp'])
-            ->whereNotIn('status', ['Selesai', 'Ditolak'])
+            ->whereNotIn('status', ['Selesai', 'Ditolak','draf'])
             ->get()
             ->sort(function ($a, $b) {
                 $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
@@ -49,7 +58,7 @@ class SKPerkawinanController extends Controller
             ->get();
     } else {
         $skpBelumSelesai = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
-            ->whereNotIn('status', ['Selesai', 'Ditolak'])
+            ->whereNotIn('status', ['Selesai', 'Ditolak','draf'])
             ->get()
             ->sort(function ($a, $b) {
                 $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
@@ -75,11 +84,12 @@ class SKPerkawinanController extends Controller
             ->get();
     }
 
-    return view('skp.index', compact('skpBelumSelesai', 'skpSelesai', 'skpDitolak'));
+    return view('skp.index', compact('skpBelumSelesai', 'skpSelesai', 'skpDitolak','drafToLoad'));
 }
 
     public function store(Request $request)
     {
+
         $request->validate([
             // Data Pemohon
             'nama' => 'required|string',
@@ -94,7 +104,7 @@ class SKPerkawinanController extends Controller
             'rt' => 'required|max:3',
             'rw' => 'required|max:3',
             'kewarganegaraan' => 'required|string',
-            'keterangan' => 'required|string',
+            // 'keterangan' => 'required|string',
             
 
             // Dokumen
@@ -338,6 +348,79 @@ foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
     }
 }
 
+public function storeDraf(Request $request)
+    {
+        try {
+            \Log::info('✅ Request masuk ke storeDraf:', $request->all());
+
+            if (auth()->user()->role !== 'Masyarakat') {
+    abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
+}
+$userId = auth()->id();
+
+            $draf = SkpModel::updateOrCreate(
+                ['user_id' => $userId, 'status' => 'draf'],
+                $request->except(['ktp', 'kk', 'pengantar_rt_rw', 'foto']) + ['status' => 'draf']
+            );
+
+            foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
+                if ($request->hasFile($file)) {
+                    $path = $request->file($file)->store("draf/{$userId}", 'local');
+                    $draf->$file = $path;
+                }
+            }
+
+            $draf->save();
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            \Log::error('❌ storeDraf error: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'error' => $e->getMessage(),
+            ], 500);
+        }
+    }
+
+
+
+
+    public function getDraf()
+{
+    $draf = SkpModel::where('status', 'draf')
+        ->where('user_id', auth()->id())
+        ->latest()
+        ->first();
+
+    return response()->json($draf);
+}
+
+
+
+
+
+    public function previewDrafFile($field)
+    {
+        $allowed = ['ktp', 'kk', 'pengantar_rt_rw', 'foto'];
+        if (!in_array($field, $allowed)) abort(403);
+
+        $draf = SkpModel::where('user_id', auth()->id())->where('status', 'draf')->firstOrFail();
+        $path = $draf->$field;
+
+        if (!Storage::disk('local')->exists($path)) abort(404);
+
+        $mime = Storage::disk('local')->mimeType($path);
+        $content = Storage::disk('local')->get($path);
+
+        return Response::make($content, 200, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
+        ]);
+    }
+
+
+
+
 
 
 
@@ -391,7 +474,7 @@ foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
                     'waktu' => now(),
                     'status' => 'Selesai',
                     'peninjau' => $user->name ?? 'Lurah',
-                    'keterangan' => 'Surat telah disahkan oleh Lurah',
+                    'keterangan' => 'Surat sudah selesai. Silahkan datang ke kantor lurah untuk mengambil surat',
                     'surat_balasan' => null,
                 ]);
 

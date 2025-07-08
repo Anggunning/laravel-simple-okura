@@ -15,13 +15,22 @@ use Illuminate\Support\Facades\Response;
 
 class SKUsahaController extends Controller
 {
-    public function index()
-    {
-        $user = auth()->user();
+    public function index(Request $request)
+{
+     $user = auth()->user();
+        $drafToLoad = null;
+
+    if ($request->has('draf')) {
+    $drafToLoad = SkuModel::where('id', $request->get('draf'))
+        ->where('status', 'draf')
+        ->where('user_id', $user->id)
+        ->first();
+}
+
 
         if ($user->role === 'Masyarakat') {
             // Untuk user masyarakat: hanya data mereka sendiri
-            $skuBelumSelesai = SkuModel::whereNotIn('status', ['Selesai', 'Ditolak'])->get()
+            $skuBelumSelesai = SkuModel::whereNotIn('status', ['Selesai', 'Ditolak', 'draf'])->get()
                 ->sort(function ($a, $b) {
                     $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
                     $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
@@ -45,8 +54,7 @@ class SKUsahaController extends Controller
             $skuSelesai = SkuModel::where('status', 'Selesai')->orderBy('created_at', 'desc')->get();
             $skuDitolak = SkuModel::where('status', 'Ditolak')->orderBy('created_at', 'desc')->get();
         } else {
-            $skuBelumSelesai = SkuModel::whereNotIn('status', ['Selesai', 'Ditolak'])
-                ->get()
+            $skuBelumSelesai = SkuModel::whereNotIn('status', ['Selesai', 'Ditolak', 'draf'])->get()
                 ->sort(function ($a, $b) {
                     $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
                     $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
@@ -70,7 +78,7 @@ class SKUsahaController extends Controller
                 ->get();
         }
 
-        return view('sku.index', compact('skuBelumSelesai', 'skuSelesai', 'skuDitolak'));
+        return view('sku.index', compact('skuBelumSelesai', 'skuSelesai', 'skuDitolak', 'drafToLoad'));
     }
 
     // Menyimpan pengajuan baru
@@ -175,12 +183,10 @@ class SKUsahaController extends Controller
             'dashboard.sku-draf',
             [
                 'draf' => $draf,
-                'jenis_surat' => 'Surat Keterangan Usaha'
+                'jenis_surat' => 'Surat Keterangan Tidak Mampu'
             ]
         );
     }
-
-
 
 
     public function previewDrafFile($field)
@@ -297,9 +303,9 @@ class SKUsahaController extends Controller
                     'tanggal' => now()->toDateString(),
                     'waktu' => now(),
                     'status' => 'Selesai',
-                     'peninjau' => $user->name ?? 'Lurah',
+                    'peninjau' => $user->name ?? 'Lurah',
                     'keterangan' => 'Surat telah disahkan oleh Lurah',
-                    'alasan' => 'Surat sudah selesai. Silahkan print surat atau datang ke kantor lurah',
+                    'alasan' => 'Surat sudah selesai. Silahkan datang ke kantor lurah untuk mengambil surat',
                 ]);
 
                 return redirect()->route('sku.show', $sku->id)->with('success', 'Surat berhasil disahkan oleh Lurah.');

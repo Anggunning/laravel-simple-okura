@@ -68,8 +68,7 @@ class SKTidakMampuController extends Controller
             $sktmSelesai = SktmModel::where('status', 'Selesai')->orderBy('created_at', 'desc')->get();
             $sktmDitolak = SktmModel::where('status', 'Ditolak')->orderBy('created_at', 'desc')->get();
         } else {
-            $sktmBelumSelesai = SktmModel::whereNotIn('status', ['Selesai', 'Ditolak'])
-                ->get()
+            $sktmBelumSelesai = SktmModel::whereNotIn('status', ['Selesai', 'Ditolak', 'draf'])->get()
                 ->sort(function ($a, $b) {
                     $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
                     $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
@@ -96,6 +95,7 @@ class SKTidakMampuController extends Controller
 
         return view('sktm.index', compact('sktmBelumSelesai', 'sktmSelesai', 'sktmDitolak','drafToLoad'));
     }
+    
     public function store(Request $request)
     {
         $request->validate([
@@ -158,7 +158,10 @@ class SKTidakMampuController extends Controller
         try {
             \Log::info('✅ Request masuk ke storeDraf:', $request->all());
 
-            $userId = auth()->id();
+            if (auth()->user()->role !== 'Masyarakat') {
+    abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
+}
+$userId = auth()->id();
 
             $draf = SktmModel::updateOrCreate(
                 ['user_id' => $userId, 'status' => 'draf'],
@@ -271,7 +274,7 @@ class SKTidakMampuController extends Controller
                     'status' => 'Selesai',
                     'peninjau' => $user->name ?? 'Lurah',
                     'keterangan' => 'Surat telah disahkan oleh Lurah',
-                    'alasan' => 'Surat sudah selesai. Silahkan print surat atau datang ke kantor lurah',
+                    'alasan' => 'Surat sudah selesai. Silahkan datang ke kantor lurah untuk mengambil surat',
                 ]);
 
                 return redirect()->route('sktm.show', $sktm->id)->with('success', 'Surat berhasil disahkan oleh Lurah.');

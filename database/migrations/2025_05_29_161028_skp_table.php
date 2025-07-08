@@ -13,30 +13,32 @@ return new class extends Migration
     {
         Schema::create('skp', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nama');
-            $table->string('nik', 16)->unique();
-            $table->enum('jenis_kelamin', ['Laki-laki', 'Perempuan']);
-            $table->string('tempat_lahir');
-            $table->date('tanggal_lahir');
-            $table->string('kewarganegaraan');
-            $table->string('pekerjaan');
-            $table->string('agama');
-            $table->enum('status', ['Diajukan', 'Diproses', 'Selesai', 'Ditolak'])->default('Diajukan');
+            $table->string('nama')->nullable();
+            $table->string('nik', 16)->nullable();
+            $table->string('jenis_kelamin')->nullable();
+            $table->string('tempat_lahir')->nullable();
+            $table->date('tanggal_lahir')->nullable();
+            $table->string('kewarganegaraan')->nullable();
+            $table->string('pekerjaan')->nullable();
+            $table->string('agama')->nullable();
+            $table->enum('status', ['Diajukan', 'Diproses', 'Selesai', 'Ditolak','draf'])->default('Diajukan')->nullable();
             $table->string('alasan')->nullable();
-            $table->text('alamat');
+            $table->text('alamat')->nullable();
              $table->string('rt', 3)->nullable();
             $table->string('rw', 3)->nullable();
             $table->text('keterangan')->nullable();
-            $table->string('status_kawin');
+            $table->string('status_kawin')->nullable();
 
-            $table->string('ktp');
-            $table->string('kk');
-            $table->string('pengantar_rt_rw');
-            $table->string('foto');
+            $table->string('ktp')->nullable();
+            $table->string('kk')->nullable();
+            $table->string('pengantar_rt_rw')->nullable();
+            $table->string('foto')->nullable();
 
             $table->timestamps();
             $table->uuid('user_id');
-            $table->uuid('status_perkawinan_id');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
+            $table->uuid('status_perkawinan_id')->nullable();
             $table->foreign('status_perkawinan_id')->references('id')->on('status_perkawinan')->onDelete('cascade');
             
         });

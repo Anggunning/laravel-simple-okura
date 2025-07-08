@@ -15,26 +15,26 @@ return new class extends Migration
         $table->uuid('id')->primary();
 
         // Ayah
-        $table->string('nama_ayah');
+        $table->string('nama_ayah')->nullable();
         $table->string('nik_ayah', 16);
-        $table->string('tempat_lahir_ayah');
-        $table->date('tanggal_lahir_ayah');
-        $table->string('kewarganegaraan_ayah');
-        $table->string('pekerjaan_ayah');
-        $table->string('agama_ayah');
-        $table->text('alamat_ayah');
+        $table->string('tempat_lahir_ayah')->nullable();
+        $table->date('tanggal_lahir_ayah')->nullable();
+        $table->string('kewarganegaraan_ayah')->nullable();
+        $table->string('pekerjaan_ayah')->nullable();
+        $table->string('agama_ayah')->nullable();
+        $table->text('alamat_ayah')->nullable();
         $table->string('rt_ayah', 3)->nullable();
         $table->string('rw_ayah', 3)->nullable();
 
         // Ibu
-        $table->string('nama_ibu');
+        $table->string('nama_ibu')->nullable();
         $table->string('nik_ibu', 16);
-        $table->string('tempat_lahir_ibu');
-        $table->date('tanggal_lahir_ibu');
-        $table->string('kewarganegaraan_ibu');
-        $table->string('pekerjaan_ibu');
-        $table->string('agama_ibu');
-        $table->text('alamat_ibu');
+        $table->string('tempat_lahir_ibu')->nullable();
+        $table->date('tanggal_lahir_ibu')->nullable();
+        $table->string('kewarganegaraan_ibu')->nullable();
+        $table->string('pekerjaan_ibu')->nullable();
+        $table->string('agama_ibu')->nullable();
+        $table->text('alamat_ibu')->nullable();
         $table->string('rt_ibu', 3)->nullable();
         $table->string('rw_ibu', 3)->nullable();
 

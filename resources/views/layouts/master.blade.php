@@ -15,11 +15,12 @@
     
     <main class="app-content">
         @yield('content')
+
     </main>
 
     <!-- Essential javascripts for application to work-->
     @include('layouts.components.scripts')
-
+ @stack('modals')
     {{-- Scripts tambahan dari view --}}
     @stack('scripts')
   </body>

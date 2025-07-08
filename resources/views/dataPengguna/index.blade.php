@@ -50,9 +50,11 @@
 
                         </div>
                         <div class="row dt-row">
-                            <div class="col-sm-12">
-                                <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable"
-                                    aria-describedby="sampleTable_info">
+                          <div class="col-sm-12">
+    <div class="table-responsive">
+        <div class="card-body">
+        <table class="table table-hover table-bordered dataTable no-footer" id="sampleTable"
+            aria-describedby="sampleTable_info">
                                     <thead>
                                         <tr>
                                             <th class="sorting sorting_asc" tabindex="0" aria-controls="sampleTable"
@@ -116,10 +118,8 @@
                                 </table>
                             </div>
                         </div>
-
-                        <div class="d-flex justify-content-center">
-                            {{ $users->links() }}
-                        </div>
+</div>
+                      
                     </div>
                 </div>
             </div>
@@ -272,14 +272,6 @@
                 // info: false,
                 searching: true // WAJIB true agar .search() aktif
             });
-
-            // Custom search input
-            // $('#myCustomSearch').on('keyup', function() {
-            //     table.search(this.value).draw();
-            // });
-
-            // Sembunyikan search bawaan
-            // $('#sampleTable_filter').hide();
         });
     </script>
     <script>

@@ -28,26 +28,37 @@
 
 
                 <div class="mb-3">
-                    <label class="form-label">USERNAME</label>
+                    <label class="form-label">EMAIL</label>
                     <input class="form-control @error('email') is-invalid @enderror" type="email" name="email"
-                        value="{{ old('email') }}" placeholder="Email" required autofocus>
-                    @error('email')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
+                        value="{{ old('email') }}" placeholder="Email" required autofocus
+                        oninvalid="this.setCustomValidity('Silakan isi email Anda')"
+                        oninput="this.setCustomValidity('')">
+
                 </div>
 
-                <div class="mb-3">
-                    <label class="form-label">PASSWORD</label>
-                    <input class="form-control @error('password') is-invalid @enderror" type="password" name="password"
-                        placeholder="Password" required>
-                    @error('password')
-                        <span class="invalid-feedback" role="alert">
-                            <strong>{{ $message }}</strong>
-                        </span>
-                    @enderror
-                </div>
+               <div class="mb-3">
+  <label class="form-label">PASSWORD</label>
+  <div class="input-group">
+    <input type="password"
+           name="password"
+           id="passwordInput"
+           class="form-control @error('password') is-invalid @enderror"
+           placeholder="Password"
+           required
+          
+           oninvalid="this.setCustomValidity('Password minimal 8 karakter dan harus mengandung huruf & angka')"
+           oninput="this.setCustomValidity('')">
+    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+      <i class="bi bi-eye-slash" id="toggleIcon"></i>
+    </button>
+  </div>
+  @error('password')
+    <span class="invalid-feedback" role="alert">
+      <strong>{{ $message }}</strong>
+    </span>
+  @enderror
+</div>
+
 
                 <div class="mb-3">
                     <div class="utility">
@@ -76,12 +87,24 @@
     <script src="{{ 'template/docs/js/jquery-3.7.0.min.js' }}"></script>
     <script src="{{ 'template/docs/js/bootstrap.min.js' }}"></script>
     <script src="{{ 'template/docs/js/main.js' }}"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script type="text/javascript">
         // Login Page Flipbox control
         $('.login-content [data-toggle="flip"]').click(function() {
             $('.login-box').toggleClass('flipped');
             return false;
         });
+    </script>
+    <script>
+        function togglePassword() {
+    const input = document.getElementById("passwordInput");
+    const icon = document.getElementById("toggleIcon");
+    const isHidden = input.type === "password";
+
+    input.type = isHidden ? "text" : "password";
+    icon.classList.toggle("bi-eye", isHidden);
+    icon.classList.toggle("bi-eye-slash", !isHidden);
+  }
     </script>
 </body>
 

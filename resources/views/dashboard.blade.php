@@ -212,7 +212,7 @@
     </div>
     </div>
 
-    @if (auth()->user()->role == 'Masyarakat')
+    @if (auth()->user()->role == 'Masyarakat' && 'Admin')
     <div class="row mt-4">
 
         {{-- Draf SKTM --}}
@@ -227,7 +227,7 @@
                             <table class="table table-bordered table-striped mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>No</th>
+                                        
                                         <th>Nama Pemohon</th>
                                         <th>Tujuan Pengajuan</th>
                                         <th>Aksi</th>
@@ -236,15 +236,19 @@
                                 <tbody>
                                     @foreach ($drafSktm as $i => $item)
                                         <tr>
-                                            <td>{{ $i + 1 }}</td>
+                                            
                                             <td>{{ $item->nama }}</td>
                                             <td>{{ $item->tujuan }}</td>
                                             <td>
                                                 <a href="{{ route('sktm.index', ['draf' => $item->id]) }}" class="btn btn-sm btn-info text-white">Lanjut</a>
-                                                <form action="{{ route('sktm.destroy', $item->id) }}" method="POST" style="display:inline;">
-                                                    @csrf @method('DELETE')
-                                                    <button onclick="return confirm('Hapus draf ini?')" class="btn btn-sm btn-danger">Hapus</button>
-                                                </form>
+                                                <form action="{{ route('sktm.destroy', $item->id) }}" method="POST" id="formHapus-{{ $item->id }}" style="display:inline;">
+    @csrf
+    @method('DELETE')
+    <button type="button" class="btn btn-sm btn-danger" id="btnHapus-{{ $item->id }}" onclick="konfirmasiHapus('{{ $item->id }}')">
+        Hapus
+    </button>
+</form>
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -272,7 +276,7 @@
                             <table class="table table-bordered table-striped mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>No</th>
+                                        
                                         <th>Nama Pemohon</th>
                                         <th>Tujuan Pengajuan</th>
                                         <th>Aksi</th>
@@ -281,15 +285,19 @@
                                 <tbody>
                                     @foreach ($drafSku as $i => $item)
                                         <tr>
-                                            <td>{{ $i + 1 }}</td>
+                                            
                                             <td>{{ $item->nama }}</td>
                                             <td>{{ $item->tujuan }}</td>
                                             <td>
-                                                <a href="{{ route('sku.index', ['draf' => $item->id]) }}" class="btn btn-sm btn-info text-white">Lanjut</a>
-                                                <form action="{{ route('sku.destroy', $item->id) }}" method="POST" style="display:inline;">
-                                                    @csrf @method('DELETE')
-                                                    <button onclick="return confirm('Hapus draf ini?')" class="btn btn-sm btn-danger">Hapus</button>
-                                                </form>
+                                               <a href="{{ route('sku.index', ['draf' => $item->id]) }}" class="btn btn-sm btn-info text-white">Lanjut</a>
+                                                 <form action="{{ route('sku.destroy', $item->id) }}" method="POST" id="formHapus-{{ $item->id }}" style="display:inline;">
+    @csrf
+    @method('DELETE')
+    <button type="button" class="btn btn-sm btn-danger" id="btnHapus-{{ $item->id }}" onclick="konfirmasiHapus('{{ $item->id }}')">
+        Hapus
+    </button>
+</form>
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -317,24 +325,28 @@
                             <table class="table table-bordered table-striped mb-0">
                                 <thead class="table-light">
                                     <tr>
-                                        <th>No</th>
                                         <th>Nama Pemohon</th>
                                         <th>Tujuan Pengajuan</th>
                                         <th>Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody>
+                                    
                                     @foreach ($drafSkp as $i => $item)
                                         <tr>
-                                            <td>{{ $i + 1 }}</td>
+                                            
                                             <td>{{ $item->nama }}</td>
-                                            <td>{{ $item->tujuan }}</td>
+                                            <td>Pengantar Perkawinan</td>
                                             <td>
                                                 <a href="{{ route('skp.index', ['draf' => $item->id]) }}" class="btn btn-sm btn-info text-white">Lanjut</a>
-                                                <form action="{{ route('skp.destroy', $item->id) }}" method="POST" style="display:inline;">
-                                                    @csrf @method('DELETE')
-                                                    <button onclick="return confirm('Hapus draf ini?')" class="btn btn-sm btn-danger">Hapus</button>
-                                                </form>
+                                                <form action="{{ route('skp.destroy', $item->id) }}" method="POST" id="formHapus-{{ $item->id }}" style="display:inline;">
+    @csrf
+    @method('DELETE')
+    <button type="button" class="btn btn-sm btn-danger" id="btnHapus-{{ $item->id }}" onclick="konfirmasiHapus('{{ $item->id }}')">
+        Hapus
+    </button>
+</form>
+
                                             </td>
                                         </tr>
                                     @endforeach
@@ -359,5 +371,47 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    function konfirmasiHapus(id) {
+        Swal.fire({
+            title: 'Yakin ingin menghapus data?',
+            text: "Data yang dihapus tidak dapat dikembalikan!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Ya, Hapus!'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                const btn = document.getElementById('btnHapus-' + id);
+                const form = document.getElementById('formHapus-' + id);
+
+                if (!btn || !form) {
+                    console.error("❌ Tidak ditemukan: btnHapus-" + id + " atau formHapus-" + id);
+                    return;
+                }
+
+                btn.disabled = true;
+                btn.innerText = 'Menghapus...';
+                form.submit();
+            }
+        });
+    }
+</script>
+<script>
+    @if (session('success'))
+        Swal.fire({
+            icon: 'success',
+            title: 'Berhasil Login!',
+            text: '{{ session('success') }}',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+    @endif
+</script>
+
+
 @endpush
 

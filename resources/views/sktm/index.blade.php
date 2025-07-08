@@ -462,7 +462,10 @@
 
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai Draf</button>
+                        @if (auth()->user()->role === 'Masyarakat')
+                            <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai
+                                Draf</button>
+                        @endif
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
 
@@ -480,70 +483,10 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-
-
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0'); // bulan dimulai dari 0
-            const dd = String(today.getDate()).padStart(2, '0');
-            const formattedToday = `${yyyy}-${mm}-${dd}`;
-
-            document.getElementById('tanggal').value = formattedToday;
-        });
-    </script> --}}
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 
 
-    {{-- <script>
-        function inisialisasiDataTable(idTabel) {
-            if ($.fn.DataTable.isDataTable(idTabel)) {
-                $(idTabel).DataTable().destroy();
-            }
-
-            // Debug: cek jumlah kolom per baris
-            $(idTabel + ' tbody tr').each(function(index, row) {
-                const tdCount = $(row).find('td').length;
-                const thCount = $(idTabel + ' thead th').length;
-                if (tdCount !== thCount) {
-                    console.warn(
-                        `⚠️ Jumlah kolom td (${tdCount}) ≠ th (${thCount}) di tabel ${idTabel} baris ke-${index + 1}`
-                    );
-                }
-            });
-
-            let table = $(idTabel).DataTable({
-                columnDefs: [{
-                    targets: 0,
-                    orderable: false,
-                    searchable: false
-                }],
-            });
-
-            table.on('order.dt search.dt', function() {
-                table.column(0, {
-                    search: 'applied',
-                    order: 'applied'
-                }).nodes().each(function(cell, i) {
-                    cell.innerHTML = i + 1;
-                });
-            }).draw();
-        }
-        $(document).ready(function() {
-    console.log("Mulai inisialisasi DataTable");
-    console.log("DataTable defined?", $.fn.dataTable); // Cek apakah DataTable sudah tersedia
-
-    inisialisasiDataTable('#sktmTableBelumSelesai');
-});
-
-
-        $(document).ready(function() {
-            inisialisasiDataTable('#sktmTableBelumSelesai');
-            inisialisasiDataTable('#sktmTableSelesai');
-            inisialisasiDataTable('#sktmTableDitolak');
-        });
-    </script> --}}
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -663,110 +606,128 @@
     </script>
 
     <script>
-    $(document).ready(function () {
-        // Setup CSRF untuk semua request Ajax
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        // Ambil data draf ketika modal dibuka
-        $('#modalTambahPengajuan').on('shown.bs.modal', function () {
-            $.get("{{ route('sktm.getDraf') }}", function (data) {
-                if (data) {
-                    $('#formPengajuanSKTM input[name="nama"]').val(data.nama);
-                    $('#formPengajuanSKTM input[name="tujuan"]').val(data.tujuan);
-                    $('#formPengajuanSKTM input[name="pekerjaan"]').val(data.pekerjaan);
-                    $('#formPengajuanSKTM select[name="jenis_kelamin"]').val(data.jenis_kelamin);
-                    $('#formPengajuanSKTM input[name="tempatLahir"]').val(data.tempatLahir);
-                    $('#formPengajuanSKTM input[name="tanggalLahir"]').val(data.tanggalLahir);
-                    $('#formPengajuanSKTM select[name="agama"]').val(data.agama);
-                    $('#formPengajuanSKTM input[name="nik"]').val(data.nik);
-                    $('#formPengajuanSKTM textarea[name="alamat"]').val(data.alamat);
-                    $('#formPengajuanSKTM input[name="rt"]').val(data.rt);
-                    $('#formPengajuanSKTM input[name="rw"]').val(data.rw);
-                    $('#formPengajuanSKTM textarea[name="keterangan"]').val(data.keterangan);
-
-                    // Tampilkan preview file jika ada
-                    ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function (field) {
-                        if (data[field]) {
-                            const filePreview = `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
-                            $(`#formPengajuanSKTM input[name="${field}"]`).after(filePreview);
-                        }
-                    });
+        $(document).ready(function() {
+            // Setup CSRF untuk semua request Ajax
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-            }).fail(function () {
-                console.warn("Tidak bisa ambil data draf.");
+            });
+
+            // Ambil data draf ketika modal dibuka
+            $('#modalTambahPengajuan').on('shown.bs.modal', function() {
+                $.get("{{ route('sktm.getDraf') }}", function(data) {
+                    if (data) {
+                        $('#formPengajuanSKTM input[name="nama"]').val(data.nama);
+                        $('#formPengajuanSKTM input[name="tujuan"]').val(data.tujuan);
+                        $('#formPengajuanSKTM input[name="pekerjaan"]').val(data.pekerjaan);
+                        $('#formPengajuanSKTM select[name="jenis_kelamin"]').val(data
+                        .jenis_kelamin);
+                        $('#formPengajuanSKTM input[name="tempatLahir"]').val(data.tempatLahir);
+                        $('#formPengajuanSKTM input[name="tanggalLahir"]').val(data.tanggalLahir);
+                        $('#formPengajuanSKTM select[name="agama"]').val(data.agama);
+                        $('#formPengajuanSKTM input[name="nik"]').val(data.nik);
+                        $('#formPengajuanSKTM textarea[name="alamat"]').val(data.alamat);
+                        $('#formPengajuanSKTM input[name="rt"]').val(data.rt);
+                        $('#formPengajuanSKTM input[name="rw"]').val(data.rw);
+                        $('#formPengajuanSKTM textarea[name="keterangan"]').val(data.keterangan);
+
+                        // Tampilkan preview file jika ada
+                        ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function(
+                        field) {
+                            if (data[field]) {
+                                const filePreview =
+                                    `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                                $(`#formPengajuanSKTM input[name="${field}"]`).after(
+                                    filePreview);
+                            }
+                        });
+                    }
+                }).fail(function() {
+                    console.warn("Tidak bisa ambil data draf.");
+                });
+            });
+
+            // Tombol Simpan Draf
+        
+   
+        $('#btnSimpanDraf').on('click', function () {
+            const form = $('#formPengajuanSKTM')[0];
+            const formData = new FormData(form);
+
+            $.ajax({
+                url: "{{ route('sktm.storeDraf') }}",
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function (res) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Draf berhasil disimpan!',
+                        confirmButtonColor: '#3085d6',
+                    }).then(() => {
+                        $('#modalTambahPengajuan').modal('hide');
+                        $('#modalTambahPengajuan').on('hidden.bs.modal', function () {
+                            $('body').removeClass('modal-open').css('overflow', '');
+                            $('.modal-backdrop').remove();
+                        });
+                    });
+                },
+                error: function (xhr, status, err) {
+                    let msg = 'Gagal menyimpan draf.';
+                    if (xhr.responseJSON && xhr.responseJSON.error) {
+                        msg += "\n" + xhr.responseJSON.error;
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops!',
+                        text: msg,
+                        confirmButtonColor: '#d33',
+                    });
+
+                    console.error(xhr.responseText);
+                }
             });
         });
-
-        // Tombol Simpan Draf
-        $('#btnSimpanDraf').on('click', function () {
-    const form = $('#formPengajuanSKTM')[0];
-    const formData = new FormData(form);
-
-    $.ajax({
-        url: "{{ route('sktm.storeDraf') }}",
-        method: "POST",
-        data: formData,
-        processData: false,
-        contentType: false,
-        success: function (res) {
-            alert('✅ Draf berhasil disimpan!');
-            
-            $('#modalTambahPengajuan').modal('hide');
-           $('#modalTambahPengajuan').on('hidden.bs.modal', function () {
-    $('body').removeClass('modal-open').css('overflow', '');
-    $('.modal-backdrop').remove();
-});
-
-        },
-        error: function (xhr, status, err) {
-            let msg = '❌ Gagal menyimpan draf.';
-            if (xhr.responseJSON && xhr.responseJSON.error) {
-                msg += "\n" + xhr.responseJSON.error;
-            }
-            alert(msg);
-            console.error(xhr.responseText);
-        }
     });
-});
-});
 </script>
 
-@if (isset($drafToLoad))
-    <script>
-        $(document).ready(function () {
-            const draf = @json($drafToLoad);
+    @if (isset($drafToLoad))
+        <script>
+            $(document).ready(function() {
+                const draf = @json($drafToLoad);
 
-            // Isi form
-            $('#formPengajuanSKTM input[name="nama"]').val(draf.nama);
-            $('#formPengajuanSKTM input[name="tujuan"]').val(draf.tujuan);
-            $('#formPengajuanSKTM input[name="pekerjaan"]').val(draf.pekerjaan);
-            $('#formPengajuanSKTM select[name="jenis_kelamin"]').val(draf.jenis_kelamin);
-            $('#formPengajuanSKTM input[name="tempatLahir"]').val(draf.tempatLahir);
-            $('#formPengajuanSKTM input[name="tanggalLahir"]').val(draf.tanggalLahir);
-            $('#formPengajuanSKTM select[name="agama"]').val(draf.agama);
-            $('#formPengajuanSKTM input[name="nik"]').val(draf.nik);
-            $('#formPengajuanSKTM textarea[name="alamat"]').val(draf.alamat);
-            $('#formPengajuanSKTM input[name="rt"]').val(draf.rt);
-            $('#formPengajuanSKTM input[name="rw"]').val(draf.rw);
-            $('#formPengajuanSKTM textarea[name="keterangan"]').val(draf.keterangan);
+                // Isi form
+                $('#formPengajuanSKTM input[name="nama"]').val(draf.nama);
+                $('#formPengajuanSKTM input[name="tujuan"]').val(draf.tujuan);
+                $('#formPengajuanSKTM input[name="pekerjaan"]').val(draf.pekerjaan);
+                $('#formPengajuanSKTM select[name="jenis_kelamin"]').val(draf.jenis_kelamin);
+                $('#formPengajuanSKTM input[name="tempatLahir"]').val(draf.tempatLahir);
+                $('#formPengajuanSKTM input[name="tanggalLahir"]').val(draf.tanggalLahir);
+                $('#formPengajuanSKTM select[name="agama"]').val(draf.agama);
+                $('#formPengajuanSKTM input[name="nik"]').val(draf.nik);
+                $('#formPengajuanSKTM textarea[name="alamat"]').val(draf.alamat);
+                $('#formPengajuanSKTM input[name="rt"]').val(draf.rt);
+                $('#formPengajuanSKTM input[name="rw"]').val(draf.rw);
+                $('#formPengajuanSKTM textarea[name="keterangan"]').val(draf.keterangan);
 
-            // Tambahkan link preview jika ada file
-            ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function (field) {
-                if (draf[field]) {
-                    const preview = `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
-                    $(`#formPengajuanSKTM input[name="${field}"]`).after(preview);
-                }
+                // Tambahkan link preview jika ada file
+                ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function(field) {
+                    if (draf[field]) {
+                        const preview =
+                            `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                        $(`#formPengajuanSKTM input[name="${field}"]`).after(preview);
+                    }
+                });
+
+                // Buka modal otomatis
+                $('#modalTambahPengajuan').modal('show');
             });
-
-            // Buka modal otomatis
-            $('#modalTambahPengajuan').modal('show');
-        });
-    </script>
-@endif
+        </script>
+    @endif
 
 
 

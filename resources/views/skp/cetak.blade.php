@@ -83,7 +83,7 @@
     <div class="pojok-kanan">Mode N 1</div> <br>
     <p >Lampiran I</p>
     <p>Keputusan Dirjen Bimas Islam No 713 Tahun 2018</p>
-
+<br>
     <p class="text-center">FORMULIR SURAT PENGANTAR PERKAWINAN</p>
 
     <table>

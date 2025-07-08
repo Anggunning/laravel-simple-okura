@@ -23,43 +23,38 @@
 <div class="title">
     <h4>Detail Penduduk Miskin</h4>
 </div>
-<div class="row content-center">
-    <div class="col-md-8">
-        <div class="tile p-3">
+<div class="d-flex justify-content mt-4">
+    <div class="tile p-4 border rounded shadow w-auto">
+        {{-- Foto Rumah --}}
+        <div class="mb-4">
+            <h6 class="fw-bold">Foto Rumah</h6>
+            @if ($pendudukMiskin->foto_rumah)
+                <img src="{{ route('dokumen.show', ['folder' => 'pendudukMiskin', 'filename' => basename($pendudukMiskin->foto_rumah)]) }}" 
+                    alt="Foto Rumah" class="img-fluid rounded" style="max-height: 300px;">
+            @else
+                <div class="text-muted fst-italic">Tidak ada foto tersedia</div>
+            @endif
+        </div>
 
-            {{-- Foto Rumah di Atas --}}
-            <div class="text-center mb-4">
-                <h6>Foto Rumah</h6>
-                @if ($pendudukMiskin->foto_rumah)
-    <img src="{{ route('dokumen.show', ['folder' => 'pendudukMiskin', 'filename' => basename($pendudukMiskin->foto_rumah)]) }}" 
-    alt="Foto Rumah" class="img-fluid" style="max-height: 400px;">
-    
-@else
-    <div class="text-muted fst-italic">Tidak ada foto tersedia</div>
-@endif
-            </div>
-
-          {{-- Data Detail (blok tengah, teks rata kiri) --}}
-<div class="d-flex flex-column align-items-center">
-    <div class="w-100" style="max-width: 600px;"> {{-- Blok center --}}
-        @foreach ([
-            'Nama' => $pendudukMiskin->nama,
-            'Alamat' => $pendudukMiskin->alamat,
-            'Nama Kepala Keluarga' => $pendudukMiskin->nama_kepala_keluarga ?? 'Tidak punya kepala keluarga / cerai',
-            'Jumlah Anggota Keluarga' => $pendudukMiskin->jml_agt_keluarga . ' Orang',
-            'Kelompok PKH' => $pendudukMiskin->kelompokPKH,
-            'Status Penduduk' => $pendudukMiskin->status,
-        ] as $label => $value)
-            <div class="row mb-2 mx-auto">
-                <div class="col-5 text-start fw-semibold">{{ $label }}</div>
-                <div class="col-7 text-start">: {{ $value }}</div>
-            </div>
-        @endforeach
-    </div>
-</div>
-
-
+        {{-- Data Penduduk --}}
+        <div>
+            @foreach ([
+                'Nama' => $pendudukMiskin->nama,
+                'Alamat' => $pendudukMiskin->alamat,
+                'Nama Kepala Keluarga' => $pendudukMiskin->nama_kepala_keluarga ?? 'Tidak punya kepala keluarga / cerai',
+                'Jumlah Anggota Keluarga' => $pendudukMiskin->jml_agt_keluarga . ' Orang',
+                'Kelompok PKH' => $pendudukMiskin->kelompokPKH,
+                'Status Penduduk' => $pendudukMiskin->status,
+            ] as $label => $value)
+                <div class="d-flex mb-2">
+                    <div class="fw-semibold" style="min-width: 180px;">{{ $label }}</div>
+                    <div>: {{ $value }}</div>
+                </div>
+            @endforeach
         </div>
     </div>
 </div>
+
+
+
 @endsection

@@ -420,7 +420,7 @@
                                 oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
-                            <label for="tempat_usaha" class="form-label">Tempat Usaha
+                            <label for="tempat_usaha" class="form-label">Alamat Usaha
                                 <span class="text-danger">*</span>
                             </label>
                             <input type="text" name="tempat_usaha" class="form-control" required
@@ -429,7 +429,7 @@
                                 oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
-                            <label for="kelurahan" class="form-label">Kelurahan
+                            <label for="kelurahan" class="form-label">Kelurahan Usaha
                                 <span class="text-danger">*</span>
                             </label>
                             <input type="text" name="kelurahan" class="form-control" required
@@ -440,7 +440,7 @@
                         
                         
                         <div class="mb-3">
-                            <label for="kecamatan" class="form-label">Kecamatan
+                            <label for="kecamatan" class="form-label">Kecamatan Usaha
                                 <span class="text-danger">*</span></label>
                             </label>
                             <input type="text" name="kecamatan" class="form-control" required
@@ -449,7 +449,7 @@
                                 oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
-                            <label for="kota" class="form-label">Kota
+                            <label for="kota" class="form-label">Kota Usaha
                                 <span class="text-danger">*</span></label>
                             </label>
                             <input type="text" name="kota" class="form-control" required
@@ -518,7 +518,10 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai Draf</button>
+                        @if (auth()->user()->role === 'Masyarakat')
+                            <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai
+                                Draf</button>
+                        @endif
                         <button type="submit" class="btn btn-primary">Simpan</button>
                     </div>
                 </form>
@@ -609,8 +612,8 @@
                     form.find('input[name="tujuan"]').val(data.tujuan);
                     form.find('input[name="pekerjaan"]').val(data.pekerjaan);
                     form.find('select[name="jenis_kelamin"]').val(data.jenis_kelamin);
-                    form.find('input[name="tempatLahir"]').val(data.tempatLahir);
-                    form.find('input[name="tanggalLahir"]').val(data.tanggalLahir);
+                    form.find('input[name="tempat_lahir"]').val(data.tempat_lahir);
+                    form.find('input[name="tanggal_lahir"]').val(data.tanggal_lahir);
                     form.find('select[name="agama"]').val(data.agama);
                     form.find('input[name="nik"]').val(data.nik);
                     form.find('textarea[name="alamat"]').val(data.alamat);
@@ -648,21 +651,32 @@
                 processData: false,
                 contentType: false,
                 success: function (res) {
-                    alert('✅ Draf berhasil disimpan!');
-                    $('#modalTambahPengajuan').modal('hide');
-
-                    // Cleanup modal state
-                    $('#modalTambahPengajuan').on('hidden.bs.modal', function () {
-                        $('body').removeClass('modal-open').css('overflow', '');
-                        $('.modal-backdrop').remove();
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Draf berhasil disimpan!',
+                        confirmButtonColor: '#3085d6',
+                    }).then(() => {
+                        $('#modalTambahPengajuan').modal('hide');
+                        $('#modalTambahPengajuan').on('hidden.bs.modal', function () {
+                            $('body').removeClass('modal-open').css('overflow', '');
+                            $('.modal-backdrop').remove();
+                        });
                     });
                 },
-                error: function (xhr) {
-                    let msg = '❌ Gagal menyimpan draf.';
+                error: function (xhr, status, err) {
+                    let msg = 'Gagal menyimpan draf.';
                     if (xhr.responseJSON && xhr.responseJSON.error) {
                         msg += "\n" + xhr.responseJSON.error;
                     }
-                    alert(msg);
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops!',
+                        text: msg,
+                        confirmButtonColor: '#d33',
+                    });
+
                     console.error(xhr.responseText);
                 }
             });
@@ -674,31 +688,32 @@
 <script>
     $(document).ready(function () {
         const draf = @json($drafToLoad);
-        const form = $('#formPengajuanSKU');
+        // const form = $('#formPengajuanSKU');
 
-        form.find('input[name="nama"]').val(draf.nama);
-        form.find('input[name="tujuan"]').val(draf.tujuan);
-        form.find('input[name="pekerjaan"]').val(draf.pekerjaan);
-        form.find('select[name="jenis_kelamin"]').val(draf.jenis_kelamin);
-        form.find('input[name="tempatLahir"]').val(draf.tempatLahir);
-        form.find('input[name="tanggalLahir"]').val(draf.tanggalLahir);
-        form.find('select[name="agama"]').val(draf.agama);
-        form.find('input[name="nik"]').val(draf.nik);
-        form.find('textarea[name="alamat"]').val(draf.alamat);
-        form.find('input[name="rt"]').val(draf.rt);
-        form.find('input[name="rw"]').val(draf.rw);
-        form.find('textarea[name="keterangan"]').val(draf.keterangan);
-        form.find('input[name="jenis_usaha"]').val(draf.jenis_usaha);
-        form.find('input[name="tempat_usaha"]').val(draf.tempat_usaha);
-        form.find('input[name="kelurahan"]').val(draf.kelurahan);
-        form.find('input[name="kecamatan"]').val(draf.kecamatan);
-        form.find('input[name="kota"]').val(draf.kota);
+        $('#formPengajuanSKU input[name="nama"]').val(draf.nama);
+        $('#formPengajuanSKU input[name="tujuan"]').val(draf.tujuan);
+        $('#formPengajuanSKU input[name="pekerjaan"]').val(draf.pekerjaan);
+        $('#formPengajuanSKU select[name="jenis_kelamin"]').val(draf.jenis_kelamin);
+        $('#formPengajuanSKU input[name="tempat_lahir"]').val(draf.tempat_lahir);
+        $('#formPengajuanSKU input[name="tanggal_lahir"]').val(draf.tanggal_lahir);
+        $('#formPengajuanSKU select[name="agama"]').val(draf.agama);
+        $('#formPengajuanSKU input[name="nik"]').val(draf.nik);
+        $('#formPengajuanSKU textarea[name="alamat"]').val(draf.alamat);
+        $('#formPengajuanSKU input[name="rt"]').val(draf.rt);
+        $('#formPengajuanSKU input[name="rw"]').val(draf.rw);
+        $('#formPengajuanSKU textarea[name="keterangan"]').val(draf.keterangan);
+        $('#formPengajuanSKU input[name="jenis_usaha"]').val(draf.jenis_usaha);
+        $('#formPengajuanSKU input[name="tempat_usaha"]').val(draf.tempat_usaha);
+        $('#formPengajuanSKU input[name="kelurahan"]').val(draf.kelurahan);
+        $('#formPengajuanSKU input[name="kecamatan"]').val(draf.kecamatan);
+        $('#formPengajuanSKU input[name="kota"]').val(draf.kota);
 
         ['foto_usaha', 'ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function (field) {
             if (draf[field]) {
-                const preview = `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
-                form.find(`input[name="${field}"]`).after(preview);
-            }
+                        const preview =
+                            `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                        $(`#formPengajuanSKU input[name="${field}"]`).after(preview);
+                    }
         });
 
         $('#modalTambahPengajuan').modal('show');

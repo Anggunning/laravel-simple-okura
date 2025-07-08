@@ -2,16 +2,16 @@
     {{-- Form Pemohon --}}
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}nama" class="form-label">Nama
+            <label for="nama" class="form-label">Nama
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="nama" id="{{ $prefix }}nama" class="form-control" required
+            <input type="text" name="nama" id="nama" class="form-control" required
                 placeholder="Masukkan nama lengkap" oninvalid="this.setCustomValidity('Silakan isi nama lengkap')"
                 oninput="this.setCustomValidity('')">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}nik" class="form-label">NIK</label>
-            <input type="text" name="nik" id="{{ $prefix }}nik" class="form-control" required
+            <label for="nik" class="form-label">NIK</label>
+            <input type="text" name="nik" id="nik" class="form-control" required
                 placeholder="Masukkan NIK 16 digit" oninvalid="this.setCustomValidity('Silakan isi nik')"
                 oninput="this.setCustomValidity('')">
         </div>
@@ -19,21 +19,22 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}jenis_kelamin" class="form-label">Jenis Kelamin
+            <label for="jenis_kelamin" class="form-label">Jenis Kelamin
                 <span class="text-danger">*</span>
             </label>
-            <select name="jenis_kelamin" id="{{ $prefix }}jenis_kelamin" class="form-select" required
+            <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required
                 oninvalid="this.setCustomValidity('Silakan isi jenis kelamin')" oninput="this.setCustomValidity('')">
+                <option value="" disabled selected hidden>Jenis Kelamin</option>
                 <option value="Laki-laki">Laki-laki</option>
                 <option value="Perempuan">Perempuan</option>
             </select>
 
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}tempat_lahir" class="form-label">Tempat Lahir
+            <label for="tempat_lahir" class="form-label">Tempat Lahir
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="tempat_lahir" id="{{ $prefix }}tempat_lahir" class="form-control" required
+            <input type="text" name="tempat_lahir" id="tempat_lahir" class="form-control" required
                 oninvalid="this.setCustomValidity('Silakan isi tempat lahir')" oninput="this.setCustomValidity('')"
                 placeholder="Masukkan tempat lahir">
         </div>
@@ -41,15 +42,15 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}tanggal_lahir" class="form-label">Tanggal Lahir
+            <label for="tanggal_lahir" class="form-label">Tanggal Lahir
                 <span class="text-danger">*</span>
             </label>
-            <input type="date" name="tanggal_lahir" id="{{ $prefix }}tanggal_lahir" class="form-control"
+            <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control"
                 required oninvalid="this.setCustomValidity('Silakan isi tanggal lahir')"
                 oninput="this.setCustomValidity('')">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}agama" class="form-label">Agama
+            <label for="agama" class="form-label">Agama
                 <span class="text-danger">*</span></label>
             <select name="agama" class="form-select" required
                 oninvalid="this.setCustomValidity('Silakan pilih agama')" oninput="this.setCustomValidity('')">
@@ -66,26 +67,26 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}pekerjaan" class="form-label">Pekerjaan
+            <label for="pekerjaan" class="form-label">Pekerjaan
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="pekerjaan" id="{{ $prefix }}pekerjaan" class="form-control" required
+            <input type="text" name="pekerjaan" id="pekerjaan" class="form-control" required
                 oninvalid="this.setCustomValidity('Silakan isi pekerjaan')" oninput="this.setCustomValidity('')"
                 placeholder="Masukkan pekerjaan">
         </div>
         <div class="mb-3 col-md-6" id="formNamaPasangan" style="display: none;">
-            <label for="{{ $prefix }}nama_pasangan_dulu" class="form-label">Nama Pasangan Dulu
+            <label for="nama_pasangan_dulu" class="form-label">Nama Pasangan Dulu
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="nama_pasangan_dulu" id="{{ $prefix }}nama_pasangan_dulu"
+            <input type="text" name="nama_pasangan_dulu" id="nama_pasangan_dulu"
                 class="form-control" oninvalid="this.setCustomValidity('Silakan isi nama pasangan dulu')"
                 oninput="this.setCustomValidity('')" placeholder="Masukkan nama pasangan">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}status_kawin" class="form-label">Status Perkawinan
+            <label for="status_kawin" class="form-label">Status Perkawinan
                 <span class="text-danger">*</span>
             </label>
-            <select name="status_kawin" id="{{ $prefix }}status_kawin" class="form-select" required
+            <select name="status_kawin" id="status_kawin" class="form-select" required
                 oninvalid="this.setCustomValidity('Silakan isi status kawin')" oninput="this.setCustomValidity('')">
                 <option value="">Pilih Status</option>
                 <option value="Belum Menikah">Belum Menikah</option>
@@ -96,29 +97,29 @@
 
 
         <div class="mb-3 col-md-6" id="formJenisKelaminPasanganDulu" style="display: none;">
-            <label for="{{ $prefix }}jenis_kelamin_psgn_dulu" class="form-label">Jenis Kelamin Pasangan
+            <label for="jenis_kelamin_psgn_dulu" class="form-label">Jenis Kelamin Pasangan
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" id="{{ $prefix }}jenis_kelamin_psgn_dulu" class="form-control" readonly>
+            <input type="text" id="jenis_kelamin_psgn_dulu" class="form-control" readonly>
         </div>
 
     </div>
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}alamat" class="form-label">Alamat
+            <label for="alamat" class="form-label">Alamat
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="alamat" id="{{ $prefix }}alamat" class="form-control" required
+            <input type="text" name="alamat" id="alamat" class="form-control" required
                 oninvalid="this.setCustomValidity('Silakan isi alamat')"
                 oninput="this.setCustomValidity('')"placeholder="Masukkan alamat tempat tinggal">
         </div>
 
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}kewarganegaraan" class="form-label">Kewarganegaraan
+            <label for="kewarganegaraan" class="form-label">Kewarganegaraan
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="kewarganegaraan" id="{{ $prefix }}kewarganegaraan"
+            <input type="text" name="kewarganegaraan" id="kewarganegaraan"
                 class="form-control" required oninvalid="this.setCustomValidity('Silakan isi kewarganegaraan')"
                 oninput="this.setCustomValidity('')" placeholder="Contoh: Indonesia">
         </div>
@@ -143,8 +144,8 @@
 
     <div class="row">
         <div class="mb-3 col-12">
-            <label for="{{ $prefix }}keterangan" class="form-label">Keterangan </label>
-            <textarea name="keterangan" id="{{ $prefix }}keterangan" class="form-control" rows="2" 
+            <label for="keterangan" class="form-label">Keterangan </label>
+            <textarea name="keterangan" id="keterangan" class="form-control" rows="2" 
                 placeholder="Masukkan Keterangan (optional)"></textarea>
         </div>
     </div>
@@ -155,8 +156,8 @@
 
         {{-- KTP --}}
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}ktp" class="form-label">KTP <span class="text-danger">*</span></label>
-            <input type="file" name="ktp" id="{{ $prefix }}ktp" class="form-control"
+            <label for="ktp" class="form-label">KTP <span class="text-danger">*</span></label>
+            <input type="file" name="ktp" id="ktp" class="form-control"
                 accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
             <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
             <div id="link_ktp_lama" class="mt-2"></div>
@@ -164,9 +165,9 @@
 
         {{-- KK --}}
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}kk" class="form-label">Kartu Keluarga <span
+            <label for="kk" class="form-label">Kartu Keluarga <span
                     class="text-danger">*</span></label>
-            <input type="file" name="kk" id="{{ $prefix }}kk" class="form-control"
+            <input type="file" name="kk" id="kk" class="form-control"
                 accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
             <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
             <div id="link_kk_lama" class="mt-2"></div>
@@ -174,9 +175,9 @@
 
         {{-- Surat Pengantar RT/RW --}}
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span
+            <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span
                     class="text-danger">*</span></label>
-            <input type="file" name="pengantar_rt_rw" id="{{ $prefix }}pengantar_rt_rw"
+            <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw"
                 class="form-control" accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
             <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
             <div id="link_pengantar_rt_rw_lama" class="mt-2"></div>
@@ -184,8 +185,8 @@
 
         {{-- Foto --}}
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}foto" class="form-label">Foto <span class="text-danger">*</span></label>
-            <input type="file" name="foto" id="{{ $prefix }}foto" class="form-control"
+            <label for="foto" class="form-label">Pas Foto 3x4 <span class="text-danger">*</span></label>
+            <input type="file" name="foto" id="foto" class="form-control"
                 accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
             <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
             <div id="link_foto_lama" class="mt-2"></div>
@@ -202,18 +203,18 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}nama_ayah" class="form-label">Nama Ayah
+            <label for="nama_ayah" class="form-label">Nama Ayah
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="nama_ayah" id="{{ $prefix }}nama_ayah" class="form-control" required
+            <input type="text" name="nama_ayah" id="nama_ayah" class="form-control" required
                 oninvalid="this.setCustomValidity('Silakan isi nama ayah')"
                 oninput="this.setCustomValidity('')"placeholder="Masukkan nama ayah">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}nik_ayah" class="form-label">NIK Ayah
+            <label for="nik_ayah" class="form-label">NIK Ayah
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="nik_ayah" id="{{ $prefix }}nik_ayah" class="form-control" required
+            <input type="text" name="nik_ayah" id="nik_ayah" class="form-control" required
                 oninvalid="this.setCustomValidity('Silakan isi nik ayah')" oninput="this.setCustomValidity('')"
                 placeholder="Masukkan NIK ayah">
         </div>
@@ -221,18 +222,18 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}tempat_lahir_ayah" class="form-label">Tempat Lahir Ayah
+            <label for="tempat_lahir_ayah" class="form-label">Tempat Lahir Ayah
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="tempat_lahir_ayah" id="{{ $prefix }}tempat_lahir_ayah"
+            <input type="text" name="tempat_lahir_ayah" id="tempat_lahir_ayah"
                 class="form-control" oninvalid="this.setCustomValidity('Silakan isi tempat lahir ayah')"
                 oninput="this.setCustomValidity('')" placeholder="Masukkan tempat lahir ayah">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}tanggal_lahir_ayah" class="form-label">Tanggal Lahir Ayah
+            <label for="tanggal_lahir_ayah" class="form-label">Tanggal Lahir Ayah
                 <span class="text-danger">*</span>
             </label>
-            <input type="date" name="tanggal_lahir_ayah" id="{{ $prefix }}tanggal_lahir_ayah"
+            <input type="date" name="tanggal_lahir_ayah" id="tanggal_lahir_ayah"
                 class="form-control" placeholder="Masukkan tanggal lahir ayah"
                 oninvalid="this.setCustomValidity('Silakan isi tanggal lahir ayah')"
                 oninput="this.setCustomValidity('')">
@@ -241,18 +242,18 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}agama_ayah" class="form-label">Agama Ayah
+            <label for="agama_ayah" class="form-label">Agama Ayah
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="agama_ayah" id="{{ $prefix }}agama_ayah" class="form-control"
+            <input type="text" name="agama_ayah" id="agama_ayah" class="form-control"
                 required oninvalid="this.setCustomValidity('Silakan isi agama ayah')"
                 oninput="this.setCustomValidity('')"placeholder="Masukkan agama ayah">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}kewarganegaraan_ayah" class="form-label">Kewarganegaraan Ayah
+            <label for="kewarganegaraan_ayah" class="form-label">Kewarganegaraan Ayah
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="kewarganegaraan_ayah" id="{{ $prefix }}kewarganegaraan_ayah"
+            <input type="text" name="kewarganegaraan_ayah" id="kewarganegaraan_ayah"
                 class="form-control" required oninvalid="this.setCustomValidity('Silakan isi kewarganegaraan ayah')"
                 oninput="this.setCustomValidity('')" placeholder="Masukkan kewarganegaraan ayah">
         </div>
@@ -260,18 +261,18 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}pekerjaan_ayah" class="form-label">Pekerjaan Ayah
+            <label for="pekerjaan_ayah" class="form-label">Pekerjaan Ayah
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="pekerjaan_ayah" id="{{ $prefix }}pekerjaan_ayah" class="form-control"
+            <input type="text" name="pekerjaan_ayah" id="pekerjaan_ayah" class="form-control"
                 required oninvalid="this.setCustomValidity('Silakan isi pekerjaan ayah')"
                 oninput="this.setCustomValidity('')" placeholder="Masukkan pekerjaan ayah">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}alamat_ayah" class="form-label">Alamat Ayah
+            <label for="alamat_ayah" class="form-label">Alamat Ayah
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="alamat_ayah" id="{{ $prefix }}alamat_ayah" class="form-control"
+            <input type="text" name="alamat_ayah" id="alamat_ayah" class="form-control"
                 required oninvalid="this.setCustomValidity('Silakan isi alamat ayah')"
                 oninput="this.setCustomValidity('')" placeholder="Masukkan alamat ayah">
         </div>
@@ -297,17 +298,17 @@
     <br>
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}nama_ibu" class="form-label">Nama Ibu
+            <label for="nama_ibu" class="form-label">Nama Ibu
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="nama_ibu" id="{{ $prefix }}nama_ibu" class="form-control" required
+            <input type="text" name="nama_ibu" id="nama_ibu" class="form-control" required
                 oninvalid="this.setCustomValidity('Silakan isi alamat ibu')" oninput="this.setCustomValidity('')"
                 placeholder="Masukkan nama ibu">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}nik_ibu" class="form-label">NIK Ibu<span
+            <label for="nik_ibu" class="form-label">NIK Ibu<span
                     class="text-danger">*</span></label>
-            <input type="text" name="nik_ibu" id="{{ $prefix }}nik_ibu" class="form-control" required
+            <input type="text" name="nik_ibu" id="nik_ibu" class="form-control" required
                 oninvalid="this.setCustomValidity('Silakan isi nik ibu')" oninput="this.setCustomValidity('')"
                 placeholder="Masukkan NIK ibu">
         </div>
@@ -315,16 +316,16 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}tempat_lahir_ibu" class="form-label">Tempat Lahir Ibu<span
+            <label for="tempat_lahir_ibu" class="form-label">Tempat Lahir Ibu<span
                     class="text-danger">*</span></label>
-            <input type="text" name="tempat_lahir_ibu" id="{{ $prefix }}tempat_lahir_ibu"
+            <input type="text" name="tempat_lahir_ibu" id="tempat_lahir_ibu"
                 class="form-control" oninvalid="this.setCustomValidity('Silakan isi tempat lahir ibu')"
                 oninput="this.setCustomValidity('')" placeholder="Masukkan tempat lahir ibu">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}tanggal_lahir_ibu" class="form-label">Tanggal Lahir Ibu<span
+            <label for="tanggal_lahir_ibu" class="form-label">Tanggal Lahir Ibu<span
                     class="text-danger">*</span></label>
-            <input type="date" name="tanggal_lahir_ibu" id="{{ $prefix }}tanggal_lahir_ibu"
+            <input type="date" name="tanggal_lahir_ibu" id="tanggal_lahir_ibu"
                 class="form-control" oninvalid="this.setCustomValidity('Silakan isi tanggal lahir ibu')"
                 oninput="this.setCustomValidity('')" placeholder="Masukkan tanggal lahir ibu">
         </div>
@@ -332,16 +333,16 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}agama_ibu" class="form-label">Agama Ibu<span
+            <label for="agama_ibu" class="form-label">Agama Ibu<span
                     class="text-danger">*</span></label>
-            <input type="text" name="agama_ibu" id="{{ $prefix }}agama_ibu" class="form-control" required
+            <input type="text" name="agama_ibu" id="agama_ibu" class="form-control" required
                 oninvalid="this.setCustomValidity('Silakan isi agama ibu')"
                 oninput="this.setCustomValidity('')"placeholder="Masukkan agama ibu">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}kewarganegaraan_ibu" class="form-label">Kewarganegaraan Ibu<span
+            <label for="kewarganegaraan_ibu" class="form-label">Kewarganegaraan Ibu<span
                     class="text-danger">*</span></label>
-            <input type="text" name="kewarganegaraan_ibu" id="{{ $prefix }}kewarganegaraan_ibu"
+            <input type="text" name="kewarganegaraan_ibu" id="kewarganegaraan_ibu"
                 class="form-control" required oninvalid="this.setCustomValidity('Silakan isi kewarganegaraan ibu')"
                 oninput="this.setCustomValidity('')" placeholder="Masukkan kewarganegaraan ibu">
         </div>
@@ -349,16 +350,16 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}pekerjaan_ibu" class="form-label">Pekerjaan Ibu<span
+            <label for="pekerjaan_ibu" class="form-label">Pekerjaan Ibu<span
                     class="text-danger">*</span></label>
-            <input type="text" name="pekerjaan_ibu" id="{{ $prefix }}pekerjaan_ibu" class="form-control"
+            <input type="text" name="pekerjaan_ibu" id="pekerjaan_ibu" class="form-control"
                 required oninvalid="this.setCustomValidity('Silakan isi pekerjaan ibu')"
                 oninput="this.setCustomValidity('')"placeholder="Masukkan pekerjaan ibu">
         </div>
         <div class="mb-3 col-md-6">
-            <label for="{{ $prefix }}alamat_ibu" class="form-label">Alamat Ibu<span
+            <label for="alamat_ibu" class="form-label">Alamat Ibu<span
                     class="text-danger">*</span></label>
-            <input type="text" name="alamat_ibu" id="{{ $prefix }}alamat_ibu" class="form-control"
+            <input type="text" name="alamat_ibu" id="alamat_ibu" class="form-control"
                 required oninvalid="this.setCustomValidity('Silakan isi alamat ibu')"
                 oninput="this.setCustomValidity('')" placeholder="Masukkan alamat ibu">
         </div>
@@ -493,7 +494,7 @@
             });
         });
     </script>
-    <script>
+    {{-- <script>
         $('.btn-edit-skp').on('click', function() {
             const modal = $('#modalEditSKP');
             const form = modal.find('#formEditSKP');
@@ -567,9 +568,40 @@
 
 
         });
+    </script> --}}
+        <script>
+document.addEventListener('DOMContentLoaded', function () {
+    const form = document.getElementById('formPengajuanSKP');
+
+    form.addEventListener('submit', function(e) {
+        // Cegah hanya jika bukan hasil konfirmasi SweetAlert
+        if (!form.dataset.konfirmasi) {
+            e.preventDefault();
+
+            Swal.fire({
+                title: 'Yakin mau menyimpan?',
+                text: 'Pastikan semua data sudah benar.',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonText: 'Simpan',
+                cancelButtonText: 'Batal',
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.dataset.konfirmasi = "true"; // Flag agar tidak masuk ke SweetAlert lagi
+                    form.requestSubmit(); // ✅ Gunakan ini, bukan form.submit()
+                }
+            });
+        } else {
+            delete form.dataset.konfirmasi; // Reset setelah konfirmasi
+        }
+    });
+});
+
     </script>
 
-    <script>
+    {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {
             const form = document.getElementById('formPengajuanSKTM');
 
@@ -592,7 +624,7 @@
                 });
             });
         });
-    </script>
+    </script> --}}
 
     {{-- <script>
             $('#modalEditSKP').on('show.bs.modal', function (event) {
@@ -662,4 +694,6 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 });
 </script> --}}
+
+
 @endpush

@@ -119,59 +119,57 @@
 
                         {{-- Tombol Verifikasi --}}
                         @if (auth()->check())
-                            {{-- ADMIN & SEKRETARIS --}}
-                            @if (in_array(auth()->user()->role, ['Admin', 'Sekretaris']))
-                                @if ($sku->status === 'Diajukan')
-                                    <form id="verifikasiFormAdmin" action="{{ route('sku.verifikasi', $sku->id) }}"
-                                        method="POST" style="display:inline;">
-                                        @csrf
-                                        <button type="button" id="btnVerifikasiAdmin" class="btn btn-success"
-                                            onclick="verifikasiAdminConfirm()">Verifikasi</button>
-                                    </form>
+    @php
+        $role = auth()->user()->role;
+    @endphp
 
-                                    {{-- Tombol Tolak --}}
-                                    <button id="btnTolak-{{ $sku->id }}" type="button" class="btn btn-danger"
-                                        onclick="konfirmasiTolak('{{ $sku->id }}')">
-                                        <i class="bi bi-x-circle"></i> Tolak
-                                    </button>
-                                    <form id="formTolak-{{ $sku->id }}" action="{{ route('sku.tolak', $sku->id) }}"
-                                        method="POST" style="display: none;">
-                                        @csrf
-                                        <input type="hidden" name="status" value="Ditolak">
-                                        <input type="hidden" name="alasan" id="inputAlasan-{{ $sku->id }}">
-                                    </form>
-                                @elseif ($sku->status === 'Ditolak')
-                                    <button class="btn btn-secondary" disabled>Sudah Ditolak</button>
-                                @else
-                                    <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
-                                @endif
-                            @else
-                                <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
-                            @endif
+    {{-- Admin & Sekretaris --}}
+    @if (in_array($role, ['Admin', 'Sekretaris']) && $sku->status === 'Diajukan')
+        <form id="verifikasiFormAdmin" action="{{ route('sku.verifikasi', $sku->id) }}" method="POST" style="display:inline;">
+            @csrf
+            <button type="button" id="btnVerifikasiAdmin" class="btn btn-success" onclick="verifikasiAdminConfirm()">Verifikasi</button>
+        </form>
 
-                            {{-- LURAH --}}
-                        @elseif (auth()->user()->role === 'Lurah')
-                            @if ($sku->status === 'Diproses')
-                                <form id="verifikasiFormLurah" action="{{ route('sku.verifikasi', $sku->id) }}"
-                                    method="POST" style="display:inline;">
-                                    @csrf
-                                    <button type="button" id="btnVerifikasiLurah" class="btn btn-success"
-                                        onclick="verifikasiLurahConfirm()">Verifikasi</button>
-                                </form>
-                            @elseif ($sku->status === 'Selesai')
-                                    <button class="btn btn-secondary" disabled>Sudah Disahkan</button>
-                            @elseif ($sku->status === 'Ditolak')
-                                    <button class="btn btn-secondary" disabled>Surat Ditolak</button>
-                            @endif
-                        @endif
-                   
+        <button id="btnTolak-{{ $sku->id }}" type="button" class="btn btn-danger" onclick="konfirmasiTolak('{{ $sku->id }}')">
+            <i class="bi bi-x-circle"></i> Tolak
+        </button>
+        <form id="formTolak-{{ $sku->id }}" action="{{ route('sku.tolak', $sku->id) }}" method="POST" style="display: none;">
+            @csrf
+            <input type="hidden" name="status" value="Ditolak">
+            <input type="hidden" name="alasan" id="inputAlasan-{{ $sku->id }}">
+        </form>
 
-                        {{-- Tombol Cetak jika status selesai --}}
-                        @if (auth()->check() && $sku->status === 'Selesai')
-                            <a href="{{ route('sku.cetak', $sku->id) }}" target="_blank" class="btn btn-success">
-                                <i class="bi bi-printer"></i> Cetak Surat
-                            </a>
-                        @endif
+    @elseif (in_array($role, ['Admin', 'Sekretaris']) && $sku->status === 'Ditolak')
+        <button class="btn btn-secondary" disabled>Sudah Ditolak</button>
+
+    @elseif (in_array($role, ['Admin', 'Sekretaris']))
+        <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
+
+    {{-- Lurah --}}
+    @elseif ($role === 'Lurah' && $sku->status === 'Diproses')
+        <form id="verifikasiFormLurah" action="{{ route('sku.verifikasi', $sku->id) }}" method="POST" style="display:inline;">
+            @csrf
+            <button type="button" id="btnVerifikasiLurah" class="btn btn-success" onclick="verifikasiLurahConfirm()">Verifikasi</button>
+        </form>
+
+    @elseif ($role === 'Lurah' && $sku->status === 'Selesai')
+        <button class="btn btn-secondary" disabled>Sudah Disahkan</button>
+
+    @elseif ($role === 'Lurah' && $sku->status === 'Ditolak')
+        <button class="btn btn-secondary" disabled>Surat Ditolak</button>
+
+    @else
+        <button class="btn btn-secondary" disabled>Sudah Diverifikasi</button>
+    @endif
+
+    {{-- Tombol Cetak jika status selesai --}}
+    @if ($sku->status === 'Selesai')
+        <a href="{{ route('sku.cetak', $sku->id) }}" target="_blank" class="btn btn-success">
+            <i class="bi bi-printer"></i> Cetak Surat
+        </a>
+    @endif
+@endif
+
                     </div>
 
 

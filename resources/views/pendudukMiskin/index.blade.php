@@ -73,7 +73,7 @@
                                                     
                                                     <td>
                                                         <div class="btn-group">
-                                                            @if (auth()->check() && in_array(auth()->user()->role, ['Admin']))
+                                                            @if (auth()->check() && in_array(auth()->user()->role, ['Admin', 'Sekretaris']))
                                                                 <a href="#" class="btn btn-white me-2"
                                                                     style="color: #2E8B57;" data-bs-toggle="modal"
                                                                     data-bs-target="#modalEditPenduduk"
@@ -96,7 +96,7 @@
                                 </div>
                             </div>
                         </div>
-                        <!-- Tab Menenagah -->
+                        <!-- Tab Menengah -->
                         <div class="tab-pane fade show" id="menengah" role="tabpanel"
                             aria-labelledby="menengah-tab">
                             <div class="table-responsive">
@@ -134,7 +134,7 @@
                                                     </td> --}}
                                                     <td>
                                                         <div class="btn-group">
-                                                            @if (auth()->check() && in_array(auth()->user()->role, ['Admin']))
+                                                            @if (auth()->check() && in_array(auth()->user()->role, ['Admin','Sekretaris']))
                                                                 <a href="#" class="btn btn-white me-2"
                                                                     style="color: #2E8B57;" data-bs-toggle="modal"
                                                                     data-bs-target="#modalEditPenduduk"
@@ -240,7 +240,9 @@
             </form>
         </div>
     </div>
-
+@endsection
+@push('modals')
+    
     <!-- Modal Edit Penduduk -->
     <div class="modal fade" id="modalEditPenduduk" tabindex="-1" aria-labelledby="modalEditLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -268,17 +270,56 @@
             </form>
         </div>
     </div>
-@endsection
+@endpush
 
 @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-
+    {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> --}}
     <!-- Leaflet -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+      <script>
+        function inisialisasiDataTable(idTabel) {
+            if ($.fn.DataTable.isDataTable(idTabel)) {
+                $(idTabel).DataTable().destroy();
+            }
+
+            // Debug: cek jumlah kolom per baris
+            $(idTabel + ' tbody tr').each(function(index, row) {
+                const tdCount = $(row).find('td').length;
+                const thCount = $(idTabel + ' thead th').length;
+                if (tdCount !== thCount) {
+                    console.warn(
+                        `⚠️ Jumlah kolom td (${tdCount}) ≠ th (${thCount}) di tabel ${idTabel} baris ke-${index + 1}`
+                    );
+                }
+            });
+
+            let table = $(idTabel).DataTable({
+                columnDefs: [{
+                    targets: 0,
+                    orderable: false,
+                    searchable: false
+                }],
+            });
+
+            table.on('order.dt search.dt', function() {
+                table.column(0, {
+                    search: 'applied',
+                    order: 'applied'
+                }).nodes().each(function(cell, i) {
+                    cell.innerHTML = i + 1;
+                });
+            }).draw();
+        }
+
+        $(document).ready(function() {
+            inisialisasiDataTable('#pendudukMiskin');
+            inisialisasiDataTable('#pendudukMenengah');
+        });
+    </script>
 
     <script>
         let map;
@@ -360,44 +401,5 @@
         });
     </script>
 
-    <script>
-        function inisialisasiDataTable(idTabel) {
-            if ($.fn.DataTable.isDataTable(idTabel)) {
-                $(idTabel).DataTable().destroy();
-            }
-
-            // Debug: cek jumlah kolom per baris
-            $(idTabel + ' tbody tr').each(function(index, row) {
-                const tdCount = $(row).find('td').length;
-                const thCount = $(idTabel + ' thead th').length;
-                if (tdCount !== thCount) {
-                    console.warn(
-                        `⚠️ Jumlah kolom td (${tdCount}) ≠ th (${thCount}) di tabel ${idTabel} baris ke-${index + 1}`
-                    );
-                }
-            });
-
-            let table = $(idTabel).DataTable({
-                columnDefs: [{
-                    targets: 0,
-                    orderable: false,
-                    searchable: false
-                }],
-            });
-
-            table.on('order.dt search.dt', function() {
-                table.column(0, {
-                    search: 'applied',
-                    order: 'applied'
-                }).nodes().each(function(cell, i) {
-                    cell.innerHTML = i + 1;
-                });
-            }).draw();
-        }
-
-        $(document).ready(function() {
-            inisialisasiDataTable('#pendudukMiskin');
-            inisialisasiDataTable('#pendudukMenengah');
-        });
-    </script>
+  
 @endpush

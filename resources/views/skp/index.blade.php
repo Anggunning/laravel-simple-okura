@@ -314,7 +314,17 @@
     <div class="modal fade" id="modalTambahSKP" tabindex="-1" aria-labelledby="modalTambahSKPLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <form action="{{ route('skp.store') }}" method="POST" enctype="multipart/form-data" class="modal-content">
+            @if ($errors->any())
+    <div class="alert alert-danger">
+        <ul class="mb-0">
+            @foreach ($errors->all() as $error)
+                <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+@endif
+
+            <form id="formPengajuanSKP" action="{{ route('skp.store') }}" method="POST" enctype="multipart/form-data" class="modal-content">
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="modalTambahSKPLabel">Tambah Pengajuan SKP</h5>
@@ -327,6 +337,10 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                     @if (auth()->user()->role === 'Masyarakat')
+                            <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai
+                                Draf</button>
+                        @endif
                     <button type="submit" class="btn btn-primary">Simpan</button>
                 </div>
 
@@ -455,4 +469,222 @@
             this.reportValidity();
         });
     </script>
+
+<script>
+    $(document).ready(function () {
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        $('#modalTambahSKP').on('shown.bs.modal', function () {
+            $.get("{{ route('skp.getDraf') }}", function (data) {
+                if (data) {
+                    const form = $('#formPengajuanSKP');
+
+                    // --- Data Pemohon ---
+                    form.find('input[name="nama"]').val(data.nama);
+                    form.find('input[name="nik"]').val(data.nik);
+                    form.find('select[name="jenis_kelamin"]').val(data.jenis_kelamin);
+                    form.find('input[name="tempat_lahir"]').val(data.tempat_lahir);
+                    form.find('input[name="tanggal_lahir"]').val(data.tanggal_lahir);
+                    form.find('input[name="kewarganegaraan"]').val(data.kewarganegaraan);
+                    form.find('input[name="pekerjaan"]').val(data.pekerjaan);
+                    form.find('select[name="agama"]').val(data.agama);
+                    form.find('input[name="rt"]').val(data.rt);
+                    form.find('input[name="rw"]').val(data.rw);
+                    form.find('textarea[name="alamat"]').val(data.alamat);
+                    form.find('textarea[name="keterangan"]').val(data.keterangan);
+                    form.find('select[name="status_kawin"]').val(data.status_kawin);
+
+                    // --- Data Ayah ---
+                    form.find('input[name="nama_ayah"]').val(data.nama_ayah);
+                    form.find('input[name="nik_ayah"]').val(data.nik_ayah);
+                    form.find('input[name="tempat_lahir_ayah"]').val(data.tempat_lahir_ayah);
+                    form.find('input[name="tanggal_lahir_ayah"]').val(data.tanggal_lahir_ayah);
+                    form.find('input[name="kewarganegaraan_ayah"]').val(data.kewarganegaraan_ayah);
+                    form.find('input[name="pekerjaan_ayah"]').val(data.pekerjaan_ayah);
+                    form.find('select[name="agama_ayah"]').val(data.agama_ayah);
+                    form.find('textarea[name="alamat_ayah"]').val(data.alamat_ayah);
+                    form.find('input[name="rt_ayah"]').val(data.rt_ayah);
+                    form.find('input[name="rw_ayah"]').val(data.rw_ayah);
+
+                    // --- Data Ibu ---
+                    form.find('input[name="nama_ibu"]').val(data.nama_ibu);
+                    form.find('input[name="nik_ibu"]').val(data.nik_ibu);
+                    form.find('input[name="tempat_lahir_ibu"]').val(data.tempat_lahir_ibu);
+                    form.find('input[name="tanggal_lahir_ibu"]').val(data.tanggal_lahir_ibu);
+                    form.find('input[name="kewarganegaraan_ibu"]').val(data.kewarganegaraan_ibu);
+                    form.find('input[name="pekerjaan_ibu"]').val(data.pekerjaan_ibu);
+                    form.find('select[name="agama_ibu"]').val(data.agama_ibu);
+                    form.find('textarea[name="alamat_ibu"]').val(data.alamat_ibu);
+                    form.find('input[name="rt_ibu"]').val(data.rt_ibu);
+                    form.find('input[name="rw_ibu"]').val(data.rw_ibu);
+
+                    // --- Preview file ---
+                    ['ktp', 'kk', 'pengantar_rt_rw', 'foto'].forEach(function (field) {
+                        if (data[field]) {
+                            const preview = `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                            form.find(`input[name="${field}"]`).after(preview);
+                        }
+                    });
+                }
+            }).fail(function () {
+                console.warn("Tidak bisa ambil data draf SKP.");
+            });
+        });
+
+        $('#btnSimpanDraf').on('click', function () {
+            const form = $('#formPengajuanSKP');
+const formData = new FormData();
+
+// Ambil semua input, select, dan textarea (termasuk yang tersembunyi)
+form.find('input, select, textarea').each(function () {
+    const input = $(this);
+    const name = input.attr('name');
+    const type = input.attr('type');
+
+    if (!name) return; // Lewati jika tidak punya name (tidak bisa dikirim)
+
+    if (type === 'file') {
+        const file = this.files[0];
+        if (file) {
+            formData.append(name, file);
+        }
+    } else {
+        formData.append(name, input.val());
+    }
+});
+
+
+            $.ajax({
+                url: "{{ route('skp.storeDraf') }}",
+                method: "POST",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Berhasil!',
+                        text: 'Draf SKP berhasil disimpan.',
+                        confirmButtonColor: '#3085d6',
+                    }).then(() => {
+                        $('#modalTambahSKP').modal('hide');
+                        $('#modalTambahSKP').on('hidden.bs.modal', function () {
+                            $('body').removeClass('modal-open').css('overflow', '');
+                            $('.modal-backdrop').remove();
+                        });
+                    });
+                },
+                error: function (xhr) {
+                    let msg = 'Gagal menyimpan draf.';
+                    if (xhr.responseJSON?.error) {
+                        msg += "\n" + xhr.responseJSON.error;
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops!',
+                        text: msg,
+                        confirmButtonColor: '#d33',
+                    });
+                    console.error(xhr.responseText);
+                }
+            });
+        });
+    });
+</script>
+
+
+    @if (request()->has('draf') && isset($drafToLoad))
+        <script>
+            $(document).ready(function() {
+                const draf = @json($drafToLoad);
+
+                 const form = $('#formPengajuanSKP');
+
+                    // --- Data Pemohon ---
+                    form.find('input[name="nama"]').val(draf.nama);
+                    form.find('input[name="nik"]').val(draf.nik);
+                    form.find('select[name="jenis_kelamin"]').val(draf.jenis_kelamin);
+                    form.find('input[name="tempat_lahir"]').val(draf.tempat_lahir);
+                    form.find('input[name="tanggal_lahir"]').val(draf.tanggal_lahir);
+                    form.find('input[name="kewarganegaraan"]').val(draf.kewarganegaraan);
+                    form.find('input[name="pekerjaan"]').val(draf.pekerjaan);
+                    form.find('select[name="agama"]').val(draf.agama);
+                    form.find('input[name="rt"]').val(draf.rt);
+                    form.find('input[name="rw"]').val(draf.rw);
+                    form.find('textarea[name="alamat"]').val(draf.alamat);
+                    form.find('textarea[name="keterangan"]').val(draf.keterangan);
+                    form.find('select[name="status_kawin"]').val(draf.status_kawin);
+
+                    // --- draf Ayah ---
+                    form.find('input[name="nama_ayah"]').val(draf.nama_ayah);
+                    form.find('input[name="nik_ayah"]').val(draf.nik_ayah);
+                    form.find('input[name="tempat_lahir_ayah"]').val(draf.tempat_lahir_ayah);
+                    form.find('input[name="tanggal_lahir_ayah"]').val(draf.tanggal_lahir_ayah);
+                    form.find('input[name="kewarganegaraan_ayah"]').val(draf.kewarganegaraan_ayah);
+                    form.find('input[name="pekerjaan_ayah"]').val(draf.pekerjaan_ayah);
+                    form.find('select[name="agama_ayah"]').val(draf.agama_ayah);
+                    form.find('textarea[name="alamat_ayah"]').val(draf.alamat_ayah);
+                    form.find('input[name="rt_ayah"]').val(draf.rt_ayah);
+                    form.find('input[name="rw_ayah"]').val(draf.rw_ayah);
+
+                    // --- draf Ibu ---
+                    form.find('input[name="nama_ibu"]').val(draf.nama_ibu);
+                    form.find('input[name="nik_ibu"]').val(draf.nik_ibu);
+                    form.find('input[name="tempat_lahir_ibu"]').val(draf.tempat_lahir_ibu);
+                    form.find('input[name="tanggal_lahir_ibu"]').val(draf.tanggal_lahir_ibu);
+                    form.find('input[name="kewarganegaraan_ibu"]').val(draf.kewarganegaraan_ibu);
+                    form.find('input[name="pekerjaan_ibu"]').val(draf.pekerjaan_ibu);
+                    form.find('select[name="agama_ibu"]').val(draf.agama_ibu);
+                    form.find('textarea[name="alamat_ibu"]').val(draf.alamat_ibu);
+                    form.find('input[name="rt_ibu"]').val(draf.rt_ibu);
+                    form.find('input[name="rw_ibu"]').val(draf.rw_ibu);
+
+                    // --- Preview file ---
+                     ['ktp', 'kk', 'pengantar_rt_rw', 'foto'].forEach(function(field) {
+                    if (draf[field]) {
+                        const preview =
+                            `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                        $(`#formPengajuanSKP input[name="${field}"]`).after(preview);
+                    }
+                });
+        
+                // Buka modal otomatis
+                $('#modalTambahSKP').modal('show');
+            });
+        </script>
+    @endif
+
+     {{-- <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('formPengajuanSKP');
+
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: 'Yakin mau menyimpan?',
+                    text: 'Pastikan semua data sudah benar.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Simpan',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#d33', // warna merah (seperti tombol "Tolak")
+                    cancelButtonColor: '#6c757d', // abu Bootstrap
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.requestSubmit();
+
+                    }
+                });
+            });
+        });
+    </script> --}}
+
+
+
+
 @endpush

@@ -104,7 +104,7 @@
                                     <table class="table table-hover table-bordered" id="pendudukMenengah">
                                         <thead>
                                             <tr>
-                                                <th>No.</th>
+                                                <th>No</th>
                                                 <th>Nama Penduduk</th>
                                                 <th>Alamat Penduduk</th>
                                                 <th>Jumlah Anggota Keluarga</th>

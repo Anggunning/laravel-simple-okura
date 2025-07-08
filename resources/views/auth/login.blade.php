@@ -23,7 +23,7 @@
                 @csrf
                 <h3 class="login-head d-flex align-items-center justify-content-center gap-2">
                     <img src="{{ asset('pekanbaru.png') }}" alt="Logo Pekanbaru" style="height: 40px;">
-                    <span><i class="bi bi-person me-1"></i>LOG IN</span>
+                    <span>LOG IN</span>
                 </h3>
 
 

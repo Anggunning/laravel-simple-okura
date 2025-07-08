@@ -21,7 +21,7 @@
   @csrf
    
   <h3 class="register-head d-flex align-items-center justify-content-center gap-2">
-    <img src="{{ asset('pekanbaru.png') }}" alt="Logo Pekanbaru" style="height: 40px;"><i class="bi bi-person me-2"></i>REGISTER</h3>
+    <img src="{{ asset('pekanbaru.png') }}" alt="Logo Pekanbaru" style="height: 40px;"></i>REGISTER</h3>
 
   <div class="mb-3">
     <label class="form-label">USERNAME</label>

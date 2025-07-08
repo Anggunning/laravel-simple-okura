@@ -14586,7 +14586,7 @@ textarea.form-control-lg {
 .login-content .login-box {
   position: relative;
   min-width: 350px;
-  min-height: 390px;
+  min-height: 370px;
   background-color: #fff;
   -webkit-box-shadow: 0px 29px 147.5px 102.5px rgba(0, 0, 0, 0.05), 0px 29px 95px 0px rgba(0, 0, 0, 0.16);
           box-shadow: 0px 29px 147.5px 102.5px rgba(0, 0, 0, 0.05), 0px 29px 95px 0px rgba(0, 0, 0, 0.16);
@@ -14691,7 +14691,7 @@ textarea.form-control-lg {
 .register-content .register-box {
   position: relative;
   min-width: 350px;
-  min-height: 480px;
+  min-height: 430px;
   background-color: #fff;
   -webkit-box-shadow: 0px 29px 147.5px 102.5px rgba(0, 0, 0, 0.05), 0px 29px 95px 0px rgba(0, 0, 0, 0.16);
           box-shadow: 0px 29px 147.5px 102.5px rgba(0, 0, 0, 0.05), 0px 29px 95px 0px rgba(0, 0, 0, 0.16);
@@ -14699,6 +14699,7 @@ textarea.form-control-lg {
           perspective: 800px;
   -webkit-transition: all 0.5s ease-in-out;
   transition: all 0.5s ease-in-out;
+  
 }
 .register-content .register-box .register-head {
   margin-top: 0;
@@ -14743,6 +14744,8 @@ textarea.form-control-lg {
   opacity: 0;
   -webkit-transform: rotateY(180deg);
           transform: rotateY(180deg);
+          
+          
 }
 .register-content .register-box.flipped {
   min-height: 300px;

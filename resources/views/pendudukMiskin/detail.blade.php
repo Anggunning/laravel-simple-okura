@@ -29,8 +29,9 @@
         <div class="mb-4">
             <h6 class="fw-bold">Foto Rumah</h6>
             @if ($pendudukMiskin->foto_rumah)
-                <img src="{{ route('dokumen.show', ['folder' => 'pendudukMiskin', 'filename' => basename($pendudukMiskin->foto_rumah)]) }}" 
-                    alt="Foto Rumah" class="img-fluid rounded" style="max-height: 300px;">
+                <img src="{{ asset('storage/' . $pendudukMiskin->foto_rumah) }}" 
+     alt="Foto Rumah" class="img-fluid rounded" style="max-height: 300px;">
+
             @else
                 <div class="text-muted fst-italic">Tidak ada foto tersedia</div>
             @endif

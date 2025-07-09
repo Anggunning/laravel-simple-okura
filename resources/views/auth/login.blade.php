@@ -76,7 +76,7 @@
                 </div>
                 <div class="mb-3 btn-container d-grid">
                     <button class="btn btn-primary btn-block" type="submit">
-                        <i class="bi bi-box-arrow-in-right me-2 fs-5"></i>LOG IN
+                        <i></i>LOG IN
                     </button>
                 </div>
             </form>

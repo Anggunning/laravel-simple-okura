@@ -7,6 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{asset('template/docs/css/main.css')}}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
     <!-- Font-icon css-->
     {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> --}}
     <title>Register</title>
@@ -48,7 +50,7 @@
 
   </div>
 
- <div class="mb-3">
+               <div class="mb-3">
   <label class="form-label">PASSWORD</label>
   <div class="input-group">
     <input type="password"
@@ -57,11 +59,9 @@
            class="form-control @error('password') is-invalid @enderror"
            placeholder="Password"
            required
-           autocomplete="new-password"
-           pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
            oninvalid="this.setCustomValidity('Password minimal 8 karakter dan harus mengandung huruf & angka')"
            oninput="this.setCustomValidity('')">
-    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" id="toggleButton">
       <i class="bi bi-eye-slash" id="toggleIcon"></i>
     </button>
   </div>
@@ -89,7 +89,7 @@
 
   <div class="mb-3 btn-container d-grid">
     <button class="btn btn-primary btn-block" type="submit">
-      <i class="bi bi-box-arrow-in-right me-2 fs-5"></i>REGISTER
+      <i ></i>REGISTER
     </button>
   </div>
   
@@ -102,7 +102,6 @@
     <script src="{{('template/docs/js/jquery-3.7.0.min.js')}}"></script>
     <script src="{{('template/docs/js/bootstrap.min.js')}}"></script>
     <script src="{{('template/docs/js/main.js')}}"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script type="text/javascript">
       // register Page Flipbox control
       $('.register-content [data-toggle="flip"]').click(function() {

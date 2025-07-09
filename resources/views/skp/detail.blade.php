@@ -230,7 +230,7 @@
         return match ($riwayat->status) {
             'Ditolak' => 'Alasan Penolakan: ' . ($riwayat->alasan ?? 'Tidak ada keterangan'),
             'Selesai' => 'Catatan Verifikasi: ' . ($riwayat->alasan ?? 'Tidak ada keterangan'),
-            default => $riwayat->alasan ?? 'Tidak ada keterangan',
+            default => $riwayat->keterangan ?? 'Tidak ada keterangan',
         };
     }
 @endphp
@@ -239,7 +239,10 @@
                     <div class="card-body d-none" id="tabContentRiwayat">
                         <h5 class="fw-bold mb-4">Riwayat Pengajuan Surat</h5>
                         <ul class="timeline">
-                            @forelse($skp->riwayat_skp->sortByDesc('tanggal')->sortByDesc('waktu') as $riwayat)
+                            @forelse($skp->riwayat_skp->sortByDesc(function($item) {
+    return \Carbon\Carbon::parse($item->tanggal . ' ' . $item->waktu);
+}) as $riwayat)
+
                                 <li>
                                     <span class="time">
                                         {{ \Carbon\Carbon::parse($riwayat->tanggal)->format('d F Y') }}

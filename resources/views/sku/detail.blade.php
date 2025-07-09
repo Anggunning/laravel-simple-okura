@@ -178,7 +178,7 @@
         return match ($riwayat->status) {
             'Ditolak' => 'Alasan Penolakan: ' . ($riwayat->alasan ?? 'Tidak ada keterangan'),
             'Selesai' => 'Catatan Verifikasi: ' . ($riwayat->alasan ?? 'Tidak ada keterangan'),
-            default => $riwayat->alasan ?? 'Tidak ada keterangan',
+            default => $riwayat->keterangan ?? 'Tidak ada keterangan',
         };
     }
 @endphp

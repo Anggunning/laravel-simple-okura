@@ -71,7 +71,7 @@
                                                 <th>Orang Tua Pemohon</th>
                                                 <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
-                                                <th class="text-center align-middle">Aksi</th>
+                                                <th class="text-center align-middle">Detail</th>
                                             </tr>
                                         </thead>
                                         @php
@@ -153,7 +153,7 @@
                                                 <th>Keterangan</th>
                                                 <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
-                                                <th class="text-center align-middle">Aksi</th>
+                                                <th class="text-center align-middle">Detail</th>
                                             </tr>
                                         </thead>
                                         @php
@@ -241,7 +241,7 @@
                                                 <th>Alasan Penolakan</th>
                                                 <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
-                                                <th class="text-center align-middle">Aksi</th>
+                                                <th class="text-center align-middle">Detail</th>
                                             </tr>
                                         </thead>
                                         @php

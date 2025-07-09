@@ -69,7 +69,7 @@
                                                 <th>Tujuan Pengajuan</th>
                                                 <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
-                                                <th class="text-center align-middle">Aksi</th>
+                                                <th class="text-center align-middle">Detail</th>
                                             </tr>
                                         </thead>
                                         @php
@@ -145,7 +145,7 @@
                                                 <th>Keterangan</th>
                                                 <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
-                                                <th class="text-center align-middle">Aksi</th>
+                                                <th class="text-center align-middle">Detail</th>
                                             </tr>
                                         </thead>
                                         @php
@@ -229,7 +229,7 @@
                                                 <th>Alasan Penolakan</th>
                                                 <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
-                                                <th class="text-center align-middle">Aksi</th>
+                                                <th class="text-center align-middle">Detail</th>
                                             </tr>
                                         </thead>
                                         @php
@@ -267,7 +267,7 @@
                                                             {{ ucfirst($item->status) }}
                                                         </span>
                                                     </td>
-                                                    <td>
+                                                    <td class="text-center align-middle">
                                                         <div class="btn-group">
                                                             <a class="btn btn-white me-2" style="color: #2E8B57;"
                                                                 href="{{ route('sku.show', $item->id) }}">

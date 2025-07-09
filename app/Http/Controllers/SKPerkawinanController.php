@@ -56,7 +56,13 @@ class SKPerkawinanController extends Controller
             ->where('status', 'Ditolak')
             ->orderBy('created_at', 'desc')
             ->get();
-    } else {
+    } elseif ($user->role === 'Lurah') {
+            // Lurah: hanya lihat Diproses, Selesai, Ditolak
+            $skpBelumSelesai = SkpModel::where('status', 'Diproses')->orderBy('created_at', 'desc')->get();
+            $skpSelesai = SkpModel::where('status', 'Selesai')->orderBy('created_at', 'desc')->get();
+            $skpDitolak = SkpModel::where('status', 'Ditolak')->orderBy('created_at', 'desc')->get();
+    }
+    else {
         $skpBelumSelesai = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
             ->whereNotIn('status', ['Selesai', 'Ditolak','draf'])
             ->get()

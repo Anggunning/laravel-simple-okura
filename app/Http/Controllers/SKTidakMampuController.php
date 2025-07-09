@@ -191,20 +191,29 @@ $userId = auth()->id();
 
 
     public function getDraf()
-    {
-        $draf = SktmModel::where('status', 'draf')
-            ->where('user_id', auth()->id())
-            ->latest()
-            ->get();
+{
+    $draf = SktmModel::where('status', 'draf')
+        ->where('user_id', auth()->id())
+        ->latest()
+        ->first();
 
-        return view(
-            'dashboard.sktm-draf',
-            [
-                'draf' => $draf,
-                'jenis_surat' => 'Surat Keterangan Tidak Mampu'
-            ]
-        );
+if (!$draf) {
+    \Log::warning('Tidak ada draf ditemukan untuk user: ' . auth()->id());
+    abort(404);
+}
+
+
+    // Bikin URL file agar bisa langsung diakses
+    $fileFields = ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'];
+    foreach ($fileFields as $field) {
+        if ($draf->$field) {
+            $draf->$field = route('sktm.preview', $field);
+        }
     }
+
+    return response()->json($draf);
+}
+
 
 
 

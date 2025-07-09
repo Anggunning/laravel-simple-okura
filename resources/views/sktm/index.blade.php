@@ -621,8 +621,7 @@
                         $('#formPengajuanSKTM input[name="nama"]').val(data.nama);
                         $('#formPengajuanSKTM input[name="tujuan"]').val(data.tujuan);
                         $('#formPengajuanSKTM input[name="pekerjaan"]').val(data.pekerjaan);
-                        $('#formPengajuanSKTM select[name="jenis_kelamin"]').val(data
-                        .jenis_kelamin);
+                        $('#formPengajuanSKTM select[name="jenis_kelamin"]').val(data.jenis_kelamin);
                         $('#formPengajuanSKTM input[name="tempatLahir"]').val(data.tempatLahir);
                         $('#formPengajuanSKTM input[name="tanggalLahir"]').val(data.tanggalLahir);
                         $('#formPengajuanSKTM select[name="agama"]').val(data.agama);

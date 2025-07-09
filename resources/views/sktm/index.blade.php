@@ -382,8 +382,9 @@
 
                         <div class="mb-3">
                             <label for="nik" class="form-label">NIK <span class="text-danger">*</span></label>
-                            <input type="text" name="nik" id="nik" class="form-control" required
-                                oninvalid="this.setCustomValidity('Silahkan isi nik')"
+                            <input type="text" pattern="\d{16}" inputmode="numeric" name="nik" id="nik"
+                                class="form-control" required onblur="cekPanjangNIK(this)"
+                                oninvalid="this.setCustomValidity('Silakan isi NIK Anda')"
                                 oninput="this.setCustomValidity('')" placeholder="Masukkan NIK" maxlength="16">
                         </div>
 
@@ -396,9 +397,10 @@
                             <div class="mb-3 col-md-6">
                                 <label for="rt" class="form-label">RT <span class="text-danger">*</span></label>
                                 <input type="text" name="rt" id="rt" class="form-control" required
-                                    maxlength="3" pattern="^\d{3}$" placeholder="Contoh: 001"
+                                    maxlength="3" pattern="\d{3}" inputmode="numeric" placeholder="Contoh: 001"
                                     oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 001')"
                                     oninput="this.setCustomValidity('')">
+
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="rw" class="form-label">RW <span class="text-danger">*</span></label>
@@ -418,7 +420,7 @@
                         <div class="mb-3">
                             <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span
                                     class="text-danger">*</span></label>
-                            <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw" class="form-control"
+                            <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw" class="form-control validate-file"
                                 accept=".jpg,.jpeg,.png,.pdf" required
                                 oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
                                 oninput="this.setCustomValidity('')">
@@ -429,7 +431,7 @@
                         <div class="mb-3">
                             <label for="kk" class="form-label">Kartu Keluarga <span
                                     class="text-danger">*</span></label>
-                            <input type="file" name="kk" id="kk" class="form-control"
+                            <input type="file" name="kk" id="kk" class="form-control validate-file"
                                 accept=".jpg,.jpeg,.png,.pdf" required
                                 oninvalid="this.setCustomValidity('Silakan unggah file KK')"
                                 oninput="this.setCustomValidity('')">
@@ -440,7 +442,7 @@
                         <div class="mb-3">
                             <label for="ktp" class="form-label">Kartu Tanda Penduduk <span
                                     class="text-danger">*</span></label>
-                            <input type="file" name="ktp" id="ktp" class="form-control"
+                            <input type="file" name="ktp" id="ktp" class="form-control validate-file"
                                 accept=".jpg,.jpeg,.png,.pdf" required
                                 oninvalid="this.setCustomValidity('Silakan unggah file KTP')"
                                 oninput="this.setCustomValidity('')">
@@ -451,7 +453,7 @@
                         <div class="mb-3">
                             <label for="surat_pernyataan" class="form-label">Surat Pernyataan <span
                                     class="text-danger">*</span></label>
-                            <input type="file" name="surat_pernyataan" id="surat_pernyataan" class="form-control"
+                            <input type="file" name="surat_pernyataan" id="surat_pernyataan" class="form-control validate-file"
                                 accept=".jpg,.jpeg,.png,.pdf" required
                                 oninvalid="this.setCustomValidity('Silakan unggah surat pernyataan')"
                                 oninput="this.setCustomValidity('')">
@@ -543,26 +545,75 @@
         }
     </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const fileInputs = document.querySelectorAll('.validate-file');
+    const maxSize = 2 * 1024 * 1024; // 2MB
+
+    fileInputs.forEach(input => {
+      input.addEventListener('change', function () {
+        const file = this.files[0];
+
+        if (file && file.size > maxSize) {
+          this.value = ''; // Reset input file agar tidak terkirim
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Ukuran File Terlalu Besar',
+            text: 'File yang diunggah tidak boleh lebih dari 2MB',
+            confirmButtonText: 'OK'
+          });
+        }
+      });
+    });
+  });
+</script>
+
+
     <script>
-        const nikInput = document.getElementById('nik');
+  document.addEventListener('DOMContentLoaded', function () {
+    const fields = [
+      {
+        id: 'nik',
+        length: 16,
+        label: 'NIK',
+        example: '1234567890123456'
+      },
+      {
+        id: 'rt',
+        length: 3,
+        label: 'RT',
+        example: '001'
+      },
+      {
+        id: 'rw',
+        length: 3,
+        label: 'RW',
+        example: '002'
+      }
+    ];
 
-        nikInput.addEventListener('input', function() {
-            const val = this.value.trim();
+    fields.forEach(field => {
+      const input = document.getElementById(field.id);
+      if (!input) return;
 
-            if (val === '') {
-                this.setCustomValidity('Silakan isi NIK');
-            } else if (!/^\d{16}$/.test(val)) {
-                this.setCustomValidity('NIK harus terdiri dari 16 digit angka');
-            } else {
-                this.setCustomValidity('');
-            }
-        });
+      input.addEventListener('input', function () {
+        const val = this.value.trim();
+        if (val === '') {
+          this.setCustomValidity(`Silakan isi ${field.label}`);
+        } else if (!new RegExp(`^\\d{${field.length}}$`).test(val)) {
+          this.setCustomValidity(`${field.label} harus terdiri dari ${field.length} digit angka (contoh: ${field.example})`);
+        } else {
+          this.setCustomValidity('');
+        }
+      });
 
-        // Trigger validasi ulang saat blur (pindah fokus)
-        nikInput.addEventListener('blur', function() {
-            this.reportValidity();
-        });
-    </script>
+      input.addEventListener('blur', function () {
+        this.reportValidity();
+      });
+    });
+  });
+</script>
 
 
 
@@ -621,7 +672,8 @@
                         $('#formPengajuanSKTM input[name="nama"]').val(data.nama);
                         $('#formPengajuanSKTM input[name="tujuan"]').val(data.tujuan);
                         $('#formPengajuanSKTM input[name="pekerjaan"]').val(data.pekerjaan);
-                        $('#formPengajuanSKTM select[name="jenis_kelamin"]').val(data.jenis_kelamin);
+                        $('#formPengajuanSKTM select[name="jenis_kelamin"]').val(data
+                            .jenis_kelamin);
                         $('#formPengajuanSKTM input[name="tempatLahir"]').val(data.tempatLahir);
                         $('#formPengajuanSKTM input[name="tanggalLahir"]').val(data.tanggalLahir);
                         $('#formPengajuanSKTM select[name="agama"]').val(data.agama);
@@ -633,7 +685,7 @@
 
                         // Tampilkan preview file jika ada
                         ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function(
-                        field) {
+                            field) {
                             if (data[field]) {
                                 const filePreview =
                                     `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
@@ -648,51 +700,53 @@
             });
 
             // Tombol Simpan Draf
-        
-   
-        $('#btnSimpanDraf').on('click', function () {
-            const form = $('#formPengajuanSKTM')[0];
-            const formData = new FormData(form);
 
-            $.ajax({
-                url: "{{ route('sktm.storeDraf') }}",
-                method: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: 'Draf berhasil disimpan!',
-                        confirmButtonColor: '#3085d6',
-                    }).then(() => {
-                        $('#modalTambahPengajuan').modal('hide');
-                        $('#modalTambahPengajuan').on('hidden.bs.modal', function () {
-                            $('body').removeClass('modal-open').css('overflow', '');
-                            $('.modal-backdrop').remove();
+
+            $('#btnSimpanDraf').on('click', function() {
+                const form = $('#formPengajuanSKTM')[0];
+                const formData = new FormData(form);
+
+                $.ajax({
+                    url: "{{ route('sktm.storeDraf') }}",
+                    method: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Draf berhasil disimpan!',
+                            confirmButtonColor: '#3085d6',
+                        }).then(() => {
+                            $('#modalTambahPengajuan').modal('hide');
+                            $('#modalTambahPengajuan').on('hidden.bs.modal',
+                                function() {
+                                    $('body').removeClass('modal-open').css(
+                                        'overflow', '');
+                                    $('.modal-backdrop').remove();
+                                });
                         });
-                    });
-                },
-                error: function (xhr, status, err) {
-                    let msg = 'Gagal menyimpan draf.';
-                    if (xhr.responseJSON && xhr.responseJSON.error) {
-                        msg += "\n" + xhr.responseJSON.error;
+                    },
+                    error: function(xhr, status, err) {
+                        let msg = 'Gagal menyimpan draf.';
+                        if (xhr.responseJSON && xhr.responseJSON.error) {
+                            msg += "\n" + xhr.responseJSON.error;
+                        }
+
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops!',
+                            text: msg,
+                            confirmButtonColor: '#d33',
+                        });
+
+                        console.error(xhr.responseText);
                     }
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops!',
-                        text: msg,
-                        confirmButtonColor: '#d33',
-                    });
-
-                    console.error(xhr.responseText);
-                }
+                });
             });
         });
-    });
-</script>
+    </script>
 
     @if (isset($drafToLoad))
         <script>
@@ -731,69 +785,3 @@
 
 
 @endpush
-
-{{-- @push('scripts')
-
-@if (Route::currentRouteName() === 'sktm.index')
-    <script>
-        $(document).ready(function() {
-            // Ambil data draf ketika modal dibuka
-            $('#modalTambahPengajuan').on('shown.bs.modal', function() {
-                $.get("{{ route('sktm.getDraf') }}", function(data) {
-                    if (data) {
-                        $('#formPengajuanSKTM input[name="nama"]').val(data.nama);
-                        $('#formPengajuanSKTM input[name="tujuan"]').val(data.tujuan);
-                        $('#formPengajuanSKTM input[name="pekerjaan"]').val(data.pekerjaan);
-                        $('#formPengajuanSKTM select[name="jenis_kelamin"]').val(data
-                        .jenis_kelamin);
-                        $('#formPengajuanSKTM input[name="tempatLahir"]').val(data.tempatLahir);
-                        $('#formPengajuanSKTM input[name="tanggalLahir"]').val(data.tanggalLahir);
-                        $('#formPengajuanSKTM select[name="agama"]').val(data.agama);
-                        $('#formPengajuanSKTM input[name="nik"]').val(data.nik);
-                        $('#formPengajuanSKTM textarea[name="alamat"]').val(data.alamat);
-                        $('#formPengajuanSKTM input[name="rt"]').val(data.rt);
-                        $('#formPengajuanSKTM input[name="rw"]').val(data.rw);
-                        $('#formPengajuanSKTM textarea[name="keterangan"]').val(data.keterangan);
-
-                        // Tampilkan link preview jika file ada
-                        ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function(
-                        field) {
-                            if (data[field]) {
-                                const filePreview =
-                                    `<a href="/sktm/draf/preview/${field}" target="_blank">Lihat File</a>`;
-                                $(`#formPengajuanSKTM input[name="${field}"]`).after(
-                                    filePreview);
-                            }
-                        });
-                    }
-                });
-            });
-
-            // Tombol Simpan Draf
-            $('#btnSimpanDraf').on('click', function(e) {
-                e.preventDefault(); // ⛔ Cegah submit default JS
-                e.stopPropagation(); // ⛔ Cegah event bubbling (penting untuk konflik tombol lain)
-
-                let formData = new FormData($('#formPengajuanSKTM')[0]);
-
-                $.ajax({
-                    url: "{{ route('sktm.storeDraf') }}",
-                    method: "POST",
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function(res) {
-                        alert('Draf berhasil disimpan!');
-                        $('#modalTambahPengajuan').modal('hide');
-                    },
-                    error: function(err) {
-                        alert('Gagal menyimpan draf.');
-                    }
-                });
-            });
-
-        });
-    </script>
-@endif
-    
-@endpush --}}

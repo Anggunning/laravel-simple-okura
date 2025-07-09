@@ -449,26 +449,109 @@
             });
         }
     </script>
-    <script>
-        const nikInput = document.getElementById('nik');
+     <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const fields = [
+      {
+        id: 'nik',
+        length: 16,
+        label: 'NIK',
+        example: '1234567890123456'
+      },
+      { id: 'nik_ibu',
+        length: 16,
+        label: 'NIK Ibu',
+        example: '1234567890123456'
+    },
+    { id: 'nik_ayah',
+        length: 16,
+        label: 'NIK Ayah',
+        example: '1234567890123456'
+    },
+      {
+        id: 'rt',
+        length: 3,
+        label: 'RT',
+        example: '001'
+      },
+      {
+        id: 'rt_ayah',
+        length: 3,
+        label: 'RT Ayah',
+        example: '001'
+      },
+      {
+        id: 'rt_ibu',
+        length: 3,
+        label: 'RT Ibu',
+        example: '001'
+      },
+      {
+        id: 'rw',
+        length: 3,
+        label: 'RW',
+        example: '002'
+      },
+      {
+        id: 'rw_ayah',
+        length: 3,
+        label: 'RW Ayah',
+        example: '002'
+      },
+      {
+        id: 'rw_ibu',
+        length: 3,
+        label: 'RW Ibu',
+        example: '002'
+      }
+    ];
 
-        nikInput.addEventListener('input', function() {
-            const val = this.value.trim();
+    fields.forEach(field => {
+      const input = document.getElementById(field.id);
+      if (!input) return;
 
-            if (val === '') {
-                this.setCustomValidity('Silakan isi NIK');
-            } else if (!/^\d{16}$/.test(val)) {
-                this.setCustomValidity('NIK harus terdiri dari 16 digit angka');
-            } else {
-                this.setCustomValidity('');
-            }
-        });
+      input.addEventListener('input', function () {
+        const val = this.value.trim();
+        if (val === '') {
+          this.setCustomValidity(`Silakan isi ${field.label}`);
+        } else if (!new RegExp(`^\\d{${field.length}}$`).test(val)) {
+          this.setCustomValidity(`${field.label} harus terdiri dari ${field.length} digit angka (contoh: ${field.example})`);
+        } else {
+          this.setCustomValidity('');
+        }
+      });
 
-        // Trigger validasi ulang saat blur (pindah fokus)
-        nikInput.addEventListener('blur', function() {
-            this.reportValidity();
-        });
-    </script>
+      input.addEventListener('blur', function () {
+        this.reportValidity();
+      });
+    });
+  });
+</script>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const fileInputs = document.querySelectorAll('.validate-file');
+    const maxSize = 2 * 1024 * 1024; // 2MB
+
+    fileInputs.forEach(input => {
+      input.addEventListener('change', function () {
+        const file = this.files[0];
+
+        if (file && file.size > maxSize) {
+          this.value = ''; // Reset input file agar tidak terkirim
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Ukuran File Terlalu Besar',
+            text: 'File yang diunggah tidak boleh lebih dari 2MB',
+            confirmButtonText: 'OK'
+          });
+        }
+      });
+    });
+  });
+</script>
+
 
 <script>
     $(document).ready(function () {

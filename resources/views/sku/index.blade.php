@@ -369,13 +369,12 @@
                             </select>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="nik" class="form-label">NIK
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" name="nik" class="form-control" required
-                                placeholder="Masukkan NIK" oninvalid="this.setCustomValidity('Silakan isi NIK')"
-                                oninput="this.setCustomValidity('')">
+                         <div class="mb-3">
+                            <label for="nik" class="form-label">NIK <span class="text-danger">*</span></label>
+                            <input type="text" pattern="\d{16}" inputmode="numeric" name="nik" id="nik"
+                                class="form-control" required onblur="cekPanjangNIK(this)"
+                                oninvalid="this.setCustomValidity('Silakan isi NIK Anda')"
+                                oninput="this.setCustomValidity('')" placeholder="Masukkan NIK" maxlength="16">
                         </div>
                         <div class="mb-3">
                             <label for="alamat" class="form-label">Alamat
@@ -388,9 +387,10 @@
                             <div class="mb-3 col-md-6">
                                 <label for="rt" class="form-label">RT <span class="text-danger">*</span></label>
                                 <input type="text" name="rt" id="rt" class="form-control" required
-                                    maxlength="3" pattern="^\d{3}$" placeholder="Contoh: 001"
+                                    maxlength="3" pattern="\d{3}" inputmode="numeric" placeholder="Contoh: 001"
                                     oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 001')"
                                     oninput="this.setCustomValidity('')">
+
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="rw" class="form-label">RW <span class="text-danger">*</span></label>
@@ -434,7 +434,7 @@
                             </label>
                             <input type="text" name="kelurahan" class="form-control" required
                                 placeholder="Masukkan Kelurahan"
-                                oninvalid="this.setCustomValidity('Silakan isi kelurahan')"
+                                oninvalid="this.setCustomValidity('Silakan isi kelurahan usaha')"
                                 oninput="this.setCustomValidity('')">
                         </div>
                         
@@ -445,7 +445,7 @@
                             </label>
                             <input type="text" name="kecamatan" class="form-control" required
                                 placeholder="Masukkan Kecamatan"
-                                oninvalid="this.setCustomValidity('Silakan isi kecamatan')"
+                                oninvalid="this.setCustomValidity('Silakan isi kecamatan usaha')"
                                 oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
@@ -453,7 +453,7 @@
                                 <span class="text-danger">*</span></label>
                             </label>
                             <input type="text" name="kota" class="form-control" required
-                                placeholder="Masukkan Kota" oninvalid="this.setCustomValidity('Silakan isi kota')"
+                                placeholder="Masukkan Kota" oninvalid="this.setCustomValidity('Silakan isi kota usaha')"
                                 oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
@@ -463,8 +463,9 @@
                         </div>
                         <div class="mb-3">
                             <label for="foto_usaha" class="form-label">Foto Usaha <span
-                                    class="text-danger">*</span></label></label>
-                            <input type="file" name="foto_usaha" class="form-control" accept=".jpg,.jpeg,.png"
+                                    class="text-danger">*</span></label>
+                            <input type="file" name="foto_usaha" id="foto_usaha" class="form-control validate-file" 
+                            accept=".jpg,.jpeg,.png,.pdf"
                                 required oninvalid="this.setCustomValidity('Silakan unggah foto usaha')"
                                 oninput="this.setCustomValidity('')">
                             <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
@@ -474,7 +475,7 @@
                         <div class="mb-3">
                             <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW
                                 <span class="text-danger">*</span></label>
-                            <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw" class="form-control"
+                            <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw" class="form-control validate-file"
                                 accept=".jpg,.jpeg,.png,.pdf" required
                                 oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
                                 oninput="this.setCustomValidity('')">
@@ -485,7 +486,7 @@
                         <div class="mb-3">
                             <label for="kk" class="form-label">Kartu Keluarga <span
                                     class="text-danger">*</span></label>
-                            <input type="file" name="kk" id="kk" class="form-control"
+                            <input type="file" name="kk" id="kk" class="form-control validate-file"
                                 accept=".jpg,.jpeg,.png,.pdf" required
                                 oninvalid="this.setCustomValidity('Silakan unggah file KK')"
                                 oninput="this.setCustomValidity('')">
@@ -496,7 +497,7 @@
                         <div class="mb-3">
                             <label for="ktp" class="form-label">Kartu Tanda Penduduk <span
                                     class="text-danger">*</span></label>
-                            <input type="file" name="ktp" id="ktp" class="form-control"
+                            <input type="file" name="ktp" id="ktp" class="form-control validate-file"
                                 accept=".jpg,.jpeg,.png,.pdf" required
                                 oninvalid="this.setCustomValidity('Silakan unggah file KTP')"
                                 oninput="this.setCustomValidity('')">
@@ -507,7 +508,7 @@
                         <div class="mb-3">
                             <label for="surat_pernyataan" class="form-label">Surat Pernyataan <span
                                     class="text-danger">*</span></label>
-                            <input type="file" name="surat_pernyataan" id="surat_pernyataan" class="form-control"
+                            <input type="file" name="surat_pernyataan" id="surat_pernyataan" class="form-control validate-file"
                                 accept=".jpg,.jpeg,.png,.pdf" required
                                 oninvalid="this.setCustomValidity('Silakan unggah surat pernyataan')"
                                 oninput="this.setCustomValidity('')">
@@ -539,17 +540,6 @@
     <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
-    {{-- <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const today = new Date();
-            const yyyy = today.getFullYear();
-            const mm = String(today.getMonth() + 1).padStart(2, '0'); // bulan dimulai dari 0
-            const dd = String(today.getDate()).padStart(2, '0');
-            const formattedToday = `${yyyy}-${mm}-${dd}`;
-
-            document.getElementById('tanggal').value = formattedToday;
-        });
-    </script> --}}
 
     <script>
         function inisialisasiDataTable(idTabel) {
@@ -777,27 +767,78 @@
             });
         }
     </script>
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const fileInputs = document.querySelectorAll('.validate-file');
+    const maxSize = 2 * 1024 * 1024; // 2MB
+
+    fileInputs.forEach(input => {
+      input.addEventListener('change', function () {
+        const file = this.files[0];
+
+        if (file && file.size > maxSize) {
+          this.value = ''; // Reset input file agar tidak terkirim
+
+          Swal.fire({
+            icon: 'error',
+            title: 'Ukuran File Terlalu Besar',
+            text: 'File yang diunggah tidak boleh lebih dari 2MB',
+            confirmButtonText: 'OK'
+          });
+        }
+      });
+    });
+  });
+</script>
 
 
 
     <script>
-        const nikInput = document.getElementById('nik');
+  document.addEventListener('DOMContentLoaded', function () {
+    const fields = [
+      {
+        id: 'nik',
+        length: 16,
+        label: 'NIK',
+        example: '1234567890123456'
+      },
+      {
+        id: 'rt',
+        length: 3,
+        label: 'RT',
+        example: '001'
+      },
+      {
+        id: 'rw',
+        length: 3,
+        label: 'RW',
+        example: '002'
+      }
+    ];
 
-        nikInput.addEventListener('input', function() {
-            const val = this.value.trim();
+    fields.forEach(field => {
+      const input = document.getElementById(field.id);
+      if (!input) return;
 
-            if (val === '') {
-                this.setCustomValidity('Silakan isi NIK');
-            } else if (!/^\d{16}$/.test(val)) {
-                this.setCustomValidity('NIK harus terdiri dari 16 digit angka');
-            } else {
-                this.setCustomValidity('');
-            }
-        });
+      input.addEventListener('input', function () {
+        const val = this.value.trim();
+        if (val === '') {
+          this.setCustomValidity(`Silakan isi ${field.label}`);
+        } else if (!new RegExp(`^\\d{${field.length}}$`).test(val)) {
+          this.setCustomValidity(`${field.label} harus terdiri dari ${field.length} digit angka (contoh: ${field.example})`);
+        } else {
+          this.setCustomValidity('');
+        }
+      });
 
-        // Trigger validasi ulang saat blur (pindah fokus)
-        nikInput.addEventListener('blur', function() {
-            this.reportValidity();
-        });
-    </script>
+      input.addEventListener('blur', function () {
+        this.reportValidity();
+      });
+    });
+  });
+</script>
+
+
+
+   
 @endpush

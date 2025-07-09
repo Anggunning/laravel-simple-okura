@@ -132,40 +132,63 @@
     <div class="modal fade" id="modalTambahPengguna" tabindex="-1" aria-labelledby="modalTambahPenggunaLabel"
         aria-hidden="true">
         <div class="modal-dialog">
-            <form id="formTambahPengguna" method="POST" action="{{ route('dataPengguna.store') }}" novalidate>
+            <form id="formTambahPengguna" method="POST" action="{{ route('dataPengguna.store') }}" >
                 @csrf
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTambahPenggunaLabel">Tambah Pengguna</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
-                    <div id="formErrorAlert" class="alert alert-danger d-none mx-3 mt-3">
+                    {{-- <div id="formErrorAlert" class="alert alert-danger d-none mx-3 mt-3">
                         <strong>Form belum lengkap!</strong> Mohon isi semua field.
-                    </div>
+                    </div> --}}
                     <div class="modal-body">
                         <div class="mb-3">
                             <label>Username</label>
                             <input type="text" class="form-control" name="username" required
-                                placeholder="Masukkan nama anda">
+                                placeholder="Masukkan nama anda"
+                                 oninvalid="this.setCustomValidity('Silakan isi username')"
+                        oninput="this.setCustomValidity('')">
 
                         </div>
 
                         <div class="mb-3">
                             <label>Email</label>
                             <input type="email" class="form-control" name="email" required
-                                placeholder="Masuukkan email anda">
+                                placeholder="Masuukkan email anda"
+                                 oninvalid="this.setCustomValidity('Silakan isi email')"
+                        oninput="this.setCustomValidity('')">
 
                         </div>
                         <div class="mb-3">
-                            <label>Password</label>
-                            <input type="password" class="form-control" name="password" required
-                                placeholder="Masukkan password anda">
-
-                        </div>
+  <label class="form-label">PASSWORD</label>
+  <div class="input-group">
+    <input type="password"
+           name="password"
+           id="passwordInput"
+           class="form-control @error('password') is-invalid @enderror"
+           placeholder="Password"
+           required
+           autocomplete="new-password"
+           pattern="^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$"
+           oninvalid="this.setCustomValidity('Password minimal 8 karakter dan harus mengandung huruf & angka')"
+           oninput="this.setCustomValidity('')">
+    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+      <i class="bi bi-eye-slash" id="toggleIcon"></i>
+    </button>
+  </div>
+  @error('password')
+    <span class="invalid-feedback" role="alert">
+      <strong>{{ $message }}</strong>
+    </span>
+  @enderror
+</div>
                         <div class="mb-3">
                             <label>Role</label>
-                            <select class="form-select" name="role" required>
-                                <option value="">-- Pilih Role --</option>
+                            <select class="form-select" name="role" required
+                            oninvalid="this.setCustomValidity('Silahkan pilih role')"
+           oninput="this.setCustomValidity('')">
+                                <option value="" disabled selected hidden>Pilih Role</option>
                                 <option value="Admin">Admin</option>
                                 <option value="Lurah">Lurah</option>
                                 <option value="Sekretaris">Sekretaris</option>
@@ -202,20 +225,33 @@
 
                         <div class="mb-3">
                             <label>Username</label>
-                            <input type="text" class="form-control" name="username" id="editUsername" required>
+                            <input type="text" class="form-control" name="username" id="editUsername" required
+                             oninvalid="this.setCustomValidity('Silakan isi username')"
+                        oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
                             <label>Email</label>
-                            <input type="email" class="form-control" name="email" id="editEmail" required>
+                            <input type="email" class="form-control" name="email" id="editEmail" required
+                             oninvalid="this.setCustomValidity('Silakan isi email')"
+                        oninput="this.setCustomValidity('')">
                         </div>
                         <div class="mb-3">
-                            <label>Password (kosongkan jika tidak diubah)</label>
-                            <input type="password" class="form-control" name="password" id="editPassword">
-                        </div>
+    <label>Password (kosongkan jika tidak diubah)</label>
+    <div class="input-group">
+        <input type="password" class="form-control" name="password" id="editPassword">
+        <button type="button" class="btn btn-outline-secondary" onclick="toggleEditPassword()">
+  <i class="bi bi-eye-slash" id="editToggleIcon"></i>
+</button>
+
+    </div>
+</div>
+
                         <div class="mb-3">
                             <label>Role</label>
-                            <select class="form-select" name="role" id="editRole" required>
-                                <option value="">-- Pilih Role --</option>
+                            <select class="form-select" name="role" id="editRole" required 
+                             oninvalid="this.setCustomValidity('Silakan pilih role')"
+                        oninput="this.setCustomValidity('')">
+                                <option value="" disabled selected hidden>Pilih Role</option>
                                 <option value="Admin">Admin</option>
                                 <option value="Lurah">Lurah</option>
                                 <option value="Sekretaris">Sekretaris</option>
@@ -234,11 +270,12 @@
 @endsection
 
 @push('scripts')
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script type="text/javascript" src="{{ 'template/docs/js/plugins/jquery.dataTables.min.js' }}"></script>
-    <script type="text/javascript" src="{{ 'template/docs/js/plugins/dataTables.bootstrap.min.js' }}"></script>
+    
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+   
 
     <script>
         $('.btn-edit').click(function(e) {
@@ -274,34 +311,7 @@
             });
         });
     </script>
-    <script>
-        (function() {
-            'use strict';
-            const form = document.getElementById('formTambahPengguna');
-            const alertBox = document.getElementById('formErrorAlert');
-
-            form.addEventListener('submit', function(event) {
-                if (!form.checkValidity()) {
-                    event.preventDefault();
-                    event.stopPropagation();
-
-                    // Tampilkan alert
-                    alertBox.classList.remove('d-none');
-
-                    // Scroll ke atas modal (agar user lihat alert)
-                    const modalBody = form.closest('.modal-content');
-                    modalBody.scrollTo({
-                        top: 0,
-                        behavior: 'smooth'
-                    });
-                } else {
-                    alertBox.classList.add('d-none'); // sembunyikan jika valid
-                }
-
-                form.classList.add('was-validated'); // munculkan feedback invalid Bootstrap
-            }, false);
-        })();
-    </script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             // Tangkap semua form hapus
@@ -321,4 +331,80 @@
             });
         });
     </script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <script type="text/javascript">
+      // register Page Flipbox control
+      $('.register-content [data-toggle="flip"]').click(function() {
+      	$('.register-box').toggleClass('flipped');
+      	return false;
+      });
+    </script>
+    <script>
+    function toggleEditPassword() {
+        const input = document.getElementById("editPassword");
+        const icon = document.getElementById("editToggleIcon");
+        const isHidden = input.type === "password";
+
+        input.type = isHidden ? "text" : "password";
+        icon.classList.toggle("bi-eye", isHidden);
+        icon.classList.toggle("bi-eye-slash", !isHidden);
+    }
+</script>
+
+
+    <script>
+        function togglePassword() {
+    const input = document.getElementById("passwordInput");
+    const icon = document.getElementById("toggleIcon");
+    const isHidden = input.type === "password";
+
+    input.type = isHidden ? "text" : "password";
+    icon.classList.toggle("bi-eye", isHidden);
+    icon.classList.toggle("bi-eye-slash", !isHidden);
+  }
+    </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const form = document.getElementById('formTambahPengguna');
+
+        form.addEventListener('submit', function (e) {
+            let valid = true;
+
+            const username = form.querySelector('input[name="username"]');
+            const email = form.querySelector('input[name="email"]');
+            const password = form.querySelector('input[name="password"]');
+            const role = form.querySelector('select[name="role"]');
+
+            // Reset custom validity
+            [username, email, password, role].forEach(input => {
+                input.setCustomValidity('');
+            });
+
+            if (!username.value.trim()) {
+                username.setCustomValidity('Silakan isi username');
+                username.reportValidity();
+                valid = false;
+            } else if (!email.value.trim()) {
+                email.setCustomValidity('Silakan isi email');
+                email.reportValidity();
+                valid = false;
+            } else if (!password.value.trim()) {
+                password.setCustomValidity('Silakan isi password');
+                password.reportValidity();
+                valid = false;
+            } else if (!role.value.trim()) {
+                role.setCustomValidity('Silakan pilih role');
+                role.reportValidity();
+                valid = false;
+            }
+
+            if (!valid) {
+                e.preventDefault(); // stop form submit
+            }
+        });
+    });
+</script>
+
 @endpush

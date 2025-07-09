@@ -7,6 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- Main CSS-->
     <link rel="stylesheet" type="text/css" href="{{ asset('template/docs/css/main.css') }}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <!-- Font-icon css-->
     {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> --}}
     <title>Login</title>
@@ -45,10 +46,9 @@
            class="form-control @error('password') is-invalid @enderror"
            placeholder="Password"
            required
-          
            oninvalid="this.setCustomValidity('Password minimal 8 karakter dan harus mengandung huruf & angka')"
            oninput="this.setCustomValidity('')">
-    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()">
+    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" id="toggleButton">
       <i class="bi bi-eye-slash" id="toggleIcon"></i>
     </button>
   </div>
@@ -87,7 +87,6 @@
     <script src="{{ 'template/docs/js/jquery-3.7.0.min.js' }}"></script>
     <script src="{{ 'template/docs/js/bootstrap.min.js' }}"></script>
     <script src="{{ 'template/docs/js/main.js' }}"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <script type="text/javascript">
         // Login Page Flipbox control
         $('.login-content [data-toggle="flip"]').click(function() {
@@ -96,16 +95,21 @@
         });
     </script>
     <script>
-        function togglePassword() {
-    const input = document.getElementById("passwordInput");
-    const icon = document.getElementById("toggleIcon");
-    const isHidden = input.type === "password";
+    function togglePassword() {
+        const input = document.getElementById("passwordInput");
+        const icon = document.getElementById("toggleIcon");
 
-    input.type = isHidden ? "text" : "password";
-    icon.classList.toggle("bi-eye", isHidden);
-    icon.classList.toggle("bi-eye-slash", !isHidden);
-  }
-    </script>
+        // Toggle tipe input
+        if (input.type === "password") {
+            input.type = "text";
+            icon.className = "bi bi-eye"; // Ganti ikon
+        } else {
+            input.type = "password";
+            icon.className = "bi bi-eye-slash"; // Kembali ke ikon semula
+        }
+    }
+</script>
+
 </body>
 
 </html>

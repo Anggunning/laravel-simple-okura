@@ -62,7 +62,7 @@
                                     <table class="table table-hover table-bordered" id="skuTableBelumSelesai">
                                         <thead>
                                             <tr>
-                                                <th>No</th>                                             
+                                                <th>No</th>
                                                 <th>Nama Pemohon</th>
                                                 <th>Jenis Usaha</th>
                                                 <th>Alamat Usaha</th>
@@ -77,8 +77,8 @@
                                         @endphp
                                         <tbody>
                                             @forelse($skuBelumSelesai as $item)
-                                            @if ($user->role !== 'Masyarakat' || $item->user_id === $user->id)
-                                                @php
+                                                @if ($user->role !== 'Masyarakat' || $item->user_id === $user->id)
+                                                    @php
                                                         $lebihDari3Hari = \Carbon\Carbon::parse($item->created_at)->lt(
                                                             now()->subDays(3),
                                                         );
@@ -86,36 +86,38 @@
                                                             $lebihDari3Hari && $item->status === 'Diajukan';
                                                     @endphp
                                                     <tr class="{{ $highlightMerah ? 'table-danger' : '' }}">
-                                                    <td></td>
-                                                    
-                                                    <td>{{ $item->nama }}</td>
-                                                    <td>{{ $item->jenis_usaha }}</td>
-                                                    <td>{{ $item->tempat_usaha }}</td>
-                                                    <td>{{ $item->tujuan }}</td>
-                                                    <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}</td>
-                                                    <td class="text-center align-middle">
-                                                        @php
-                                                            $badgeClass = match ($item->status) {
-                                                                'Diajukan' => 'bg-secondary text-dark',
-                                                                'Diproses' => 'bg-warning',
-                                                                'Ditolak' => 'bg-danger',
-                                                                'Selesai' => 'bg-success',
-                                                                default => 'bg-light text-dark',
-                                                            };
-                                                        @endphp
-                                                        <span class="badge {{ $badgeClass }} fs-6 py-2 px-3 rounded-3">
-                                                            {{ ucfirst($item->status) }}
-                                                        </span>
-                                                    </td>
-                                                    <td>
-                                                        <div class="btn-group">
-                                                            <a class="btn btn-white me-2" style="color: #2E8B57;"
-                                                                href="{{ route('sku.show', $item->id) }}">
-                                                                <i class="bi bi-info-circle fs-5"></i>
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        <td></td>
+
+                                                        <td>{{ $item->nama }}</td>
+                                                        <td>{{ $item->jenis_usaha }}</td>
+                                                        <td>{{ $item->tempat_usaha }}</td>
+                                                        <td>{{ $item->tujuan }}</td>
+                                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            @php
+                                                                $badgeClass = match ($item->status) {
+                                                                    'Diajukan' => 'bg-secondary text-dark',
+                                                                    'Diproses' => 'bg-warning',
+                                                                    'Ditolak' => 'bg-danger',
+                                                                    'Selesai' => 'bg-success',
+                                                                    default => 'bg-light text-dark',
+                                                                };
+                                                            @endphp
+                                                            <span
+                                                                class="badge {{ $badgeClass }} fs-6 py-2 px-3 rounded-3">
+                                                                {{ ucfirst($item->status) }}
+                                                            </span>
+                                                        </td>
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a class="btn btn-white me-2" style="color: #2E8B57;"
+                                                                    href="{{ route('sku.show', $item->id) }}">
+                                                                    <i class="bi bi-info-circle fs-5"></i>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 @endif
                                             @empty
                                                 <tr>
@@ -138,7 +140,7 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                                
+
                                                 <th>Nama Pemohon</th>
                                                 <th>Jenis Usaha</th>
                                                 <th>Tujuan Pengajuan</th>
@@ -163,11 +165,11 @@
                                                 <tr class="{{ $highlightMerah ? 'baris-lewat' : '' }}">
 
                                                     <td></td>
-                                                    
+
                                                     <td>{{ $item->nama }}</td>
                                                     <td>{{ $item->jenis_usaha }}</td>
                                                     <td>{{ $item->tujuan }}</td>
-                                                    
+
                                                     @php
                                                         $riwayatSelesai = $item->riwayat_sku
                                                             ->where('status', 'Selesai')
@@ -212,7 +214,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
 
                         {{-- tab ditolak --}}
                         <div class="tab-pane fade show" id="ditolak" role="tabpanel">
@@ -222,7 +224,7 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-                                               
+
                                                 <th>Nama Pemohon</th>
                                                 <th>Jenis Usaha</th>
                                                 <th>Tujuan Pengajuan</th>
@@ -237,45 +239,46 @@
                                         @endphp
                                         <tbody>
                                             @forelse($skuDitolak as $item)
-                                            @if ($user->role !== 'Masyarakat' || $item->user_id === $user->id)
-                                                <tr>
-                                                    <td></td>
-                                                    
-                                                    <td>{{ $item->nama }}</td>
-                                                    <td>{{ $item->jenis_usaha }}</td>
-                                                    <td>{{ $item->tujuan }}</td>
-                                                    
-                                                    @php
-                                                        $riwayatDitolak = $item->riwayat_sku
-                                                            ->where('status', 'Ditolak')
-                                                            ->last();
+                                                @if ($user->role !== 'Masyarakat' || $item->user_id === $user->id)
+                                                    <tr>
+                                                        <td></td>
+
+                                                        <td>{{ $item->nama }}</td>
+                                                        <td>{{ $item->jenis_usaha }}</td>
+                                                        <td>{{ $item->tujuan }}</td>
+
+                                                        @php
+                                                            $riwayatDitolak = $item->riwayat_sku
+                                                                ->where('status', 'Ditolak')
+                                                                ->last();
                                                         @endphp
                                                         <td>{{ $riwayatDitolak?->alasan ?? '-' }}</td>
                                                         <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                    </td>
-                                                    <td class="text-center align-middle">
-                                                        @php
-                                                            $badgeClass = match ($item->status) {
-                                                                'Diajukan' => 'bg-secondary text-dark',
-                                                                'Diproses' => 'bg-warning',
-                                                                'Selesai' => 'bg-success',
-                                                                'Ditolak' => 'bg-danger',
-                                                                default => 'bg-light text-dark',
-                                                            };
-                                                        @endphp
-                                                        <span class="badge {{ $badgeClass }} fs-6 py-2 px-3 rounded-3">
-                                                            {{ ucfirst($item->status) }}
-                                                        </span>
-                                                    </td>
-                                                    <td class="text-center align-middle">
-                                                        <div class="btn-group">
-                                                            <a class="btn btn-white me-2" style="color: #2E8B57;"
-                                                                href="{{ route('sku.show', $item->id) }}">
-                                                                <i class="bi bi-info-circle fs-5"></i>
-                                                            </a>
-                                                        </div>
-                                                    </td>
-                                                </tr>
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            @php
+                                                                $badgeClass = match ($item->status) {
+                                                                    'Diajukan' => 'bg-secondary text-dark',
+                                                                    'Diproses' => 'bg-warning',
+                                                                    'Selesai' => 'bg-success',
+                                                                    'Ditolak' => 'bg-danger',
+                                                                    default => 'bg-light text-dark',
+                                                                };
+                                                            @endphp
+                                                            <span
+                                                                class="badge {{ $badgeClass }} fs-6 py-2 px-3 rounded-3">
+                                                                {{ ucfirst($item->status) }}
+                                                            </span>
+                                                        </td>
+                                                        <td class="text-center align-middle">
+                                                            <div class="btn-group">
+                                                                <a class="btn btn-white me-2" style="color: #2E8B57;"
+                                                                    href="{{ route('sku.show', $item->id) }}">
+                                                                    <i class="bi bi-info-circle fs-5"></i>
+                                                                </a>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
                                                 @endif
                                             @empty
                                                 <tr>
@@ -294,14 +297,15 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- Modal Tambah Pengajuan -->
     <div class="modal fade" id="modalTambahPengajuan" tabindex="-1" aria-labelledby="modalTambahLabel"
         aria-hidden="true">
         <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <form id="formPengajuanSKU" action="{{ route('sku.store') }}" method="POST" enctype="multipart/form-data">
+                <form id="formPengajuanSKU" action="{{ route('sku.store') }}" method="POST"
+                    enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
                         <h5 class="modal-title" id="modalTambahLabel">Tambah Pengajuan Surat</h5>
@@ -309,79 +313,90 @@
                     </div>
 
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="nama" class="form-label">Nama Pemohon<span
-                                    class="text-danger">*</span></label>
-                            <input type="text" name="nama" class="form-control" required
-                                placeholder="Masukkan Nama Lengkap"
-                                oninvalid="this.setCustomValidity('Silakan isi nama lengkap')"
-                                oninput="this.setCustomValidity('')">
-                        </div>
-                        <div class="mb-3">
-                            <label for="tujuan" class="form-label">Tujuan
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" name="tujuan" class="form-control" required
-                                placeholder="Masukkan Tujuan" oninvalid="this.setCustomValidity('Silakan isi tujuan')"
-                                oninput="this.setCustomValidity('')">
-                        </div>
-                        <div class="mb-3">
-                            <label for="jenis_kelamin" class="form-label">Jenis Kelamin <span
-                                    class="text-danger">*</span></label>
-                            <select name="jenis_kelamin" class="form-select" required
-                                oninvalid="this.setCustomValidity('Silakan pilih jenis kelamin')"
-                                oninput="this.setCustomValidity('')">
-                                <option value="" disabled selected hidden>Jenis Kelamin</option>
-                                <option value="Laki-laki">Laki-laki</option>
-                                <option value="Perempuan">Perempuan</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="tempatLahir" class="form-label">Tempat Lahir
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" name="tempatLahir" class="form-control" required
-                                placeholder="Masukkan Tempat Lahir"
-                                oninvalid="this.setCustomValidity('Silakan isi tempat lahir')"
-                                oninput="this.setCustomValidity('')">
-                        </div>
-                        <div class="mb-3">
-                            <label for="tanggalLahir" class="form-label">Tanggal Lahir
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="date" name="tanggalLahir" class="form-control" required
-                                placeholder="Masukkan Tanggal Lahir"
-                                oninvalid="this.setCustomValidity('Silakan isi tanggal lahir')"
-                                oninput="this.setCustomValidity('')">
-                        </div>
-                         <div class="mb-3">
-                            <label for="agama" class="form-label">Agama<span class="text-danger">*</span></label>
-                            <select name="agama" class="form-select" required
-                                oninvalid="this.setCustomValidity('Silakan pilih agama')"
-                                oninput="this.setCustomValidity('')">
-                                <option value="" disabled selected hidden>Agama</option>
-                                <option value="Islam">Islam</option>
-                                <option value="Kristen Protestan">Kristen Protestan</option>
-                                <option value="Katolik">Katolik</option>
-                                <option value="Hindu">Hindu</option>
-                                <option value="Buddha">Buddha</option>
-                                <option value="Konghuchu">Konghuchu</option>
-                            </select>
-                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="nama" class="form-label">Nama Pemohon<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="nama" class="form-control" required
+                                    placeholder="Masukkan Nama Lengkap"
+                                    oninvalid="this.setCustomValidity('Silakan isi nama lengkap')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="nik" class="form-label">NIK <span class="text-danger">*</span></label>
+                                <input type="text" pattern="\d{16}" inputmode="numeric" name="nik"
+                                    id="nik" class="form-control" required onblur="cekPanjangNIK(this)"
+                                    oninvalid="this.setCustomValidity('Silakan isi NIK Anda')"
+                                    oninput="this.setCustomValidity('')" placeholder="Masukkan NIK" maxlength="16">
+                            </div>
 
-                         <div class="mb-3">
-                            <label for="nik" class="form-label">NIK <span class="text-danger">*</span></label>
-                            <input type="text" pattern="\d{16}" inputmode="numeric" name="nik" id="nik"
-                                class="form-control" required onblur="cekPanjangNIK(this)"
-                                oninvalid="this.setCustomValidity('Silakan isi NIK Anda')"
-                                oninput="this.setCustomValidity('')" placeholder="Masukkan NIK" maxlength="16">
                         </div>
-                        <div class="mb-3">
-                            <label for="alamat" class="form-label">Alamat
-                                <span class="text-danger">*</span>
-                            </label>
-                            <textarea name="alamat" class="form-control" rows="1" required placeholder="Masukkan Alamat"
-                                oninvalid="this.setCustomValidity('Silakan isi alamat')" oninput="this.setCustomValidity('')"></textarea>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="tanggalLahir" class="form-label">Tanggal Lahir
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="date" name="tanggalLahir" class="form-control" required
+                                    placeholder="Masukkan Tanggal Lahir"
+                                    oninvalid="this.setCustomValidity('Silakan isi tanggal lahir')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                                <label for="tempatLahir" class="form-label">Tempat Lahir
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="tempatLahir" class="form-control" required
+                                    placeholder="Masukkan Tempat Lahir"
+                                    oninvalid="this.setCustomValidity('Silakan isi tempat lahir')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="jenis_kelamin" class="form-label">Jenis Kelamin <span
+                                        class="text-danger">*</span></label>
+                                <select name="jenis_kelamin" class="form-select" required
+                                    oninvalid="this.setCustomValidity('Silakan pilih jenis kelamin')"
+                                    oninput="this.setCustomValidity('')">
+                                    <option value="" disabled selected hidden>Jenis Kelamin</option>
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="agama" class="form-label">Agama<span class="text-danger">*</span></label>
+                                <select name="agama" class="form-select" required
+                                    oninvalid="this.setCustomValidity('Silakan pilih agama')"
+                                    oninput="this.setCustomValidity('')">
+                                    <option value="" disabled selected hidden>Agama</option>
+                                    <option value="Islam">Islam</option>
+                                    <option value="Kristen Protestan">Kristen Protestan</option>
+                                    <option value="Katolik">Katolik</option>
+                                    <option value="Hindu">Hindu</option>
+                                    <option value="Buddha">Buddha</option>
+                                    <option value="Konghuchu">Konghuchu</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="pekerjaan" class="form-label">Pekerjaan
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="pekerjaan" class="form-control" required
+                                    placeholder="Masukkan Pekerjaan"
+                                    oninvalid="this.setCustomValidity('Silakan isi pekerjaan')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="alamat" class="form-label">Alamat
+                                    <span class="text-danger">*</span>
+                                </label>
+                                 <input name="alamat" class="form-control"
+                                 required placeholder="Masukkan Alamat"
+                                    oninvalid="this.setCustomValidity('Silakan isi alamat')" oninput="this.setCustomValidity('')"></input>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="mb-3 col-md-6">
@@ -400,121 +415,132 @@
                                     oninput="this.setCustomValidity('')">
                             </div>
                         </div>
+                        <div class="row">
 
-                        <div class="mb-3">
-                            <label for="pekerjaan" class="form-label">Pekerjaan
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" name="pekerjaan" class="form-control" required
-                                placeholder="Masukkan Pekerjaan"
-                                oninvalid="this.setCustomValidity('Silakan isi pekerjaan')"
-                                oninput="this.setCustomValidity('')">
+                            <div class="mb-3 col-md-6">
+                                <label for="tujuan" class="form-label">Tujuan Pengajuan
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="tujuan" class="form-control" required
+                                    placeholder="Masukkan Tujuan Pengajuan"
+                                    oninvalid="this.setCustomValidity('Silakan isi tujuan pengajuan')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="jenis_usaha" class="form-label">Jenis Usaha
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="jenis_usaha" class="form-control" required
+                                    placeholder="Masukkan Jenis Usaha"
+                                    oninvalid="this.setCustomValidity('Silakan isi jenis usaha')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="jenis_usaha" class="form-label">Jenis Usaha
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" name="jenis_usaha" class="form-control" required
-                                placeholder="Masukkan Jenis Usaha"
-                                oninvalid="this.setCustomValidity('Silakan isi jenis usaha')"
-                                oninput="this.setCustomValidity('')">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="tempat_usaha" class="form-label">Alamat Usaha
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="tempat_usaha" class="form-control" required
+                                    placeholder="Masukkan Tempat Usaha"
+                                    oninvalid="this.setCustomValidity('Silakan isi tempat usaha')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="kelurahan" class="form-label">Kelurahan Usaha
+                                    <span class="text-danger">*</span>
+                                </label>
+                                <input type="text" name="kelurahan" class="form-control" required
+                                    placeholder="Masukkan Kelurahan Usaha"
+                                    oninvalid="this.setCustomValidity('Silakan isi kelurahan usaha')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="tempat_usaha" class="form-label">Alamat Usaha
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" name="tempat_usaha" class="form-control" required
-                                placeholder="Masukkan Tempat Usaha"
-                                oninvalid="this.setCustomValidity('Silakan isi tempat usaha')"
-                                oninput="this.setCustomValidity('')">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="kecamatan" class="form-label">Kecamatan Usaha
+                                    <span class="text-danger">*</span></label>
+                                </label>
+                                <input type="text" name="kecamatan" class="form-control" required
+                                    placeholder="Masukkan Kecamatan Usaha"
+                                    oninvalid="this.setCustomValidity('Silakan isi kecamatan usaha')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="kota" class="form-label">Kota Usaha
+                                    <span class="text-danger">*</span></label>
+                                </label>
+                                <input type="text" name="kota" class="form-control" required
+                                    placeholder="Masukkan Kota Usaha"
+                                    oninvalid="this.setCustomValidity('Silakan isi kota usaha')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="kelurahan" class="form-label">Kelurahan Usaha
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" name="kelurahan" class="form-control" required
-                                placeholder="Masukkan Kelurahan"
-                                oninvalid="this.setCustomValidity('Silakan isi kelurahan usaha')"
-                                oninput="this.setCustomValidity('')">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="keterangan" class="form-label">Keterangan </label>
+                                <textarea name="keterangan" class="form-control" rows="2" 
+                                placeholder="Masukkan Keterangan (optional)"></textarea>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="foto_usaha" class="form-label">Foto Usaha <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="foto_usaha" id="foto_usaha"
+                                    class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah foto usaha')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
+                                    Maksimal :
+                                    2MB.</small>
+                            </div>
                         </div>
-                        
-                        
-                        <div class="mb-3">
-                            <label for="kecamatan" class="form-label">Kecamatan Usaha
-                                <span class="text-danger">*</span></label>
-                            </label>
-                            <input type="text" name="kecamatan" class="form-control" required
-                                placeholder="Masukkan Kecamatan"
-                                oninvalid="this.setCustomValidity('Silakan isi kecamatan usaha')"
-                                oninput="this.setCustomValidity('')">
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW
+                                    <span class="text-danger">*</span></label>
+                                <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw"
+                                    class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
+                                    Maksimal :
+                                    2MB.</small>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="kk" class="form-label">Kartu Keluarga <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="kk" id="kk" class="form-control validate-file"
+                                    accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah file KK')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
+                                    Maksimal :
+                                    2MB.</small>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="kota" class="form-label">Kota Usaha
-                                <span class="text-danger">*</span></label>
-                            </label>
-                            <input type="text" name="kota" class="form-control" required
-                                placeholder="Masukkan Kota" oninvalid="this.setCustomValidity('Silakan isi kota usaha')"
-                                oninput="this.setCustomValidity('')">
-                        </div>
-                        <div class="mb-3">
-                            <label for="keterangan" class="form-label">Keterangan </label>
-                            <textarea name="keterangan" class="form-control" rows="2"  
-                            placeholder="Masukkan Keterangan (optional)"></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="foto_usaha" class="form-label">Foto Usaha <span
-                                    class="text-danger">*</span></label>
-                            <input type="file" name="foto_usaha" id="foto_usaha" class="form-control validate-file" 
-                            accept=".jpg,.jpeg,.png,.pdf"
-                                required oninvalid="this.setCustomValidity('Silakan unggah foto usaha')"
-                                oninput="this.setCustomValidity('')">
-                            <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
-                                Maksimal :
-                                2MB.</small>
-                        </div>
-                        <div class="mb-3">
-                            <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW
-                                <span class="text-danger">*</span></label>
-                            <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw" class="form-control validate-file"
-                                accept=".jpg,.jpeg,.png,.pdf" required
-                                oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
-                                oninput="this.setCustomValidity('')">
-                            <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
-                                Maksimal :
-                                2MB.</small>
-                        </div>
-                        <div class="mb-3">
-                            <label for="kk" class="form-label">Kartu Keluarga <span
-                                    class="text-danger">*</span></label>
-                            <input type="file" name="kk" id="kk" class="form-control validate-file"
-                                accept=".jpg,.jpeg,.png,.pdf" required
-                                oninvalid="this.setCustomValidity('Silakan unggah file KK')"
-                                oninput="this.setCustomValidity('')">
-                            <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
-                                Maksimal :
-                                2MB.</small>
-                        </div>
-                        <div class="mb-3">
-                            <label for="ktp" class="form-label">Kartu Tanda Penduduk <span
-                                    class="text-danger">*</span></label>
-                            <input type="file" name="ktp" id="ktp" class="form-control validate-file"
-                                accept=".jpg,.jpeg,.png,.pdf" required
-                                oninvalid="this.setCustomValidity('Silakan unggah file KTP')"
-                                oninput="this.setCustomValidity('')">
-                            <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
-                                Maksimal :
-                                2MB.</small>
-                        </div>
-                        <div class="mb-3">
-                            <label for="surat_pernyataan" class="form-label">Surat Pernyataan <span
-                                    class="text-danger">*</span></label>
-                            <input type="file" name="surat_pernyataan" id="surat_pernyataan" class="form-control validate-file"
-                                accept=".jpg,.jpeg,.png,.pdf" required
-                                oninvalid="this.setCustomValidity('Silakan unggah surat pernyataan')"
-                                oninput="this.setCustomValidity('')">
-                            <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
-                                Maksimal :
-                                2MB.</small>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="ktp" class="form-label">Kartu Tanda Penduduk <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="ktp" id="ktp" class="form-control validate-file"
+                                    accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah file KTP')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
+                                    Maksimal :
+                                    2MB.</small>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="surat_pernyataan" class="form-label">Surat Pernyataan <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="surat_pernyataan" id="surat_pernyataan"
+                                    class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah surat pernyataan')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
+                                    Maksimal :
+                                    2MB.</small>
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -529,7 +555,6 @@
             </div>
         </div>
     </div>
-
 @endsection
 
 
@@ -583,160 +608,169 @@
         });
     </script>
 
-<script>
-    $(document).ready(function () {
-        // Setup CSRF
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
-
-        // Ambil draf saat modal SKU dibuka
-        $('#modalTambahPengajuan').on('shown.bs.modal', function () {
-            $.get("{{ route('sku.getDraf') }}", function (data) {
-                if (data) {
-                    const form = $('#formPengajuanSKU');
-
-                    form.find('input[name="nama"]').val(data.nama);
-                    form.find('input[name="tujuan"]').val(data.tujuan);
-                    form.find('input[name="pekerjaan"]').val(data.pekerjaan);
-                    form.find('select[name="jenis_kelamin"]').val(data.jenis_kelamin);
-                    form.find('input[name="tempat_lahir"]').val(data.tempat_lahir);
-                    form.find('input[name="tanggal_lahir"]').val(data.tanggal_lahir);
-                    form.find('select[name="agama"]').val(data.agama);
-                    form.find('input[name="nik"]').val(data.nik);
-                    form.find('textarea[name="alamat"]').val(data.alamat);
-                    form.find('input[name="rt"]').val(data.rt);
-                    form.find('input[name="rw"]').val(data.rw);
-                    form.find('textarea[name="keterangan"]').val(data.keterangan);
-                    form.find('input[name="jenis_usaha"]').val(data.jenis_usaha);
-                    form.find('input[name="tempat_usaha"]').val(data.tempat_usaha);
-                    form.find('input[name="kelurahan"]').val(data.kelurahan);
-                    form.find('input[name="kecamatan"]').val(data.kecamatan);
-                    form.find('input[name="kota"]').val(data.kota);
-
-                    // File preview
-                    ['foto_usaha', 'ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function (field) {
-                        if (data[field]) {
-                            const preview = `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
-                            form.find(`input[name="${field}"]`).after(preview);
-                        }
-                    });
+    <script>
+        $(document).ready(function() {
+            // Setup CSRF
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
-            }).fail(function () {
-                console.warn("❌ Tidak bisa ambil data draf.");
             });
-        });
 
-        // Simpan draf
-        $('#btnSimpanDraf').on('click', function () {
-            const form = $('#formPengajuanSKU')[0];
-            const formData = new FormData(form);
+            // Ambil draf saat modal SKU dibuka
+            $('#modalTambahPengajuan').on('shown.bs.modal', function() {
+                $.get("{{ route('sku.getDraf') }}", function(data) {
+                    if (data) {
+                        const form = $('#formPengajuanSKU');
 
-            $.ajax({
-                url: "{{ route('sku.storeDraf') }}",
-                method: "POST",
-                data: formData,
-                processData: false,
-                contentType: false,
-                success: function (res) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Berhasil!',
-                        text: 'Draf berhasil disimpan!',
-                        confirmButtonColor: '#3085d6',
-                    }).then(() => {
-                        $('#modalTambahPengajuan').modal('hide');
-                        $('#modalTambahPengajuan').on('hidden.bs.modal', function () {
-                            $('body').removeClass('modal-open').css('overflow', '');
-                            $('.modal-backdrop').remove();
-                        });
-                    });
-                },
-                error: function (xhr, status, err) {
-                    let msg = 'Gagal menyimpan draf.';
-                    if (xhr.responseJSON && xhr.responseJSON.error) {
-                        msg += "\n" + xhr.responseJSON.error;
+                        form.find('input[name="nama"]').val(data.nama);
+                        form.find('input[name="tujuan"]').val(data.tujuan);
+                        form.find('input[name="pekerjaan"]').val(data.pekerjaan);
+                        form.find('select[name="jenis_kelamin"]').val(data.jenis_kelamin);
+                        form.find('input[name="tempat_lahir"]').val(data.tempat_lahir);
+                        form.find('input[name="tanggal_lahir"]').val(data.tanggal_lahir);
+                        form.find('select[name="agama"]').val(data.agama);
+                        form.find('input[name="nik"]').val(data.nik);
+                        form.find('input[name="alamat"]').val(data.alamat);
+                        form.find('input[name="rt"]').val(data.rt);
+                        form.find('input[name="rw"]').val(data.rw);
+                        form.find('textarea[name="keterangan"]').val(data.keterangan);
+                        form.find('input[name="jenis_usaha"]').val(data.jenis_usaha);
+                        form.find('input[name="tempat_usaha"]').val(data.tempat_usaha);
+                        form.find('input[name="kelurahan"]').val(data.kelurahan);
+                        form.find('input[name="kecamatan"]').val(data.kecamatan);
+                        form.find('input[name="kota"]').val(data.kota);
+
+                        // File preview
+                        ['foto_usaha', 'ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(
+                            function(field) {
+                                if (data[field]) {
+                                    const preview =
+                                        `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                                    form.find(`input[name="${field}"]`).after(preview);
+                                }
+                            });
                     }
-
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Oops!',
-                        text: msg,
-                        confirmButtonColor: '#d33',
-                    });
-
-                    console.error(xhr.responseText);
-                }
+                }).fail(function() {
+                    console.warn("❌ Tidak bisa ambil data draf.");
+                });
             });
-        });
+
+            // Simpan draf
+            $('#btnSimpanDraf').on('click', function () {
+    const form = $('#formPengajuanSKU')[0];
+    const formData = new FormData(form);
+
+    // Hilangkan atribut required dan pattern untuk NIK (dan input lain kalau perlu)
+    const nik = document.getElementById('nik');
+    nik.removeAttribute('required');
+    nik.removeAttribute('pattern');
+    nik.setCustomValidity('');
+
+    // Lanjutkan kirim draf seperti biasa...
+    $.ajax({
+        url: "{{ route('sku.storeDraf') }}",
+        method: "POST",
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function (res) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Berhasil!',
+                text: 'Draf berhasil disimpan!',
+                confirmButtonColor: '#3085d6',
+            }).then(() => {
+                $('#modalTambahPengajuan').modal('hide');
+                $('#modalTambahPengajuan').on('hidden.bs.modal', function () {
+                    $('body').removeClass('modal-open').css('overflow', '');
+                    $('.modal-backdrop').remove();
+                });
+            });
+        },
+        error: function (xhr, status, err) {
+            let msg = 'Gagal menyimpan draf.';
+            if (xhr.responseJSON && xhr.responseJSON.error) {
+                msg += "\n" + xhr.responseJSON.error;
+            }
+
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops!',
+                text: msg,
+                confirmButtonColor: '#d33',
+            });
+
+            console.error(xhr.responseText);
+        }
     });
-</script>
+});
+});
+    </script>
 
-@if (isset($drafToLoad))
-<script>
-    $(document).ready(function () {
-        const draf = @json($drafToLoad);
-        // const form = $('#formPengajuanSKU');
+    @if (isset($drafToLoad))
+        <script>
+            $(document).ready(function() {
+                const draf = @json($drafToLoad);
+                // const form = $('#formPengajuanSKU');
 
-        $('#formPengajuanSKU input[name="nama"]').val(draf.nama);
-        $('#formPengajuanSKU input[name="tujuan"]').val(draf.tujuan);
-        $('#formPengajuanSKU input[name="pekerjaan"]').val(draf.pekerjaan);
-        $('#formPengajuanSKU select[name="jenis_kelamin"]').val(draf.jenis_kelamin);
-        $('#formPengajuanSKU input[name="tempat_lahir"]').val(draf.tempat_lahir);
-        $('#formPengajuanSKU input[name="tanggal_lahir"]').val(draf.tanggal_lahir);
-        $('#formPengajuanSKU select[name="agama"]').val(draf.agama);
-        $('#formPengajuanSKU input[name="nik"]').val(draf.nik);
-        $('#formPengajuanSKU textarea[name="alamat"]').val(draf.alamat);
-        $('#formPengajuanSKU input[name="rt"]').val(draf.rt);
-        $('#formPengajuanSKU input[name="rw"]').val(draf.rw);
-        $('#formPengajuanSKU textarea[name="keterangan"]').val(draf.keterangan);
-        $('#formPengajuanSKU input[name="jenis_usaha"]').val(draf.jenis_usaha);
-        $('#formPengajuanSKU input[name="tempat_usaha"]').val(draf.tempat_usaha);
-        $('#formPengajuanSKU input[name="kelurahan"]').val(draf.kelurahan);
-        $('#formPengajuanSKU input[name="kecamatan"]').val(draf.kecamatan);
-        $('#formPengajuanSKU input[name="kota"]').val(draf.kota);
+                $('#formPengajuanSKU input[name="nama"]').val(draf.nama);
+                $('#formPengajuanSKU input[name="tujuan"]').val(draf.tujuan);
+                $('#formPengajuanSKU input[name="pekerjaan"]').val(draf.pekerjaan);
+                $('#formPengajuanSKU select[name="jenis_kelamin"]').val(draf.jenis_kelamin);
+                $('#formPengajuanSKU input[name="tempat_lahir"]').val(draf.tempat_lahir);
+                $('#formPengajuanSKU input[name="tanggal_lahir"]').val(draf.tanggal_lahir);
+                $('#formPengajuanSKU select[name="agama"]').val(draf.agama);
+                $('#formPengajuanSKU input[name="nik"]').val(draf.nik);
+                $('#formPengajuanSKU input[name="alamat"]').val(draf.alamat);
+                $('#formPengajuanSKU input[name="rt"]').val(draf.rt);
+                $('#formPengajuanSKU input[name="rw"]').val(draf.rw);
+                $('#formPengajuanSKU textarea[name="keterangan"]').val(draf.keterangan);
+                $('#formPengajuanSKU input[name="jenis_usaha"]').val(draf.jenis_usaha);
+                $('#formPengajuanSKU input[name="tempat_usaha"]').val(draf.tempat_usaha);
+                $('#formPengajuanSKU input[name="kelurahan"]').val(draf.kelurahan);
+                $('#formPengajuanSKU input[name="kecamatan"]').val(draf.kecamatan);
+                $('#formPengajuanSKU input[name="kota"]').val(draf.kota);
 
-        ['foto_usaha', 'ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function (field) {
-            if (draf[field]) {
+                ['foto_usaha', 'ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function(field) {
+                    if (draf[field]) {
                         const preview =
                             `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
                         $(`#formPengajuanSKU input[name="${field}"]`).after(preview);
                     }
-        });
+                });
 
-        $('#modalTambahPengajuan').modal('show');
-    });
-</script>
-@endif
+                $('#modalTambahPengajuan').modal('show');
+            });
+        </script>
+    @endif
 
 
 
     <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const form = document.getElementById('formPengajuanSKU');
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('formPengajuanSKU');
 
-        form.addEventListener('submit', function (e) {
-            e.preventDefault();
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
 
-            Swal.fire({
-                title: 'Yakin mau menyimpan?',
-                text: 'Pastikan semua data sudah benar.',
-                icon: 'question',
-                showCancelButton: true,
-                confirmButtonText: 'Simpan',
-                cancelButtonText: 'Batal',
-                confirmButtonColor: '#d33',       // warna merah (seperti tombol "Tolak")
-                cancelButtonColor: '#6c757d',     // abu Bootstrap
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    form.submit();
-                }
+                Swal.fire({
+                    title: 'Yakin mau menyimpan?',
+                    text: 'Pastikan semua data sudah benar.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Simpan',
+                    cancelButtonText: 'Batal',
+                    confirmButtonColor: '#d33', // warna merah (seperti tombol "Tolak")
+                    cancelButtonColor: '#6c757d', // abu Bootstrap
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
             });
         });
-    });
-</script>
+    </script>
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -767,78 +801,92 @@
             });
         }
     </script>
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const fileInputs = document.querySelectorAll('.validate-file');
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInputs = document.querySelectorAll('.validate-file');
+            const maxSize = 2 * 1024 * 1024; // 2MB
 
-    fileInputs.forEach(input => {
-      input.addEventListener('change', function () {
-        const file = this.files[0];
+            fileInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const file = this.files[0];
 
-        if (file && file.size > maxSize) {
-          this.value = ''; // Reset input file agar tidak terkirim
+                    if (file && file.size > maxSize) {
+                        this.value = ''; // Reset input file agar tidak terkirim
 
-          Swal.fire({
-            icon: 'error',
-            title: 'Ukuran File Terlalu Besar',
-            text: 'File yang diunggah tidak boleh lebih dari 2MB',
-            confirmButtonText: 'OK'
-          });
-        }
-      });
-    });
-  });
-</script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Ukuran File Terlalu Besar',
+                            text: 'File yang diunggah tidak boleh lebih dari 2MB',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 
 
 
     <script>
-  document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener('DOMContentLoaded', function () {
+    let lastClickedButton = null;
+
+    // Tangkap tombol terakhir yang diklik
+    document.querySelectorAll('button[type=submit]').forEach(button => {
+        button.addEventListener('click', function () {
+            lastClickedButton = this.value;
+        });
+    });
+
     const fields = [
-      {
-        id: 'nik',
-        length: 16,
-        label: 'NIK',
-        example: '1234567890123456'
-      },
-      {
-        id: 'rt',
-        length: 3,
-        label: 'RT',
-        example: '001'
-      },
-      {
-        id: 'rw',
-        length: 3,
-        label: 'RW',
-        example: '002'
-      }
+        {
+            id: 'nik',
+            length: 16,
+            label: 'NIK',
+            example: '1234567890123456'
+        },
+        {
+            id: 'rt',
+            length: 3,
+            label: 'RT',
+            example: '001'
+        },
+        {
+            id: 'rw',
+            length: 3,
+            label: 'RW',
+            example: '002'
+        }
     ];
 
     fields.forEach(field => {
-      const input = document.getElementById(field.id);
-      if (!input) return;
+        const input = document.getElementById(field.id);
+        if (!input) return;
 
-      input.addEventListener('input', function () {
-        const val = this.value.trim();
-        if (val === '') {
-          this.setCustomValidity(`Silakan isi ${field.label}`);
-        } else if (!new RegExp(`^\\d{${field.length}}$`).test(val)) {
-          this.setCustomValidity(`${field.label} harus terdiri dari ${field.length} digit angka (contoh: ${field.example})`);
-        } else {
-          this.setCustomValidity('');
-        }
-      });
+        input.addEventListener('input', function () {
+            // Saat simpan sebagai draf, jangan validasi NIK
+            if (lastClickedButton === 'draft' && field.id === 'nik') {
+                this.setCustomValidity('');
+                return;
+            }
 
-      input.addEventListener('blur', function () {
-        this.reportValidity();
-      });
+            const val = this.value.trim();
+            if (val === '') {
+                this.setCustomValidity(`Silakan isi ${field.label}`);
+            } else if (!new RegExp(`^\\d{${field.length}}$`).test(val)) {
+                this.setCustomValidity(
+                    `${field.label} harus terdiri dari ${field.length} digit angka (contoh: ${field.example})`
+                );
+            } else {
+                this.setCustomValidity('');
+            }
+        });
+
+        input.addEventListener('blur', function () {
+            this.reportValidity();
+        });
     });
-  });
+});
 </script>
 
-
-
-   
 @endpush

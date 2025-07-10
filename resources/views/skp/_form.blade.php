@@ -20,16 +20,11 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="jenis_kelamin" class="form-label">Jenis Kelamin
+            <label for="tanggal_lahir" class="form-label">Tanggal Lahir
                 <span class="text-danger">*</span>
             </label>
-            <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required
-                oninvalid="this.setCustomValidity('Silakan isi jenis kelamin')" oninput="this.setCustomValidity('')">
-                <option value="" disabled selected hidden>Jenis Kelamin</option>
-                <option value="Laki-laki">Laki-laki</option>
-                <option value="Perempuan">Perempuan</option>
-            </select>
-
+            <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control" required
+                oninvalid="this.setCustomValidity('Silakan isi tanggal lahir')" oninput="this.setCustomValidity('')">
         </div>
         <div class="mb-3 col-md-6">
             <label for="tempat_lahir" class="form-label">Tempat Lahir
@@ -43,11 +38,15 @@
 
     <div class="row">
         <div class="mb-3 col-md-6">
-            <label for="tanggal_lahir" class="form-label">Tanggal Lahir
+            <label for="jenis_kelamin" class="form-label">Jenis Kelamin
                 <span class="text-danger">*</span>
             </label>
-            <input type="date" name="tanggal_lahir" id="tanggal_lahir" class="form-control" required
-                oninvalid="this.setCustomValidity('Silakan isi tanggal lahir')" oninput="this.setCustomValidity('')">
+            <select name="jenis_kelamin" id="jenis_kelamin" class="form-select" required
+                oninvalid="this.setCustomValidity('Silakan isi jenis kelamin')" oninput="this.setCustomValidity('')">
+                <option value="" disabled selected hidden>Jenis Kelamin</option>
+                <option value="Laki-laki">Laki-laki</option>
+                <option value="Perempuan">Perempuan</option>
+            </select>
         </div>
         <div class="mb-3 col-md-6">
             <label for="agama" class="form-label">Agama
@@ -74,14 +73,17 @@
                 oninvalid="this.setCustomValidity('Silakan isi pekerjaan')" oninput="this.setCustomValidity('')"
                 placeholder="Masukkan pekerjaan">
         </div>
-        <div class="mb-3 col-md-6" id="formNamaPasangan" style="display: none;">
-            <label for="nama_pasangan_dulu" class="form-label">Nama Pasangan Dulu
+         <div class="mb-3 col-md-6">
+            <label for="alamat" class="form-label">Alamat
                 <span class="text-danger">*</span>
             </label>
-            <input type="text" name="nama_pasangan_dulu" id="nama_pasangan_dulu" class="form-control"
-                oninvalid="this.setCustomValidity('Silakan isi nama pasangan dulu')"
-                oninput="this.setCustomValidity('')" placeholder="Masukkan nama pasangan">
+            <input type="text" name="alamat" id="alamat" class="form-control" required
+                oninvalid="this.setCustomValidity('Silakan isi alamat')"
+                oninput="this.setCustomValidity('')"placeholder="Masukkan alamat tempat tinggal">
         </div>
+        </div>
+        <div class="row">
+        
         <div class="mb-3 col-md-6">
             <label for="status_kawin" class="form-label">Status Perkawinan
                 <span class="text-danger">*</span>
@@ -94,27 +96,6 @@
                 <option value="Cerai Mati">Cerai Mati</option>
             </select>
         </div>
-
-
-        <div class="mb-3 col-md-6" id="formJenisKelaminPasanganDulu" style="display: none;">
-            <label for="jenis_kelamin_psgn_dulu" class="form-label">Jenis Kelamin Pasangan
-                <span class="text-danger">*</span>
-            </label>
-            <input type="text" id="jenis_kelamin_psgn_dulu" class="form-control" readonly>
-        </div>
-
-    </div>
-
-    <div class="row">
-        <div class="mb-3 col-md-6">
-            <label for="alamat" class="form-label">Alamat
-                <span class="text-danger">*</span>
-            </label>
-            <input type="text" name="alamat" id="alamat" class="form-control" required
-                oninvalid="this.setCustomValidity('Silakan isi alamat')"
-                oninput="this.setCustomValidity('')"placeholder="Masukkan alamat tempat tinggal">
-        </div>
-
         <div class="mb-3 col-md-6">
             <label for="kewarganegaraan" class="form-label">Kewarganegaraan
                 <span class="text-danger">*</span>
@@ -123,6 +104,23 @@
                 oninvalid="this.setCustomValidity('Silakan isi kewarganegaraan')" oninput="this.setCustomValidity('')"
                 placeholder="Contoh: Indonesia">
         </div>
+        </div>
+<div class="row">
+        <div class="mb-3 col-md-6" id="formJenisKelaminPasanganDulu" style="display: none;">
+            <label for="jenis_kelamin_psgn_dulu" class="form-label">Jenis Kelamin Pasangan
+                <span class="text-danger">*</span>
+            </label>
+            <input type="text" id="jenis_kelamin_psgn_dulu" class="form-control" readonly>
+        </div>
+        <div class="mb-3 col-md-6" id="formNamaPasangan" style="display: none;">
+            <label for="nama_pasangan_dulu" class="form-label">Nama Pasangan Dulu
+                <span class="text-danger">*</span>
+            </label>
+            <input type="text" name="nama_pasangan_dulu" id="nama_pasangan_dulu" class="form-control"
+                oninvalid="this.setCustomValidity('Silakan isi nama pasangan dulu')"
+                oninput="this.setCustomValidity('')" placeholder="Masukkan nama pasangan">
+        </div>
+        
     </div>
     <div class="row">
         <div class="mb-3 col-md-6">
@@ -145,7 +143,7 @@
     <div class="row">
         <div class="mb-3 col-12">
             <label for="keterangan" class="form-label">Keterangan </label>
-            <textarea name="keterangan" id="keterangan" class="form-control" rows="2"
+            <textarea name="keterangan" id="keterangan" class="form-control" rows="1"
                 placeholder="Masukkan Keterangan (optional)"></textarea>
         </div>
     </div>

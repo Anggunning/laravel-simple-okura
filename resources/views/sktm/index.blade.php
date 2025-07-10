@@ -312,86 +312,86 @@
                     </div>
 
                     <div class="modal-body">
-                        <div class="mb-3">
-                            <label for="nama" class="form-label">Nama Pemohon <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" name="nama" class="form-control" required
-                                placeholder="Masukkan Nama Lengkap"
-                                oninvalid="this.setCustomValidity('Silakan isi nama lengkap')"
-                                oninput="this.setCustomValidity('')">
-                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="nama" class="form-label">Nama Pemohon <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="nama" class="form-control" required
+                                    placeholder="Masukkan Nama Lengkap"
+                                    oninvalid="this.setCustomValidity('Silakan isi nama lengkap')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="nik" class="form-label">NIK <span class="text-danger">*</span></label>
+                                <input type="text" pattern="\d{16}" inputmode="numeric" name="nik"
+                                    id="nik" class="form-control" required onblur="cekPanjangNIK(this)"
+                                    oninvalid="this.setCustomValidity('Silakan isi NIK Anda')"
+                                    oninput="this.setCustomValidity('')" placeholder="Masukkan NIK" maxlength="16">
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="tujuan" class="form-label">Tujuan <span class="text-danger">*</span></label>
-                            <input type="text" name="tujuan" class="form-control" required
-                                placeholder="Masukkan Tujuan"
-                                oninvalid="this.setCustomValidity('Silakan isi tujuan pengajuan')"
-                                oninput="this.setCustomValidity('')">
                         </div>
-                        <div class="mb-3">
-                            <label for="pekerjaan" class="form-label">Pekerjaan <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" name="pekerjaan" class="form-control" required
-                                placeholder="Masukkan Pekerjaan"
-                                oninvalid="this.setCustomValidity('Silakan isi pekerjaan pengajuan')"
-                                oninput="this.setCustomValidity('')">
-                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="tempatLahir" class="form-label">Tempat Lahir <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="tempatLahir" class="form-control" required
+                                    placeholder="Masukkan Tempat Lahir"
+                                    oninvalid="this.setCustomValidity('Silakan isi tempat lahir')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="jenis_kelamin" class="form-label">Jenis Kelamin <span
-                                    class="text-danger">*</span></label>
-                            <select name="jenis_kelamin" class="form-select" required
-                                oninvalid="this.setCustomValidity('Silakan pilih jenis kelamin')"
-                                oninput="this.setCustomValidity('')">
-                                <option value="" disabled selected hidden>Jenis Kelamin</option>
-                                <option value="Laki-laki">Laki-laki</option>
-                                <option value="Perempuan">Perempuan</option>
-                            </select>
+                            <div class="mb-3 col-md-6">
+                                <label for="tanggalLahir" class="form-label">Tanggal Lahir <span
+                                        class="text-danger">*</span></label>
+                                <input type="date" name="tanggalLahir" class="form-control" required
+                                    oninvalid="this.setCustomValidity('Silakan pilih tanggal lahir')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
                         </div>
+                        <div class="row">
 
-                        <div class="mb-3">
-                            <label for="tempatLahir" class="form-label">Tempat Lahir <span
-                                    class="text-danger">*</span></label>
-                            <input type="text" name="tempatLahir" class="form-control" required
-                                placeholder="Masukkan Tempat Lahir"
-                                oninvalid="this.setCustomValidity('Silakan isi tempat lahir')"
-                                oninput="this.setCustomValidity('')">
-                        </div>
 
-                        <div class="mb-3">
-                            <label for="tanggalLahir" class="form-label">Tanggal Lahir <span
-                                    class="text-danger">*</span></label>
-                            <input type="date" name="tanggalLahir" class="form-control" required
-                                oninvalid="this.setCustomValidity('Silakan pilih tanggal lahir')"
-                                oninput="this.setCustomValidity('')">
+                            <div class="mb-3 col-md-6">
+                                <label for="jenis_kelamin" class="form-label">Jenis Kelamin <span
+                                        class="text-danger">*</span></label>
+                                <select name="jenis_kelamin" class="form-select" required
+                                    oninvalid="this.setCustomValidity('Silakan pilih jenis kelamin')"
+                                    oninput="this.setCustomValidity('')">
+                                    <option value="" disabled selected hidden>Jenis Kelamin</option>
+                                    <option value="Laki-laki">Laki-laki</option>
+                                    <option value="Perempuan">Perempuan</option>
+                                </select>
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="agama" class="form-label">Agama<span class="text-danger">*</span></label>
+                                <select name="agama" class="form-select" required
+                                    oninvalid="this.setCustomValidity('Silakan pilih agama')"
+                                    oninput="this.setCustomValidity('')">
+                                    <option value="" disabled selected hidden>Agama</option>
+                                    <option value="Islam">Islam</option>
+                                    <option value="Kristen Protestan">Kristen Protestan</option>
+                                    <option value="Katolik">Katolik</option>
+                                    <option value="Hindu">Hindu</option>
+                                    <option value="Buddha">Buddha</option>
+                                    <option value="Konghuchu">Konghuchu</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="agama" class="form-label">Agama<span class="text-danger">*</span></label>
-                            <select name="agama" class="form-select" required
-                                oninvalid="this.setCustomValidity('Silakan pilih agama')"
-                                oninput="this.setCustomValidity('')">
-                                <option value="" disabled selected hidden>Agama</option>
-                                <option value="Islam">Islam</option>
-                                <option value="Kristen Protestan">Kristen Protestan</option>
-                                <option value="Katolik">Katolik</option>
-                                <option value="Hindu">Hindu</option>
-                                <option value="Buddha">Buddha</option>
-                                <option value="Konghuchu">Konghuchu</option>
-                            </select>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="nik" class="form-label">NIK <span class="text-danger">*</span></label>
-                            <input type="text" pattern="\d{16}" inputmode="numeric" name="nik" id="nik"
-                                class="form-control" required onblur="cekPanjangNIK(this)"
-                                oninvalid="this.setCustomValidity('Silakan isi NIK Anda')"
-                                oninput="this.setCustomValidity('')" placeholder="Masukkan NIK" maxlength="16">
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="alamat" class="form-label">Alamat <span class="text-danger">*</span></label>
-                            <textarea name="alamat" class="form-control" rows="1" required placeholder="Masukkan Alamat"
-                                oninvalid="this.setCustomValidity('Silakan isi alamat')" oninput="this.setCustomValidity('')"></textarea>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="pekerjaan" class="form-label">Pekerjaan <span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="pekerjaan" class="form-control" required
+                                    placeholder="Masukkan Pekerjaan"
+                                    oninvalid="this.setCustomValidity('Silakan isi pekerjaan pengajuan')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="alamat" class="form-label">Alamat <span
+                                        class="text-danger">*</span></label>
+                                <textarea name="alamat" class="form-control" rows="1" required placeholder="Masukkan Alamat"
+                                    oninvalid="this.setCustomValidity('Silakan isi alamat')" oninput="this.setCustomValidity('')"></textarea>
+                            </div>
                         </div>
                         <div class="row">
                             <div class="mb-3 col-md-6">
@@ -400,7 +400,6 @@
                                     maxlength="3" pattern="\d{3}" inputmode="numeric" placeholder="Contoh: 001"
                                     oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 001')"
                                     oninput="this.setCustomValidity('')">
-
                             </div>
                             <div class="mb-3 col-md-6">
                                 <label for="rw" class="form-label">RW <span class="text-danger">*</span></label>
@@ -410,66 +409,76 @@
                                     oninput="this.setCustomValidity('')">
                             </div>
                         </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="tujuan" class="form-label">Tujuan Pegajuan<span
+                                        class="text-danger">*</span></label>
+                                <input type="text" name="tujuan" class="form-control" required
+                                    placeholder="Masukkan Tujuan Pengajuan"
+                                    oninvalid="this.setCustomValidity('Silakan isi tujuan pengajuan')"
+                                    oninput="this.setCustomValidity('')">
+                            </div>
+                            <div class="mb-3 col-md-6">
+                                <label for="keterangan" class="form-label">Keterangan</label>
+                                <textarea name="keterangan" class="form-control" rows="1" placeholder="Masukkan Keterangan (optional)"></textarea>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <!-- INPUT FILE -->
+                            <div class="mb-3 col-md-6">
+                                <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw"
+                                    class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                    2MB.</small>
+                            </div>
 
-                        <div class="mb-3">
-                            <label for="keterangan" class="form-label">Keterangan </label>
-                            <textarea name="keterangan" class="form-control" rows="2" placeholder="Masukkan Keterangan (optional)"></textarea>
+                            <div class="mb-3 col-md-6">
+                                <label for="kk" class="form-label">Kartu Keluarga <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="kk" id="kk" class="form-control validate-file"
+                                    accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah file KK')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                    2MB.</small>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="ktp" class="form-label">Kartu Tanda Penduduk <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="ktp" id="ktp" class="form-control validate-file"
+                                    accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah file KTP')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                    2MB.</small>
+                            </div>
+
+                            <div class="mb-3 col-md-6">
+                                <label for="surat_pernyataan" class="form-label">Surat Pernyataan <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="surat_pernyataan" id="surat_pernyataan"
+                                    class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah surat pernyataan')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                    2MB.</small>
+                            </div>
                         </div>
 
-                        <!-- INPUT FILE -->
-                        <div class="mb-3">
-                            <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span
-                                    class="text-danger">*</span></label>
-                            <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw" class="form-control validate-file"
-                                accept=".jpg,.jpeg,.png,.pdf" required
-                                oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
-                                oninput="this.setCustomValidity('')">
-                            <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
-                                2MB.</small>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                            @if (auth()->user()->role === 'Masyarakat')
+                                <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai
+                                    Draf</button>
+                            @endif
+                            <button type="submit" class="btn btn-primary">Simpan</button>
                         </div>
-
-                        <div class="mb-3">
-                            <label for="kk" class="form-label">Kartu Keluarga <span
-                                    class="text-danger">*</span></label>
-                            <input type="file" name="kk" id="kk" class="form-control validate-file"
-                                accept=".jpg,.jpeg,.png,.pdf" required
-                                oninvalid="this.setCustomValidity('Silakan unggah file KK')"
-                                oninput="this.setCustomValidity('')">
-                            <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
-                                2MB.</small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="ktp" class="form-label">Kartu Tanda Penduduk <span
-                                    class="text-danger">*</span></label>
-                            <input type="file" name="ktp" id="ktp" class="form-control validate-file"
-                                accept=".jpg,.jpeg,.png,.pdf" required
-                                oninvalid="this.setCustomValidity('Silakan unggah file KTP')"
-                                oninput="this.setCustomValidity('')">
-                            <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
-                                2MB.</small>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="surat_pernyataan" class="form-label">Surat Pernyataan <span
-                                    class="text-danger">*</span></label>
-                            <input type="file" name="surat_pernyataan" id="surat_pernyataan" class="form-control validate-file"
-                                accept=".jpg,.jpeg,.png,.pdf" required
-                                oninvalid="this.setCustomValidity('Silakan unggah surat pernyataan')"
-                                oninput="this.setCustomValidity('')">
-                            <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
-                                2MB.</small>
-                        </div>
-                    </div>
-
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
-                        @if (auth()->user()->role === 'Masyarakat')
-                            <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai
-                                Draf</button>
-                        @endif
-                        <button type="submit" class="btn btn-primary">Simpan</button>
-                    </div>
 
 
                 </form>
@@ -545,75 +554,76 @@
         }
     </script>
 
-<script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const fileInputs = document.querySelectorAll('.validate-file');
-    const maxSize = 2 * 1024 * 1024; // 2MB
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInputs = document.querySelectorAll('.validate-file');
+            const maxSize = 2 * 1024 * 1024; // 2MB
 
-    fileInputs.forEach(input => {
-      input.addEventListener('change', function () {
-        const file = this.files[0];
+            fileInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    const file = this.files[0];
 
-        if (file && file.size > maxSize) {
-          this.value = ''; // Reset input file agar tidak terkirim
+                    if (file && file.size > maxSize) {
+                        this.value = ''; // Reset input file agar tidak terkirim
 
-          Swal.fire({
-            icon: 'error',
-            title: 'Ukuran File Terlalu Besar',
-            text: 'File yang diunggah tidak boleh lebih dari 2MB',
-            confirmButtonText: 'OK'
-          });
-        }
-      });
-    });
-  });
-</script>
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Ukuran File Terlalu Besar',
+                            text: 'File yang diunggah tidak boleh lebih dari 2MB',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
 
 
     <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const fields = [
-      {
-        id: 'nik',
-        length: 16,
-        label: 'NIK',
-        example: '1234567890123456'
-      },
-      {
-        id: 'rt',
-        length: 3,
-        label: 'RT',
-        example: '001'
-      },
-      {
-        id: 'rw',
-        length: 3,
-        label: 'RW',
-        example: '002'
-      }
-    ];
+        document.addEventListener('DOMContentLoaded', function() {
+            const fields = [{
+                    id: 'nik',
+                    length: 16,
+                    label: 'NIK',
+                    example: '1234567890123456'
+                },
+                {
+                    id: 'rt',
+                    length: 3,
+                    label: 'RT',
+                    example: '001'
+                },
+                {
+                    id: 'rw',
+                    length: 3,
+                    label: 'RW',
+                    example: '002'
+                }
+            ];
 
-    fields.forEach(field => {
-      const input = document.getElementById(field.id);
-      if (!input) return;
+            fields.forEach(field => {
+                const input = document.getElementById(field.id);
+                if (!input) return;
 
-      input.addEventListener('input', function () {
-        const val = this.value.trim();
-        if (val === '') {
-          this.setCustomValidity(`Silakan isi ${field.label}`);
-        } else if (!new RegExp(`^\\d{${field.length}}$`).test(val)) {
-          this.setCustomValidity(`${field.label} harus terdiri dari ${field.length} digit angka (contoh: ${field.example})`);
-        } else {
-          this.setCustomValidity('');
-        }
-      });
+                input.addEventListener('input', function() {
+                    const val = this.value.trim();
+                    if (val === '') {
+                        this.setCustomValidity(`Silakan isi ${field.label}`);
+                    } else if (!new RegExp(`^\\d{${field.length}}$`).test(val)) {
+                        this.setCustomValidity(
+                            `${field.label} harus terdiri dari ${field.length} digit angka (contoh: ${field.example})`
+                        );
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
 
-      input.addEventListener('blur', function () {
-        this.reportValidity();
-      });
-    });
-  });
-</script>
+                input.addEventListener('blur', function() {
+                    this.reportValidity();
+                });
+            });
+        });
+    </script>
 
 
 

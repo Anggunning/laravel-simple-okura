@@ -30,8 +30,7 @@ class DataPenggunaController extends Controller
         });
     }
 
-    $users = $users->orderBy('created_at', 'desc')->paginate(6)->appends(['search' => $search]);
-
+    $users = $users->orderBy('created_at', 'desc')->get();
     return view('dataPengguna.index', compact('users'));
 }
 

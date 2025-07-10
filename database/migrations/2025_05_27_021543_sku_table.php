@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('tempatLahir')->nullable();
             $table->date('tanggalLahir')->nullable();
             $table->string('agama')->nullable();
-            $table->string('nik', 16);
+            $table->string('nik', 16)->nullable();
             $table->string('pekerjaan')->nullable();
             $table->string('jenis_usaha')->nullable();
             $table->string('tempat_usaha')->nullable();

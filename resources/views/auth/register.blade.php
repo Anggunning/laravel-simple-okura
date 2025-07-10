@@ -12,6 +12,39 @@
     <!-- Font-icon css-->
     {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> --}}
     <title>Register</title>
+    
+    <style>
+    body {
+        background-image: url('{{ asset('bg-login.jpg') }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    /* Opsional: tambahkan overlay agar login box lebih jelas */
+    .register-content::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 0;
+    }
+
+    .register-box {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Hilangkan material-half-bg agar tidak tumpuk */
+    .material-half-bg {
+        display: none;
+    }
+    .register-content {
+    background-color: transparent;
+}
+
+</style>
   </head>
   <body>
     <section class="material-half-bg">
@@ -109,6 +142,34 @@
       	return false;
       });
     </script>
+    {{-- Tambahkan CDN SweetAlert --}}
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+@if (session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('success') }}',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
+
+@if ($errors->any())
+<script>
+    let errorList = @json($errors->all());
+
+    Swal.fire({
+        icon: 'error',
+        title: 'Gagal mendaftar!',
+        html: '<ul style="list-style: none; padding-left: 0; text-align: left; margin: 0;">' + errorList.map(e => `<li>${e}</li>`).join('') + '</ul>',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'OK'
+    });
+</script>
+@endif
+
 
     <script>
         function togglePassword() {
@@ -122,5 +183,4 @@
   }
     </script>
   </body>
-</html>
 </html>

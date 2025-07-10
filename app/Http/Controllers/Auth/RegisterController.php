@@ -22,7 +22,7 @@ class RegisterController extends Controller
         // dd($request->all());
         $request->validate([
             'username' => 'required|string',
-            'email' => 'required|email',
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|string|min:6',
         ]);
 
@@ -34,6 +34,7 @@ class RegisterController extends Controller
             'role' => 'Masyarakat',
         ]);
 
-        return redirect('/login')->with('success', 'Registrasi berhasil! Silakan login.');
+        return redirect()->route('login')->with('success', 'Registrasi berhasil! Silakan login.');
+
     }
 }

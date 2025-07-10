@@ -35,17 +35,30 @@ class DataPenggunaController extends Controller
 }
 
 
-    public function store(Request $request)
-    {
+ public function store(Request $request)
+{
+    try {
+       $request->validate([
+        'username' => 'required|string|max:255',
+        'email' => 'required|email|unique:users,email',
+        'password' => 'required|string|min:8',
+        'role' => 'required|string',
+    ], [
+        'email.unique' => 'Email sudah terdaftar.', // pesan kustom
+    ]);
+
         User::create([
-            'username' => $request->username,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-            'role' => $request->role,
+            'username' => $request['username'],
+            'email' => $request['email'],
+            'password' => bcrypt($request['password']),
+            'role' => $request['role'],
         ]);
-        return redirect()->back()->with('success', 'Pengguna berhasil ditambahkan');
-        
+
+        return redirect()->route('dataPengguna.index')->with('success', 'Pengguna berhasil ditambahkan.');
+    } catch (\Exception $e) {
+        return redirect()->back()->with('error', 'Terjadi kesalahan: ' . $e->getMessage());
     }
+}
 
 
    public function update(Request $request, $id)

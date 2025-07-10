@@ -71,7 +71,7 @@
                                                 <th>Tujuan Pengajuan</th>
                                                 <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
-                                                <th class="text-center align-middle">Aksi</th>
+                                                <th class="text-center align-middle">Detail</th>
                                             </tr>
                                         </thead>
                                         @php
@@ -152,7 +152,7 @@
                                                 <th>Keterangan</th>
                                                 <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
-                                                <th class="text-center align-middle">Aksi</th>
+                                                <th class="text-center align-middle">Detail</th>
                                             </tr>
                                             @php
                                                 $user = auth()->user();
@@ -216,14 +216,13 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-
                                                 <th>Nama Pemohon</th>
                                                 <th>Alamat Pemohon</th>
                                                 <th>Tujuan Pengajuan</th>
                                                 <th>Alasan Penolakan</th>
                                                 <th>Tanggal Pengajuan</th>
                                                 <th class="text-center align-middle">Status</th>
-                                                <th class="text-center align-middle">Aksi</th>
+                                                <th class="text-center align-middle">Detail</th>
                                             </tr>
                                         </thead>
                                         @php

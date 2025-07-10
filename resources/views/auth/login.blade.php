@@ -11,6 +11,40 @@
     <!-- Font-icon css-->
     {{-- <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"> --}}
     <title>Login</title>
+
+    <style>
+    body {
+        background-image: url('{{ asset('bg-login.jpg') }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        background-attachment: fixed;
+    }
+
+    /* Opsional: tambahkan overlay agar login box lebih jelas */
+    .login-content::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-color: rgba(0, 0, 0, 0.4);
+        z-index: 0;
+    }
+
+    .login-box {
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Hilangkan material-half-bg agar tidak tumpuk */
+    .material-half-bg {
+        display: none;
+    }
+    .login-content {
+    background-color: transparent;
+}
+
+</style>
+
 </head>
 
 <body>
@@ -113,3 +147,19 @@
 </body>
 
 </html>
+
+{{-- <style>
+    .material-half-bg .cover {
+        background-image: url('{{ asset('bg-kantor.jpg') }}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0.9;
+    }
+    .material-half-bg .cover::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4); /* Ubah transparansi sesuai selera */
+}
+</style> --}}

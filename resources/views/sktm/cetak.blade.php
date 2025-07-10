@@ -17,7 +17,7 @@
             font-size: 12pt;
             line-height: 1.5;
         }
-         table {
+        table {
         width: 100%;
         font-size: 12pt;
         border-collapse: collapse;

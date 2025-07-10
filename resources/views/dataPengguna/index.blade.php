@@ -407,4 +407,45 @@
     });
 </script>
 
+@if(session('success'))
+<script>
+    Swal.fire({
+        icon: 'success',
+        title: 'Berhasil!',
+        text: '{{ session('success') }}',
+        timer: 2500,
+        showConfirmButton: false
+    });
+</script>
+@endif
+
+@if ($errors->any())
+    @php
+        $emailError = $errors->first('email');
+    @endphp
+
+    @if ($emailError)
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                text: '{{ $emailError }}',
+                showConfirmButton: true
+            });
+        </script>
+    @else
+        <script>
+            Swal.fire({
+                icon: 'error',
+                title: 'Gagal!',
+                html: `{!! implode('<br>', $errors->all()) !!}`,
+                showConfirmButton: true
+            });
+        </script>
+    @endif
+@endif
+
+
+
+
 @endpush

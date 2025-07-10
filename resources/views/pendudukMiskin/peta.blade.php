@@ -83,7 +83,7 @@
                             });
 
                             const filename = item.foto_rumah ? item.foto_rumah.split('/').pop() : null;
-const fotoUrl = filename ? `storage/pendudukMiskin/${filename}` : null;
+const fotoUrl = filename ? `/dokumen/pendudukMiskin/${filename}` : null;
 
 const popupContent = `
     <div style="width: 250px; font-size: 14px; font-family: "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif">

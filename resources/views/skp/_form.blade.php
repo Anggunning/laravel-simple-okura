@@ -238,13 +238,19 @@
     </div>
 
     <div class="row">
-        <div class="mb-3 col-md-6">
+         <div class="mb-3 col-md-6">
             <label for="agama_ayah" class="form-label">Agama Ayah
-                <span class="text-danger">*</span>
-            </label>
-            <input type="text" name="agama_ayah" id="agama_ayah" class="form-control" required
-                oninvalid="this.setCustomValidity('Silakan isi agama ayah')"
-                oninput="this.setCustomValidity('')"placeholder="Masukkan agama ayah">
+                <span class="text-danger">*</span></label>
+            <select name="agama_ayah" class="form-select" required
+                oninvalid="this.setCustomValidity('Silakan pilih agama ayah')" oninput="this.setCustomValidity('')">
+                <option value="" disabled selected hidden>Agama Ayah</option>
+                <option value="Islam">Islam</option>
+                <option value="Kristen Protestan">Kristen Protestan</option>
+                <option value="Katolik">Katolik</option>
+                <option value="Hindu">Hindu</option>
+                <option value="Buddha">Buddha</option>
+                <option value="Konghuchu">Konghuchu</option>
+            </select>
         </div>
         <div class="mb-3 col-md-6">
             <label for="kewarganegaraan_ayah" class="form-label">Kewarganegaraan Ayah
@@ -329,11 +335,19 @@
     </div>
 
     <div class="row">
-        <div class="mb-3 col-md-6">
-            <label for="agama_ibu" class="form-label">Agama Ibu<span class="text-danger">*</span></label>
-            <input type="text" name="agama_ibu" id="agama_ibu" class="form-control" required
-                oninvalid="this.setCustomValidity('Silakan isi agama ibu')"
-                oninput="this.setCustomValidity('')"placeholder="Masukkan agama ibu">
+         <div class="mb-3 col-md-6">
+            <label for="agama_ibu" class="form-label">Agama Ibu
+                <span class="text-danger">*</span></label>
+            <select name="agama_ibu" class="form-select" required
+                oninvalid="this.setCustomValidity('Silakan pilih agama ibu')" oninput="this.setCustomValidity('')">
+                <option value="" disabled selected hidden>Agama Ibu</option>
+                <option value="Islam">Islam</option>
+                <option value="Kristen Protestan">Kristen Protestan</option>
+                <option value="Katolik">Katolik</option>
+                <option value="Hindu">Hindu</option>
+                <option value="Buddha">Buddha</option>
+                <option value="Konghuchu">Konghuchu</option>
+            </select>
         </div>
         <div class="mb-3 col-md-6">
             <label for="kewarganegaraan_ibu" class="form-label">Kewarganegaraan Ibu<span

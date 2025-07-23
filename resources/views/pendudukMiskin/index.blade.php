@@ -226,11 +226,11 @@
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Latitude<span class="text-danger">*</span></label>
-                        <input type="text" name="latitude" id="latitude" class="form-control" readonly>
+                        <input type="text" name="latitude" id="latitude" class="form-control" >
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Longitude<span class="text-danger">*</span></label>
-                        <input type="text" name="longitude" id="longitude" class="form-control" readonly>
+                        <input type="text" name="longitude" id="longitude" class="form-control" >
                     </div>
 
                     <div class="modal-footer">

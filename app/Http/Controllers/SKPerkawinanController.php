@@ -478,8 +478,8 @@ class SKPerkawinanController extends Controller
                     'waktu' => now(),
                     'status' => 'Selesai',
                     'peninjau' => $user->name ?? 'Lurah',
-                    'keterangan' => 'Surat sudah selesai. Silahkan datang ke kantor lurah untuk mengambil surat',
-                    'surat_balasan' => null,
+                    'keterangan' => 'Surat telah disahkan oleh Lurah',
+                    'alasan' => 'Surat sudah selesai. Silahkan datang ke kantor lurah untuk mengambil surat',
                 ]);
 
                 return redirect()->route('skp.show', $skp->id)->with('success', 'Surat berhasil disahkan oleh Lurah.');

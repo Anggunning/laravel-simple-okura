@@ -172,6 +172,7 @@ class SKUsahaController extends Controller
         }
     }
 
+
     public function getDraf()
     {
         $draf = SkuModel::where('status', 'draf')
@@ -185,25 +186,34 @@ class SKUsahaController extends Controller
 
    public function previewDrafFile($field)
 {
-    $user = auth()->user();
-    $draf = SKUsaha::where('user_id', $user->id)->latest()->first();
-
-    if (!$draf || empty($draf->$field)) {
-        \Log::warning("Draf atau field kosong", ['field' => $field, 'user' => $user->id]);
-        abort(404);
+    $allowed = ['ktp','surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha'];
+    if (!in_array($field, $allowed)) {
+        abort(403, 'Field tidak diizinkan.');
     }
 
-    $path = 'draf/' . $user->id . '/' . $draf->$field;
-    \Log::info("Preview path: " . $path);
+    $draf = SkuModel::where('user_id', auth()->id())
+        ->where('status', 'draf')
+        ->first();
 
+    // Pastikan draf dan field-nya ada dan tidak kosong
+    if (!$draf || empty($draf->$field)) {
+        abort(404, 'Data draf atau file tidak ditemukan.');
+    }
+
+    $path = $draf->$field;
+
+    // Cek keberadaan file di disk 'local'
     if (!Storage::disk('local')->exists($path)) {
-        \Log::error("File tidak ditemukan: " . $path);
-        abort(403, 'File tidak ditemukan');
+        abort(404, 'File tidak ditemukan di storage.');
     }
 
     $mime = Storage::disk('local')->mimeType($path);
-    return response()->file(storage_path('app/' . $path), [
+    $content = Storage::disk('local')->get($path);
+\Log::info('Preview file path:', ['path' => $path]);
+
+    return \Response::make($content, 200, [
         'Content-Type' => $mime,
+        'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
     ]);
 }
 

@@ -13,85 +13,85 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use App\Models\StatusPerkawinanModel;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 
 class SKPerkawinanController extends Controller
 {
     public function index(Request $request)
-{
-     $user = auth()->user();
+    {
+        $user = auth()->user();
         $drafToLoad = null;
 
-    if ($request->has('draf')) {
-    $drafToLoad = SkpModel::where('id', $request->get('draf'))
-        ->where('status', 'draf')
-        ->where('user_id', $user->id)
-        ->first();
-}
+        if ($request->has('draf')) {
+            $drafToLoad = SkpModel::where('id', $request->get('draf'))
+                ->where('status', 'draf')
+                ->where('user_id', $user->id)
+                ->first();
+        }
 
 
-    if ($user->role === 'Masyarakat') {
-        // Belum Selesai: status bukan 'Selesai' atau 'Ditolak' (misalnya: Diajukan, Diproses)
-        $skpBelumSelesai = SkpModel::with(['statusPerkawinan', 'orangTua','riwayat_skp'])
-            ->whereNotIn('status', ['Selesai', 'Ditolak','draf'])
-            ->get()
-            ->sort(function ($a, $b) {
-                $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
-                $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+        if ($user->role === 'Masyarakat') {
+            // Belum Selesai: status bukan 'Selesai' atau 'Ditolak' (misalnya: Diajukan, Diproses)
+            $skpBelumSelesai = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
+                ->whereNotIn('status', ['Selesai', 'Ditolak', 'draf'])
+                ->get()
+                ->sort(function ($a, $b) {
+                    $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+                    $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
 
-                if ($aPrioritas === 0 && $bPrioritas === 0) {
-                    $aPrioritas = $a->status === 'Diajukan' ? 1 : 0;
-                    $bPrioritas = $b->status === 'Diajukan' ? 1 : 0;
-                }
+                    if ($aPrioritas === 0 && $bPrioritas === 0) {
+                        $aPrioritas = $a->status === 'Diajukan' ? 1 : 0;
+                        $bPrioritas = $b->status === 'Diajukan' ? 1 : 0;
+                    }
 
-                return $bPrioritas <=> $aPrioritas ?: strtotime($b->created_at) <=> strtotime($a->created_at);
-            })
-            ->values();
+                    return $bPrioritas <=> $aPrioritas ?: strtotime($b->created_at) <=> strtotime($a->created_at);
+                })
+                ->values();
 
-        $skpSelesai = SkpModel::with(['statusPerkawinan', 'orangTua','riwayat_skp'])
-            ->where('status', 'Selesai')
-            ->orderBy('created_at', 'desc')
-            ->get();
+            $skpSelesai = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
+                ->where('status', 'Selesai')
+                ->orderBy('created_at', 'desc')
+                ->get();
 
-        $skpDitolak = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
-            ->where('status', 'Ditolak')
-            ->orderBy('created_at', 'desc')
-            ->get();
-    } elseif ($user->role === 'Lurah') {
+            $skpDitolak = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
+                ->where('status', 'Ditolak')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        } elseif ($user->role === 'Lurah') {
             // Lurah: hanya lihat Diproses, Selesai, Ditolak
             $skpBelumSelesai = SkpModel::where('status', 'Diproses')->orderBy('created_at', 'desc')->get();
             $skpSelesai = SkpModel::where('status', 'Selesai')->orderBy('created_at', 'desc')->get();
             $skpDitolak = SkpModel::where('status', 'Ditolak')->orderBy('created_at', 'desc')->get();
+        } else {
+            $skpBelumSelesai = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
+                ->whereNotIn('status', ['Selesai', 'Ditolak', 'draf'])
+                ->get()
+                ->sort(function ($a, $b) {
+                    $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+                    $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
+
+                    if ($aPrioritas === 0 && $bPrioritas === 0) {
+                        $aPrioritas = $a->status === 'Diajukan' ? 1 : 0;
+                        $bPrioritas = $b->status === 'Diajukan' ? 1 : 0;
+                    }
+
+                    return $bPrioritas <=> $aPrioritas ?: strtotime($b->created_at) <=> strtotime($a->created_at);
+                })
+                ->values();
+
+            $skpSelesai = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
+                ->where('status', 'Selesai')
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            $skpDitolak = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
+                ->where('status', 'Ditolak')
+                ->orderBy('created_at', 'desc')
+                ->get();
+        }
+
+        return view('skp.index', compact('skpBelumSelesai', 'skpSelesai', 'skpDitolak', 'drafToLoad'));
     }
-    else {
-        $skpBelumSelesai = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
-            ->whereNotIn('status', ['Selesai', 'Ditolak','draf'])
-            ->get()
-            ->sort(function ($a, $b) {
-                $aPrioritas = $a->status === 'Diajukan' && \Carbon\Carbon::parse($a->created_at)->lt(now()->subDays(3)) ? 2 : 0;
-                $bPrioritas = $b->status === 'Diajukan' && \Carbon\Carbon::parse($b->created_at)->lt(now()->subDays(3)) ? 2 : 0;
-
-                if ($aPrioritas === 0 && $bPrioritas === 0) {
-                    $aPrioritas = $a->status === 'Diajukan' ? 1 : 0;
-                    $bPrioritas = $b->status === 'Diajukan' ? 1 : 0;
-                }
-
-                return $bPrioritas <=> $aPrioritas ?: strtotime($b->created_at) <=> strtotime($a->created_at);
-            })
-            ->values();
-
-        $skpSelesai = SkpModel::with(['statusPerkawinan', 'orangTua', 'riwayat_skp'])
-            ->where('status', 'Selesai')
-            ->orderBy('created_at', 'desc')
-            ->get();
-
-        $skpDitolak = SkpModel::with(['statusPerkawinan', 'orangTua','riwayat_skp' ])
-            ->where('status', 'Ditolak')
-            ->orderBy('created_at', 'desc')
-            ->get();
-    }
-
-    return view('skp.index', compact('skpBelumSelesai', 'skpSelesai', 'skpDitolak','drafToLoad'));
-}
 
     public function store(Request $request)
     {
@@ -111,7 +111,7 @@ class SKPerkawinanController extends Controller
             'rw' => 'required|max:3',
             'kewarganegaraan' => 'required|string',
             // 'keterangan' => 'required|string',
-            
+
 
             // Dokumen
             'pengantar_rt_rw' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -145,7 +145,7 @@ class SKPerkawinanController extends Controller
         ]);
 
         try {
-           $data = $request->all();
+            $data = $request->all();
 
             // 1. Simpan data status perkawinan
             $statusPerkawinan = StatusPerkawinanModel::create([
@@ -163,7 +163,7 @@ class SKPerkawinanController extends Controller
             $data['pengantar_rt_rw'] = $request->file('pengantar_rt_rw')->store('skp', 'local');
             $data['kk'] = $request->file('kk')->store('skp', 'local');
             $data['ktp'] = $request->file('ktp')->store('skp', 'local');
-            $data['foto'] = $request->file('foto')->store('skp','local');
+            $data['foto'] = $request->file('foto')->store('skp', 'local');
             $data['user_id'] = auth()->id();
 
             // 3. Cek duplikat NIK
@@ -198,7 +198,7 @@ class SKPerkawinanController extends Controller
                 'updated_at' => now(),
 
             ]);
-            
+
             // 5. Simpan data orang tua dan kaitkan ke SKP
             $orangTua = OrangTuaModel::create([
                 'id' => Str::uuid(),
@@ -224,8 +224,8 @@ class SKPerkawinanController extends Controller
                 'rw_ibu' => $request->rw_ibu,
                 'skp_id' => $skp->id,
             ]);
-            
-            
+
+
             // 6. Simpan riwayat pengajuan
             RiwayatskpModel::create([
                 'skp_id' => $skp->id,
@@ -234,135 +234,135 @@ class SKPerkawinanController extends Controller
                 'keterangan' => 'Surat diajukan oleh pemohon',
                 'alasan' => null,
             ]);
-            
-            
+
+
             return redirect()->back()->with('success', 'Data berhasil disimpan');
         } catch (\Exception $e) {
-    Log::error('Gagal simpan SKP: ' . $e->getMessage());
-    return redirect()->back()
-        ->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data.'])
-        ->withInput()
-        ->with('form', 'tambah');
+            Log::error('Gagal simpan SKP: ' . $e->getMessage());
+            return redirect()->back()
+                ->withErrors(['error' => 'Terjadi kesalahan saat menyimpan data.'])
+                ->withInput()
+                ->with('form', 'tambah');
         }
-}
-public function update(Request $request, $id)
-{
-    try {
-        // 1. Validasi input
-        $validated = $request->validate([
-            'nama' => 'required',
-            'nik' => 'required',
-            'jenis_kelamin' => 'required',
-            'tempat_lahir' => 'required',
-            'tanggal_lahir' => 'required|date',
-            'agama' => 'required',
-            'pekerjaan' => 'required',
-            'status_kawin' => 'required|in:Belum Menikah,Cerai Mati,Cerai Hidup',
-            'alamat' => 'required',
-            'rt' => 'required|max:3',
-            'rw' => 'required|max:3',
-            'kewarganegaraan' => 'required',
-            'keterangan' => 'nullable',
+    }
+    public function update(Request $request, $id)
+    {
+        try {
+            // 1. Validasi input
+            $validated = $request->validate([
+                'nama' => 'required',
+                'nik' => 'required',
+                'jenis_kelamin' => 'required',
+                'tempat_lahir' => 'required',
+                'tanggal_lahir' => 'required|date',
+                'agama' => 'required',
+                'pekerjaan' => 'required',
+                'status_kawin' => 'required|in:Belum Menikah,Cerai Mati,Cerai Hidup',
+                'alamat' => 'required',
+                'rt' => 'required|max:3',
+                'rw' => 'required|max:3',
+                'kewarganegaraan' => 'required',
+                'keterangan' => 'nullable',
 
-            // Dokumen
-            'ktp' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'kk' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'pengantar_rt_rw' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-            'foto' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                // Dokumen
+                'ktp' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'kk' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'pengantar_rt_rw' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+                'foto' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
 
-            // Data Orang Tua
-            'nama_ayah' => 'required',
-            'nik_ayah' => 'required',
-            'agama_ayah' => 'required',
-            'kewarganegaraan_ayah' => 'required',
-            'pekerjaan_ayah' => 'required',
-            'alamat_ayah' => 'required',
-            'rt_ayah' => 'required|max:3',
-            'rw_ayah' => 'required|max:3',
-            'nama_ibu' => 'required',
-            'nik_ibu' => 'required',
-            'agama_ibu' => 'required',
-            'kewarganegaraan_ibu' => 'required',
-            'pekerjaan_ibu' => 'required',
-            'alamat_ibu' => 'required',
-            'rt_ibu' => 'required|max:3',
-            'rw_ibu' => 'required|max:3',
-        ]);
+                // Data Orang Tua
+                'nama_ayah' => 'required',
+                'nik_ayah' => 'required',
+                'agama_ayah' => 'required',
+                'kewarganegaraan_ayah' => 'required',
+                'pekerjaan_ayah' => 'required',
+                'alamat_ayah' => 'required',
+                'rt_ayah' => 'required|max:3',
+                'rw_ayah' => 'required|max:3',
+                'nama_ibu' => 'required',
+                'nik_ibu' => 'required',
+                'agama_ibu' => 'required',
+                'kewarganegaraan_ibu' => 'required',
+                'pekerjaan_ibu' => 'required',
+                'alamat_ibu' => 'required',
+                'rt_ibu' => 'required|max:3',
+                'rw_ibu' => 'required|max:3',
+            ]);
 
-        // 2. Ambil data SKP
-        $skp = SkpModel::findOrFail($id);
+            // 2. Ambil data SKP
+            $skp = SkpModel::findOrFail($id);
 
-        // 3. Update Status Perkawinan
-        if ($skp->status_perkawinan_id) {
-            $statusPerkawinan = StatusPerkawinanModel::find($skp->status_perkawinan_id);
-            if ($statusPerkawinan) {
-                $statusPerkawinan->update([
-                    'status_kawin' => $request->status_kawin,
-                    'jenis_kelamin_psgn_dulu' => in_array($request->status_kawin, ['Cerai Hidup', 'Cerai Mati'])
-                        ? ($request->jenis_kelamin === 'Laki-laki' ? 'Perempuan' : 'Laki-laki')
-                        : null,
-                    'nama_pasangan_dulu' => in_array($request->status_kawin, ['Cerai Hidup', 'Cerai Mati'])
-                        ? $request->nama_pasangan_dulu
-                        : null,
+            // 3. Update Status Perkawinan
+            if ($skp->status_perkawinan_id) {
+                $statusPerkawinan = StatusPerkawinanModel::find($skp->status_perkawinan_id);
+                if ($statusPerkawinan) {
+                    $statusPerkawinan->update([
+                        'status_kawin' => $request->status_kawin,
+                        'jenis_kelamin_psgn_dulu' => in_array($request->status_kawin, ['Cerai Hidup', 'Cerai Mati'])
+                            ? ($request->jenis_kelamin === 'Laki-laki' ? 'Perempuan' : 'Laki-laki')
+                            : null,
+                        'nama_pasangan_dulu' => in_array($request->status_kawin, ['Cerai Hidup', 'Cerai Mati'])
+                            ? $request->nama_pasangan_dulu
+                            : null,
+                    ]);
+                }
+            }
+
+
+            // 4. Upload file jika ada, kalau tidak ada tetap gunakan nilai lama
+            foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
+                if ($request->hasFile($file)) {
+                    // Hapus file lama jika perlu
+                    if ($skp->$file && \Storage::exists($skp->$file)) {
+                        Storage::delete($skp->$file);
+                    }
+
+                    // Simpan file baru
+                    $validated[$file] = $request->file($file)->store('skp', 'local');
+                } else {
+                    // Gunakan data lama agar tidak hilang
+                    $validated[$file] = $skp->$file;
+                }
+            }
+
+
+            // 5. Update SKP
+            $skp->update($validated);
+
+            // 6. Update Orang Tua (gunakan relasi atau pencarian manual)
+            if ($skp->orangTua) {
+                $skp->orangTua->update([
+                    'nama_ayah' => $request->nama_ayah,
+                    'nik_ayah' => $request->nik_ayah,
+                    'agama_ayah' => $request->agama_ayah,
+                    'kewarganegaraan_ayah' => $request->kewarganegaraan_ayah,
+                    'pekerjaan_ayah' => $request->pekerjaan_ayah,
+                    'alamat_ayah' => $request->alamat_ayah,
+                    'nama_ibu' => $request->nama_ibu,
+                    'nik_ibu' => $request->nik_ibu,
+                    'agama_ibu' => $request->agama_ibu,
+                    'kewarganegaraan_ibu' => $request->kewarganegaraan_ibu,
+                    'pekerjaan_ibu' => $request->pekerjaan_ibu,
+                    'alamat_ibu' => $request->alamat_ibu,
                 ]);
             }
+
+            return redirect()->back()->with('success', 'Data berhasil diperbarui');
+        } catch (\Exception $e) {
+            \Log::error('Update SKP error: ' . $e->getMessage());
+            return redirect()->back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: ' . $e->getMessage()]);
         }
-
-
-        // 4. Upload file jika ada, kalau tidak ada tetap gunakan nilai lama
-foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
-    if ($request->hasFile($file)) {
-        // Hapus file lama jika perlu
-        if ($skp->$file && \Storage::exists($skp->$file)) {
-            Storage::delete($skp->$file);
-        }
-
-        // Simpan file baru
-        $validated[$file] = $request->file($file)->store('skp','local');
-    } else {
-        // Gunakan data lama agar tidak hilang
-        $validated[$file] = $skp->$file;
     }
-}
 
-
-        // 5. Update SKP
-        $skp->update($validated);
-
-        // 6. Update Orang Tua (gunakan relasi atau pencarian manual)
-        if ($skp->orangTua) {
-            $skp->orangTua->update([
-                'nama_ayah' => $request->nama_ayah,
-                'nik_ayah' => $request->nik_ayah,
-                'agama_ayah' => $request->agama_ayah,
-                'kewarganegaraan_ayah' => $request->kewarganegaraan_ayah,
-                'pekerjaan_ayah' => $request->pekerjaan_ayah,
-                'alamat_ayah' => $request->alamat_ayah,
-                'nama_ibu' => $request->nama_ibu,
-                'nik_ibu' => $request->nik_ibu,
-                'agama_ibu' => $request->agama_ibu,
-                'kewarganegaraan_ibu' => $request->kewarganegaraan_ibu,
-                'pekerjaan_ibu' => $request->pekerjaan_ibu,
-                'alamat_ibu' => $request->alamat_ibu,
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Data berhasil diperbarui');
-    } catch (\Exception $e) {
-        \Log::error('Update SKP error: ' . $e->getMessage());
-        return redirect()->back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: ' . $e->getMessage()]);
-    }
-}
-
-public function storeDraf(Request $request)
+    public function storeDraf(Request $request)
     {
         try {
             \Log::info('✅ Request masuk ke storeDraf:', $request->all());
 
             if (auth()->user()->role !== 'Masyarakat') {
-    abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
-}
-$userId = auth()->id();
+                abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
+            }
+            $userId = auth()->id();
 
             $draf = SkpModel::updateOrCreate(
                 ['user_id' => $userId, 'status' => 'draf'],
@@ -392,14 +392,14 @@ $userId = auth()->id();
 
 
     public function getDraf()
-{
-    $draf = SkpModel::where('status', 'draf')
-        ->where('user_id', auth()->id())
-        ->latest()
-        ->first();
+    {
+        $draf = SkpModel::where('status', 'draf')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->first();
 
-    return response()->json($draf);
-}
+        return response()->json($draf);
+    }
 
 
 
@@ -423,8 +423,6 @@ $userId = auth()->id();
             'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
         ]);
     }
-
-
 
 
 
@@ -521,15 +519,15 @@ $userId = auth()->id();
 
         // // Logika untuk generate surat, bisa return view khusus cetak
         // return view('skp.cetak', compact('skp'));
-         $skp = SkpModel::findOrFail($id);
+        $skp = SkpModel::findOrFail($id);
 
-    if ($skp->status !== 'Selesai') {
-        abort(403, 'Surat hanya bisa dicetak jika statusnya Selesai.');
-    }
+        if ($skp->status !== 'Selesai') {
+            abort(403, 'Surat hanya bisa dicetak jika statusnya Selesai.');
+        }
 
-    $pdf = Pdf::loadView('skp.cetak', compact('skp'));
+        $pdf = Pdf::loadView('skp.cetak', compact('skp'));
 
-    return $pdf->stream("skp-{$skp->nama}.pdf"); // akan tampil di tab baru
+        return $pdf->stream("skp-{$skp->nama}.pdf"); // akan tampil di tab baru
     }
 
 

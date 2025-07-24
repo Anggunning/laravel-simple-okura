@@ -627,8 +627,8 @@
                         form.find('input[name="tujuan"]').val(data.tujuan);
                         form.find('input[name="pekerjaan"]').val(data.pekerjaan);
                         form.find('select[name="jenis_kelamin"]').val(data.jenis_kelamin);
-                        form.find('input[name="tempat_lahir"]').val(data.tempat_lahir);
-                        form.find('input[name="tanggal_lahir"]').val(data.tanggal_lahir);
+                        form.find('input[name="tempatLahir"]').val(data.tempatLahir);
+                        form.find('input[name="tanggalLahir"]').val(data.tanggalLahir);
                         form.find('select[name="agama"]').val(data.agama);
                         form.find('input[name="nik"]').val(data.nik);
                         form.find('input[name="alamat"]').val(data.alamat);
@@ -642,19 +642,24 @@
                         form.find('input[name="kota"]').val(data.kota);
 
                         // File preview
-                        ['foto_usaha', 'ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(
-                            function(field) {
-                                if (data[field]) {
-                                    const preview =
-                                        `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
-                                    form.find(`input[name="${field}"]`).after(preview);
-                                }
-                            });
-                    }
-                }).fail(function() {
-                    console.warn("❌ Tidak bisa ambil data draf.");
-                });
+                   ['ktp','surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha'].forEach(function (field) {
+                        if (data[field]) {
+                            const preview = `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                            const inputField = form.find(`[name="${field}"]`);
+if (inputField.length) {
+    inputField.after(preview);
+} else {
+    console.warn(`Field '${field}' tidak ditemukan di form`);
+}
+
+                        }
+                    });
+                }
+                
+            }).fail(function () {
+                console.warn("Tidak bisa ambil data draf SKU.");
             });
+        });
 
             // Simpan draf
             $('#btnSimpanDraf').on('click', function () {
@@ -708,37 +713,39 @@
 });
     </script>
 
-    @if (isset($drafToLoad))
+     @if (request()->has('draf') && isset($drafToLoad))
         <script>
             $(document).ready(function() {
                 const draf = @json($drafToLoad);
                 // const form = $('#formPengajuanSKU');
+                const form = $('#formPengajuanSKU');
 
-                $('#formPengajuanSKU input[name="nama"]').val(draf.nama);
-                $('#formPengajuanSKU input[name="tujuan"]').val(draf.tujuan);
-                $('#formPengajuanSKU input[name="pekerjaan"]').val(draf.pekerjaan);
-                $('#formPengajuanSKU select[name="jenis_kelamin"]').val(draf.jenis_kelamin);
-                $('#formPengajuanSKU input[name="tempat_lahir"]').val(draf.tempat_lahir);
-                $('#formPengajuanSKU input[name="tanggal_lahir"]').val(draf.tanggal_lahir);
-                $('#formPengajuanSKU select[name="agama"]').val(draf.agama);
-                $('#formPengajuanSKU input[name="nik"]').val(draf.nik);
-                $('#formPengajuanSKU input[name="alamat"]').val(draf.alamat);
-                $('#formPengajuanSKU input[name="rt"]').val(draf.rt);
-                $('#formPengajuanSKU input[name="rw"]').val(draf.rw);
-                $('#formPengajuanSKU textarea[name="keterangan"]').val(draf.keterangan);
-                $('#formPengajuanSKU input[name="jenis_usaha"]').val(draf.jenis_usaha);
-                $('#formPengajuanSKU input[name="tempat_usaha"]').val(draf.tempat_usaha);
-                $('#formPengajuanSKU input[name="kelurahan"]').val(draf.kelurahan);
-                $('#formPengajuanSKU input[name="kecamatan"]').val(draf.kecamatan);
-                $('#formPengajuanSKU input[name="kota"]').val(draf.kota);
+                form.find('input[name="nama"]').val(draf.nama);
+                form.find('input[name="tujuan"]').val(draf.tujuan);
+                form.find('input[name="pekerjaan"]').val(draf.pekerjaan);
+                form.find('select[name="jenis_kelamin"]').val(draf.jenis_kelamin);
+                form.find('input[name="tempatLahir"]').val(draf.tempatLahir);
+                form.find('input[name="tanggalLahir"]').val(draf.tanggalLahir);
+                form.find('select[name="agama"]').val(draf.agama);
+                form.find('input[name="nik"]').val(draf.nik);
+                form.find('input[name="alamat"]').val(draf.alamat);
+                form.find('input[name="rt"]').val(draf.rt);
+                form.find('input[name="rw"]').val(draf.rw);
+                form.find('textarea[name="keterangan"]').val(draf.keterangan);
+                form.find('input[name="jenis_usaha"]').val(draf.jenis_usaha);
+                form.find('input[name="tempat_usaha"]').val(draf.tempat_usaha);
+                form.find('input[name="kelurahan"]').val(draf.kelurahan);
+                form.find('input[name="kecamatan"]').val(draf.kecamatan);
+                form.find('input[name="kota"]').val(draf.kota);
 
-                ['foto_usaha', 'ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function(field) {
+                ['ktp','surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha'].forEach(function(field) {
                     if (draf[field]) {
                         const preview =
                             `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
                         $(`#formPengajuanSKU input[name="${field}"]`).after(preview);
                     }
                 });
+                
 
                 $('#modalTambahPengajuan').modal('show');
             });

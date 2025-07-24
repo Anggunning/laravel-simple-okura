@@ -19,18 +19,18 @@ use Illuminate\Support\Facades\Response;
 
 class SKTidakMampuController extends Controller
 {
-   public function index(Request $request)
-{
-    
+    public function index(Request $request)
+    {
+
         $user = auth()->user();
         $drafToLoad = null;
 
-    if ($request->has('draf')) {
-    $drafToLoad = SktmModel::where('id', $request->get('draf'))
-        ->where('status', 'draf')
-        ->where('user_id', $user->id)
-        ->first();
-}
+        if ($request->has('draf')) {
+            $drafToLoad = SktmModel::where('id', $request->get('draf'))
+                ->where('status', 'draf')
+                ->where('user_id', $user->id)
+                ->first();
+        }
 
 
 
@@ -61,7 +61,6 @@ class SKTidakMampuController extends Controller
             $sktmDitolak = SktmModel::with(['riwayat_sktm'])->where('status', 'Ditolak')
                 ->orderBy('created_at', 'desc')
                 ->get();
-                
         } elseif ($user->role === 'Lurah') {
             // Lurah: hanya lihat Diproses, Selesai, Ditolak
             $sktmBelumSelesai = SktmModel::where('status', 'Diproses')->orderBy('created_at', 'desc')->get();
@@ -93,9 +92,9 @@ class SKTidakMampuController extends Controller
                 ->get();
         }
 
-        return view('sktm.index', compact('sktmBelumSelesai', 'sktmSelesai', 'sktmDitolak','drafToLoad'));
+        return view('sktm.index', compact('sktmBelumSelesai', 'sktmSelesai', 'sktmDitolak', 'drafToLoad'));
     }
-    
+
     public function store(Request $request)
     {
         $request->validate([
@@ -152,16 +151,15 @@ class SKTidakMampuController extends Controller
     }
 
 
-
-    public function storeDraf(Request $request)
+public function storeDraf(Request $request)
     {
         try {
             \Log::info('✅ Request masuk ke storeDraf:', $request->all());
 
             if (auth()->user()->role !== 'Masyarakat') {
-    abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
-}
-$userId = auth()->id();
+                abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
+            }
+            $userId = auth()->id();
 
             $draf = SktmModel::updateOrCreate(
                 ['user_id' => $userId, 'status' => 'draf'],
@@ -191,28 +189,14 @@ $userId = auth()->id();
 
 
     public function getDraf()
-{
-    $draf = SktmModel::where('status', 'draf')
-        ->where('user_id', auth()->id())
-        ->latest()
-        ->first();
+    {
+        $draf = SktmModel::where('status', 'draf')
+            ->where('user_id', auth()->id())
+            ->latest()
+            ->first();
 
-if (!$draf) {
-    \Log::warning('Tidak ada draf ditemukan untuk user: ' . auth()->id());
-    abort(404);
-}
-
-
-    // Bikin URL file agar bisa langsung diakses
-    $fileFields = ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'];
-    foreach ($fileFields as $field) {
-        if ($draf->$field) {
-            $draf->$field = route('sktm.preview', $field);
-        }
+        return response()->json($draf);
     }
-
-    return response()->json($draf);
-}
 
 
 
@@ -236,6 +220,7 @@ if (!$draf) {
             'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
         ]);
     }
+
 
 
 

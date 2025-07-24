@@ -138,19 +138,22 @@ class SKUsahaController extends Controller
         }
     }
 
-       public function storeDraf(Request $request)
+      public function storeDraf(Request $request)
     {
         try {
             \Log::info('✅ Request masuk ke storeDraf:', $request->all());
 
+            if (auth()->user()->role !== 'Masyarakat') {
+                abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
+            }
             $userId = auth()->id();
 
             $draf = SkuModel::updateOrCreate(
                 ['user_id' => $userId, 'status' => 'draf'],
-                $request->except(['foto_usaha','ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan']) + ['status' => 'draf']
+                $request->except(['ktp','surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha']) + ['status' => 'draf']
             );
 
-            foreach (['foto_usaha','ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'] as $file) {
+            foreach (['ktp','surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha'] as $file) {
                 if ($request->hasFile($file)) {
                     $path = $request->file($file)->store("draf/{$userId}", 'local');
                     $draf->$file = $path;
@@ -169,44 +172,41 @@ class SKUsahaController extends Controller
         }
     }
 
-
-
-
     public function getDraf()
     {
         $draf = SkuModel::where('status', 'draf')
             ->where('user_id', auth()->id())
             ->latest()
-            ->get();
+            ->first();
 
-        return view(
-            'dashboard.sku-draf',
-            [
-                'draf' => $draf,
-                'jenis_surat' => 'Surat Keterangan Tidak Mampu'
-            ]
-        );
+        return response()->json($draf);
     }
 
 
-    public function previewDrafFile($field)
-    {
-        $allowed = ['foto_usaha','ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'];
-        if (!in_array($field, $allowed)) abort(403);
+   public function previewDrafFile($field)
+{
+    $user = auth()->user();
+    $draf = SKUsaha::where('user_id', $user->id)->latest()->first();
 
-        $draf = SkuModel::where('user_id', auth()->id())->where('status', 'draf')->firstOrFail();
-        $path = $draf->$field;
-
-        if (!Storage::disk('local')->exists($path)) abort(404);
-
-        $mime = Storage::disk('local')->mimeType($path);
-        $content = Storage::disk('local')->get($path);
-
-        return Response::make($content, 200, [
-            'Content-Type' => $mime,
-            'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
-        ]);
+    if (!$draf || empty($draf->$field)) {
+        \Log::warning("Draf atau field kosong", ['field' => $field, 'user' => $user->id]);
+        abort(404);
     }
+
+    $path = 'draf/' . $user->id . '/' . $draf->$field;
+    \Log::info("Preview path: " . $path);
+
+    if (!Storage::disk('local')->exists($path)) {
+        \Log::error("File tidak ditemukan: " . $path);
+        abort(403, 'File tidak ditemukan');
+    }
+
+    $mime = Storage::disk('local')->mimeType($path);
+    return response()->file(storage_path('app/' . $path), [
+        'Content-Type' => $mime,
+    ]);
+}
+
 
 
     public function update(Request $request, $id)

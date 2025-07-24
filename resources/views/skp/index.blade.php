@@ -740,6 +740,7 @@ form.find('input, select, textarea').each(function () {
             });
         </script>
     @endif
+    
 
      {{-- <script>
         document.addEventListener('DOMContentLoaded', function() {

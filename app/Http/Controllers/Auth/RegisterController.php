@@ -22,14 +22,14 @@ class RegisterController extends Controller
         // dd($request->all());
         $request->validate([
             'username' => 'required|string',
-            'email' => 'required|email|unique:users,email',
+            'no_hp' => 'required|string|unique:users,no_hp',
             'password' => 'required|string|min:6',
         ]);
 
         // Simpan user ke database
         User::create([
             'username' => $request->username,
-            'email' => $request->email,
+            'no_hp' => $request->no_hp,
             'password' => Hash::make($request->password),
             'role' => 'Masyarakat',
         ]);

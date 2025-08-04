@@ -693,15 +693,15 @@
                         $('#formPengajuanSKTM textarea[name="keterangan"]').val(data.keterangan);
 
                         // Tampilkan preview file jika ada
-                        ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function(
-                            field) {
-                            if (data[field]) {
-                                const filePreview =
-                                    `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
-                                $(`#formPengajuanSKTM input[name="${field}"]`).after(
-                                    filePreview);
-                            }
-                        });
+                        // ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function(
+                        //     field) {
+                        //     if (data[field]) {
+                        //         const filePreview =
+                        //             `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                        //         $(`#formPengajuanSKTM input[name="${field}"]`).after(
+                        //             filePreview);
+                        //     }
+                        // });
                     }
                 }).fail(function() {
                     console.warn("Tidak bisa ambil data draf.");
@@ -709,7 +709,6 @@
             });
 
             // Tombol Simpan Draf
-
 
             $('#btnSimpanDraf').on('click', function() {
                 const form = $('#formPengajuanSKTM')[0];
@@ -776,14 +775,14 @@
                 $('#formPengajuanSKTM input[name="rw"]').val(draf.rw);
                 $('#formPengajuanSKTM textarea[name="keterangan"]').val(draf.keterangan);
 
-                // Tambahkan link preview jika ada file
-                ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function(field) {
-                    if (draf[field]) {
-                        const preview =
-                            `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
-                        $(`#formPengajuanSKTM input[name="${field}"]`).after(preview);
-                    }
-                });
+                // // Tambahkan link preview jika ada file
+                // ['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'].forEach(function(field) {
+                //     if (draf[field]) {
+                //         const preview =
+                //             `<a href="/draf/preview/${field}" target="_blank" class="d-block mt-1 text-primary">Lihat File Lama</a>`;
+                //         $(`#formPengajuanSKTM input[name="${field}"]`).after(preview);
+                //     }
+                // });
 
                 // Buka modal otomatis
                 $('#modalTambahPengajuan').modal('show');

@@ -61,12 +61,11 @@
                     <span>LOG IN</span>
                 </h3>
 
-
                 <div class="mb-3">
-                    <label class="form-label">EMAIL</label>
-                    <input class="form-control @error('email') is-invalid @enderror" type="email" name="email"
-                        value="{{ old('email') }}" placeholder="Email" required autofocus
-                        oninvalid="this.setCustomValidity('Silakan isi email Anda')"
+                    <label class="form-label">NO HP</label>
+                    <input class="form-control @error('no_hp') is-invalid @enderror" type="text" name="no_hp"
+                        value="{{ old('no_hp') }}" placeholder="No Telepon" required autofocus
+                        oninvalid="this.setCustomValidity('Silakan isi no_hp Anda')"
                         oninput="this.setCustomValidity('')">
 
                 </div>
@@ -82,9 +81,7 @@
            required
            oninvalid="this.setCustomValidity('Password minimal 8 karakter dan harus mengandung huruf & angka')"
            oninput="this.setCustomValidity('')">
-    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" id="toggleButton">
-      <i class="bi bi-eye-slash" id="toggleIcon"></i>
-    </button>
+  
   </div>
   @error('password')
     <span class="invalid-feedback" role="alert">
@@ -121,28 +118,14 @@
     <script src="{{ 'template/docs/js/jquery-3.7.0.min.js' }}"></script>
     <script src="{{ 'template/docs/js/bootstrap.min.js' }}"></script>
     <script src="{{ 'template/docs/js/main.js' }}"></script>
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
         // Login Page Flipbox control
         $('.login-content [data-toggle="flip"]').click(function() {
             $('.login-box').toggleClass('flipped');
             return false;
         });
-    </script>
-    <script>
-    function togglePassword() {
-        const input = document.getElementById("passwordInput");
-        const icon = document.getElementById("toggleIcon");
-
-        // Toggle tipe input
-        if (input.type === "password") {
-            input.type = "text";
-            icon.className = "bi bi-eye"; // Ganti ikon
-        } else {
-            input.type = "password";
-            icon.className = "bi bi-eye-slash"; // Kembali ke ikon semula
-        }
-    }
-</script>
+    </script> --}}
+   
 
 </body>
 

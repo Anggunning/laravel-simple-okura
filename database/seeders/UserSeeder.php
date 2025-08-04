@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             [
                 'id' => '7174b28a-d066-11ee-8bb8-744ca1759434',
                 'username' => 'Admin',
-                'email' => 'admin@gmail.com',
+                'no_hp' => '082111111111',
                 'email_verified_at' => now(),
                 'password' => Hash::make('admin123'), // Gunakan password yang kuat di produksi
                 'role' => 'Admin',
@@ -31,7 +31,7 @@ class UserSeeder extends Seeder
             [
                 'id' => '585f45a6-ecd1-11ee-95e5-2a57142798db',
                 'username' => 'budi',
-                'email' => 'budi@gmail.com',
+                'no_hp' => '081222222222',
                 'email_verified_at' => now(),
                 'password' => Hash::make('12345678'),
                 'role' => 'Lurah',
@@ -42,7 +42,7 @@ class UserSeeder extends Seeder
             [
                 'id' => '07608176-d067-11ee-8bb8-744ca1759434',
                 'username' => 'anggun',
-                'email' => 'anggun@gmail.com',
+                'no_hp' => '088233333333',
                 'email_verified_at' => now(),
                 'password' => Hash::make('12345678'),
                 'role' => 'Sekretaris',
@@ -53,7 +53,7 @@ class UserSeeder extends Seeder
             [
                 'id' => '585f56ca-ecd1-11ee-95e5-2a57142791db',
                 'username' => 'anto',
-                'email' => 'anto@gmail.com',
+                'no_hp' => '089744444444',
                 'email_verified_at' => now(),
                 'password' => Hash::make('12345678'),
                 'role' => 'Masyarakat',

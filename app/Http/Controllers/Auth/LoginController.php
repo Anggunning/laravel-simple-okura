@@ -48,17 +48,17 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $credentials = $request->only('email', 'password');
+        $credentials = $request->only('no_hp', 'password');
 
         if (Auth::attempt($credentials, $request->remember)) {
             return redirect()->route('dashboard')->with('success', 'Selamat datang di Simpel Okura!');
 
         }
         
-
         return back()->withErrors([
-            'email' => 'Email atau password salah.',
-        ])->withInput($request->only('email', 'remember'));
+            'no_hp' => 'No hp salah.',
+            'password' => 'Password salah.',
+        ])->withInput($request->only('no_hp','password', 'remember'));
     }
 
     public function logout(Request $request)

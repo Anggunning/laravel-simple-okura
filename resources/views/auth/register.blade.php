@@ -71,17 +71,21 @@
 
   </div>
   <div class="mb-3">
-    <label class="form-label">EMAIL</label>
-    <input class="form-control @error('email') is-invalid @enderror"
-    type="email"
-    name="email"
-    value="{{ old('email') }}"
-    placeholder="Email"
-    required
-    oninvalid="this.setCustomValidity('Silakan isi email yang valid')"
-    oninput="this.setCustomValidity('')">
+    <label class="form-label">NO HP</label>
+    <input class="form-control @error('no_hp') is-invalid @enderror"
+        type="text"
+        name="no_hp"
+        value="{{ old('no_hp') }}"
+        placeholder="Contoh: 081234567890"
+        required
+        oninvalid="this.setCustomValidity('Silakan isi nomor HP yang valid')"
+        oninput="this.setCustomValidity('')">
 
-  </div>
+    @error('no_hp')
+        <div class="invalid-feedback">{{ $message }}</div>
+    @enderror
+</div>
+
 
                <div class="mb-3">
   <label class="form-label">PASSWORD</label>
@@ -94,9 +98,7 @@
            required
            oninvalid="this.setCustomValidity('Password minimal 8 karakter dan harus mengandung huruf & angka')"
            oninput="this.setCustomValidity('')">
-    <button type="button" class="btn btn-outline-secondary" onclick="togglePassword()" id="toggleButton">
-      <i class="bi bi-eye-slash" id="toggleIcon"></i>
-    </button>
+    
   </div>
   @error('password')
     <span class="invalid-feedback" role="alert">
@@ -135,13 +137,13 @@
     <script src="{{('template/docs/js/jquery-3.7.0.min.js')}}"></script>
     <script src="{{('template/docs/js/bootstrap.min.js')}}"></script>
     <script src="{{('template/docs/js/main.js')}}"></script>
-    <script type="text/javascript">
+    {{-- <script type="text/javascript">
       // register Page Flipbox control
       $('.register-content [data-toggle="flip"]').click(function() {
       	$('.register-box').toggleClass('flipped');
       	return false;
       });
-    </script>
+    </script> --}}
     {{-- Tambahkan CDN SweetAlert --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 @if (session('success'))
@@ -171,7 +173,7 @@
 @endif
 
 
-    <script>
+    {{-- <script>
         function togglePassword() {
     const input = document.getElementById("passwordInput");
     const icon = document.getElementById("toggleIcon");
@@ -181,6 +183,6 @@
     icon.classList.toggle("bi-eye", isHidden);
     icon.classList.toggle("bi-eye-slash", !isHidden);
   }
-    </script>
+    </script> --}}
   </body>
 </html>

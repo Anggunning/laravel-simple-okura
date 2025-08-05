@@ -76,7 +76,7 @@
         type="text"
         name="no_hp"
         value="{{ old('no_hp') }}"
-        placeholder="Contoh: 081234567890"
+        placeholder="No Telepon"
         required
         oninvalid="this.setCustomValidity('Silakan isi nomor HP yang valid')"
         oninput="this.setCustomValidity('')">

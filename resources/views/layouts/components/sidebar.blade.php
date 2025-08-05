@@ -22,16 +22,16 @@
             <ul class="treeview-menu">
                 <li>
                     <a class="treeview-item" href="{{ route('sktm.index') }}">
-                        <i class="icon bi bi-circle-fill"></i>SK Tidak Mampu</a>
+                        <i class="icon bi bi-circle-fill"></i>Surat Keterangan Tidak Mampu</a>
                 </li>
                 <li>
                     <a class="treeview-item" href="{{ route('sku.index') }}" >
-                        <i class="icon bi bi-circle-fill"></i>SK Usaha</a>
+                        <i class="icon bi bi-circle-fill"></i>Surat Keterangan Usaha</a>
                 </li>
                 
                 <li>
                     <a class="treeview-item" href="{{ route('skp.index') }}"><i class="icon bi bi-circle-fill">
-                        </i>SK Perkawinan</a>
+                        </i>Surat Pengantar Perkawinan</a>
                 </li>
             </ul>
         </li>

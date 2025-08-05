@@ -17,7 +17,7 @@
         </ul>
     </div>
     <div class="title">
-        <h4>Data Pengajuan Surat Keterangan Pengantar Perkawinan</h4>
+        <h4>Data Pengajuan Surat Pengantar Perkawinan</h4>
     </div>
     <div class="row">
         <div class="col-md-12">
@@ -327,7 +327,7 @@
             <form id="formPengajuanSKP" action="{{ route('skp.store') }}" method="POST" enctype="multipart/form-data" class="modal-content">
                 @csrf
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modalTambahSKPLabel">Tambah Pengajuan SKP</h5>
+                    <h5 class="modal-title" id="modalTambahSKPLabel">Tambah Pengajuan Surat Pengantar Perkawinan</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                 </div>
 
@@ -341,7 +341,7 @@
                             <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai
                                 Draf</button>
                         @endif
-                    <button type="submit" class="btn btn-primary">Simpan</button>
+                    <button type="submit" class="btn btn-primary">Ajukan</button>
                 </div>
 
             </form>

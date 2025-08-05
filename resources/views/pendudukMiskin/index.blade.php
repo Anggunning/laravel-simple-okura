@@ -37,7 +37,7 @@
                         @if (auth()->check() && in_array(auth()->user()->role, ['Admin','Sekretaris']))
                         <a href="#" class="btn btn-primary" data-bs-toggle="modal"
                             data-bs-target="#modalTambahPenduduk">
-                            <i class="bi bi-plus-circle"></i> Tambah Data
+                            <i class="bi bi-plus-circle"></i> Tambah Penduduk Miskin
                         </a>
                         @endif
                     </div>

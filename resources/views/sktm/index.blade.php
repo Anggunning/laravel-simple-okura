@@ -64,7 +64,6 @@
                                         <thead>
                                             <tr>
                                                 <th>No</th>
-
                                                 <th>Nama Pemohon</th>
                                                 <th>Alamat Pemohon</th>
                                                 <th>Pekerjaan Pemohon</th>
@@ -97,9 +96,17 @@
                                                         <td>{{ $item->alamat }}</td>
                                                         <td>{{ $item->pekerjaan }}</td>
                                                         <td>{{ $item->tujuan }}</td>
-                                                        <td>
+                                                        {{-- <td>
                                                             {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+                                                        </td> --}}
+                                                        @php
+    \Carbon\Carbon::setLocale('id');
+@endphp
+
+                                                        <td>
+    {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}<br>
+    <small class="text-muted">({{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }})</small>
+</td>
                                                         <td>
                                                             @php
                                                                 $badgeClass = match ($item->status) {
@@ -172,8 +179,12 @@
                                                                 ->last();
                                                         @endphp
                                                         <td>{{ $riwayatSelesai?->alasan ?? '-' }}</td>
-                                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+                                                        {{-- <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
+                                                        </td> --}}
+                                                        <td>
+    {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}<br>
+    <small class="text-muted">({{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }})</small>
+</td>
                                                         <td class="text-center align-middle">
                                                             @php
                                                                 $badgeClass = match ($item->status) {
@@ -244,9 +255,13 @@
                                                                 ->last();
                                                         @endphp
                                                         <td>{{ $riwayatDitolak?->alasan ?? '-' }}</td>
-                                                        <td>
+                                                        {{-- <td>
                                                             {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+                                                        </td> --}}
+                                                        <td>
+    {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}<br>
+    <small class="text-muted">({{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }})</small>
+</td>
 
                                                         {{-- <td>{{ $item->riwayat_sktm->alasan}}</td> --}}
                                                         <td class="text-center align-middle">
@@ -306,7 +321,7 @@
                     enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalTambahLabel">Tambah Pengajuan Surat</h5>
+                        <h5 class="modal-title" id="modalTambahLabel">Tambah Pengajuan Surat Keterangan Tidak Mampu</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
@@ -388,8 +403,8 @@
                             <div class="mb-3 col-md-6">
                                 <label for="alamat" class="form-label">Alamat <span
                                         class="text-danger">*</span></label>
-                                <textarea name="alamat" class="form-control" rows="1" required placeholder="Masukkan Alamat"
-                                    oninvalid="this.setCustomValidity('Silakan isi alamat')" oninput="this.setCustomValidity('')"></textarea>
+                                <input type="text" name="alamat" class="form-control" rows="1" required placeholder="Masukkan Alamat"
+                                    oninvalid="this.setCustomValidity('Silakan isi alamat')" oninput="this.setCustomValidity('')"></input>
                             </div>
                         </div>
                         <div class="row">
@@ -410,7 +425,7 @@
                         </div>
                         <div class="row">
                             <div class="mb-3 col-md-6">
-                                <label for="tujuan" class="form-label">Tujuan Pegajuan<span
+                                <label for="tujuan" class="form-label">Tujuan Pengajuan<span
                                         class="text-danger">*</span></label>
                                 <input type="text" name="tujuan" class="form-control" required
                                     placeholder="Masukkan Tujuan Pengajuan"
@@ -459,8 +474,14 @@
                             </div>
 
                             <div class="mb-3 col-md-6">
-                                <label for="surat_pernyataan" class="form-label">Surat Pernyataan <span
-                                        class="text-danger">*</span></label>
+                                <label for="surat_pernyataan" class="form-label">
+                                    Surat Pernyataan <span class="text-danger">*</span>
+                                    <a href="{{ asset('contoh/Format_Surat_Pernyataan.docx') }}"
+                                        class="fw-bold text-decoration-none small" style="color: #093FB4;" download>
+                                        <i class="bi bi-file-earmark-text"></i>
+                                        Format Surat Pernyataan
+                                    </a>
+                                </label>
                                 <input type="file" name="surat_pernyataan" id="surat_pernyataan"
                                     class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
                                     oninvalid="this.setCustomValidity('Silakan unggah surat pernyataan')"
@@ -476,7 +497,7 @@
                                 <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai
                                     Draf</button>
                             @endif
-                            <button type="submit" class="btn btn-primary">Simpan</button>
+                            <button type="submit" class="btn btn-primary">Ajukan</button>
                         </div>
 
 
@@ -506,14 +527,14 @@
                 e.preventDefault();
 
                 Swal.fire({
-                    title: 'Yakin mau menyimpan?',
+                    title: 'Yakin mau mengajukan?',
                     text: 'Pastikan semua data sudah benar.',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonText: 'Simpan',
+                    confirmButtonText: 'Ajukan',
                     cancelButtonText: 'Batal',
-                    confirmButtonColor: '#d33', // warna merah (seperti tombol "Tolak")
-                    cancelButtonColor: '#6c757d', // abu Bootstrap
+                    confirmButtonColor: '#65AE38',
+                    cancelButtonColor: '#ced4da',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();

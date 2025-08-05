@@ -2,19 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use Users;
 use Exception;
+use App\Models\User;
 use App\Models\SktmModel;
-use Illuminate\Support\Str;
 
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use App\Models\NotifikasiModel;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\RiwayatsktmModel;
+
 use Illuminate\Routing\Controller;
 use Illuminate\Support\Facades\Auth;
-
 use App\Models\RiwayatPengajuanModel;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\PengajuanSktmBaru;
 use Illuminate\Support\Facades\Response;
 
 class SKTidakMampuController extends Controller
@@ -138,6 +142,12 @@ class SKTidakMampuController extends Controller
                 'keterangan' => 'Surat diajukan oleh pemohon',
                 'alasan' => null,
             ]);
+            // Cari user dengan role admin, lurah, sekretaris
+            $adminUsers = User::whereIn('role', ['admin', 'lurah', 'sekretaris'])->get();
+
+            foreach ($adminUsers as $admin) {
+                $admin->notify(new PengajuanSktmBaru('Pengajuan surat SKTM baru telah diajukan.'));
+            }
             // Hapus draf
             SktmModel::where('user_id', auth()->id())->where('status', 'draf')->delete();
 
@@ -151,7 +161,7 @@ class SKTidakMampuController extends Controller
     }
 
 
-public function storeDraf(Request $request)
+    public function storeDraf(Request $request)
     {
         try {
             \Log::info('✅ Request masuk ke storeDraf:', $request->all());

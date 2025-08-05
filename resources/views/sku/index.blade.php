@@ -308,7 +308,7 @@
                     enctype="multipart/form-data">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title" id="modalTambahLabel">Tambah Pengajuan Surat</h5>
+                        <h5 class="modal-title" id="modalTambahLabel">Tambah Pengajuan Surat Keterangan Usaha</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
 
@@ -393,7 +393,7 @@
                                 <label for="alamat" class="form-label">Alamat
                                     <span class="text-danger">*</span>
                                 </label>
-                                 <input name="alamat" class="form-control"
+                                 <input type="text" name="alamat" class="form-control"
                                  required placeholder="Masukkan Alamat"
                                     oninvalid="this.setCustomValidity('Silakan isi alamat')" oninput="this.setCustomValidity('')"></input>
                             </div>
@@ -531,8 +531,14 @@
                                     2MB.</small>
                             </div>
                             <div class="mb-3 col-md-6">
-                                <label for="surat_pernyataan" class="form-label">Surat Pernyataan <span
-                                        class="text-danger">*</span></label>
+                                <label for="surat_pernyataan" class="form-label">
+                                    Surat Pernyataan Usaha<span class="text-danger">*</span>
+                                    <a href="{{ asset('contoh/Format_Surat_Pernyataan_Usaha.docx') }}"
+                                        class="fw-bold text-decoration-none small" style="color: #093FB4;" download>
+                                        <i class="bi bi-file-earmark-text"></i>
+                                        Format Surat Pernyataan Usaha
+                                    </a>
+                                </label>
                                 <input type="file" name="surat_pernyataan" id="surat_pernyataan"
                                     class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
                                     oninvalid="this.setCustomValidity('Silakan unggah surat pernyataan')"
@@ -549,7 +555,7 @@
                             <button type="button" class="btn btn-warning" id="btnSimpanDraf">Simpan Sebagai
                                 Draf</button>
                         @endif
-                        <button type="submit" class="btn btn-primary">Simpan</button>
+                        <button type="submit" class="btn btn-primary">Ajukan</button>
                     </div>
                 </form>
             </div>
@@ -762,14 +768,14 @@ if (inputField.length) {
                 e.preventDefault();
 
                 Swal.fire({
-                    title: 'Yakin mau menyimpan?',
+                    title: 'Yakin mau mengajukan?',
                     text: 'Pastikan semua data sudah benar.',
                     icon: 'question',
                     showCancelButton: true,
-                    confirmButtonText: 'Simpan',
+                    confirmButtonText: 'Ajukan',
                     cancelButtonText: 'Batal',
-                    confirmButtonColor: '#d33', // warna merah (seperti tombol "Tolak")
-                    cancelButtonColor: '#6c757d', // abu Bootstrap
+                    confirmButtonColor: '#65AE38', 
+                    cancelButtonColor: '#ced4da',
                 }).then((result) => {
                     if (result.isConfirmed) {
                         form.submit();

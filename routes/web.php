@@ -3,9 +3,11 @@
 use App\Models\PendudukMiskinModel;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\DokumenController;
 use App\Http\Controllers\SKUsahaController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\NotifikasiController;
 use App\Http\Controllers\DokumenSKTMController;
 use App\Http\Controllers\DataPenggunaController;
 use App\Http\Controllers\SKPerkawinanController;
@@ -13,7 +15,6 @@ use App\Http\Controllers\SKTidakMampuController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\PendudukMiskinController;
 use App\Http\Controllers\PetaPersebaranController;
-use App\Http\Controllers\DokumenController;
 
 Route::get('/', function () {
     return view('auth.login');
@@ -124,7 +125,9 @@ Route::get('/dokumen/{folder}/{filename}', [DokumenController::class, 'show'])
 // Route::put('/data_pengguna/{id}', [DataPenggunaController::class, 'update'])->name('data_pengguna.update');
 // Route::delete('/data_pengguna/destroy/{id}', [DataPenggunaController::class, 'destroy'])->name('data_pengguna.destroy');
 
-
+// routes/web.php
+Route::get('/notifikasi', [NotifikasiController::class, 'index']);
+Route::post('/notifikasi/baca/{id}', [NotifikasiController::class, 'destroy']);
 
 
 // Route::get('sktm', function () {

@@ -513,14 +513,14 @@
                     e.preventDefault();
 
                     Swal.fire({
-                        title: 'Yakin mau menyimpan?',
+                        title: 'Yakin mau mengajukan?',
                         text: 'Pastikan semua data sudah benar.',
                         icon: 'question',
                         showCancelButton: true,
-                        confirmButtonText: 'Simpan',
+                        confirmButtonText: 'Ajukan',
                         cancelButtonText: 'Batal',
-                        confirmButtonColor: '#d33',
-                        cancelButtonColor: '#6c757d',
+                        confirmButtonColor: '#65AE38', 
+                    cancelButtonColor: '#ced4da',
                     }).then((result) => {
                         if (result.isConfirmed) {
                             form.dataset.konfirmasi =

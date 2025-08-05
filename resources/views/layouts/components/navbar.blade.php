@@ -8,8 +8,10 @@
     <!-- Sidebar toggle button-->
     <a class="app-sidebar__toggle" href="#" data-toggle="sidebar" aria-label="Hide Sidebar"></a>
     <!-- Navbar Right Menu-->
-    
+            {{-- Penduduk Miskin --}}
+            
     <ul class="app-nav">
+      @if (in_array(auth()->user()->role, ['Admin', 'Lurah', 'Sekretaris']))
         <li class="dropdown">
             <a class="app-nav__item show" href="#" data-bs-toggle="dropdown" aria-label="Show notifications"
                 aria-expanded="true">
@@ -19,47 +21,8 @@
             <ul class="app-notification dropdown-menu dropdown-menu-right" id="daftar-notifikasi">
                 <li class="app-notification__title">Memuat notifikasi...</li>
         </li>
-
-        {{-- <li class="dropdown">
-      <a class="app-nav__item show" href="#" data-bs-toggle="dropdown" aria-label="Show notifications" aria-expanded="true"><i class="bi bi-bell fs-5"></i></a>
-          <ul class="app-notification dropdown-menu dropdown-menu-right show" style="position: absolute; inset: 0px 0px auto auto; margin: 0px; transform: translate3d(-0.8px, 53.6px, 0px);" data-popper-placement="bottom-end">
-            <li class="app-notification__title">You have 4 new notifications.</li>
-            <div class="app-notification__content">
-              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><i class="bi bi-envelope fs-4 text-primary"></i></span>
-                  <div>
-                    <p class="app-notification__message">Lisa sent you a mail</p>
-                    <p class="app-notification__meta">2 min ago</p>
-                  </div></a></li>
-              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><i class="bi bi-exclamation-triangle fs-4 text-warning"></i></span>
-                  <div>
-                    <p class="app-notification__message">Mail server not working</p>
-                    <p class="app-notification__meta">5 min ago</p>
-                  </div></a></li>
-              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><i class="bi bi-cash fs-4 text-success"></i></span>
-                  <div>
-                    <p class="app-notification__message">Transaction complete</p>
-                    <p class="app-notification__meta">2 days ago</p>
-                  </div></a></li>
-              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><i class="bi bi-envelope fs-4 text-primary"></i></span>
-                  <div>
-                    <p class="app-notification__message">Lisa sent you a mail</p>
-                    <p class="app-notification__meta">2 min ago</p>
-                  </div></a></li>
-              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><i class="bi bi-exclamation-triangle fs-4 text-warning"></i></span>
-                  <div>
-                    <p class="app-notification__message">Mail server not working</p>
-                    <p class="app-notification__meta">5 min ago</p>
-                  </div></a></li>
-              <li><a class="app-notification__item" href="javascript:;"><span class="app-notification__icon"><i class="bi bi-cash fs-4 text-success"></i></span>
-                  <div>
-                    <p class="app-notification__message">Transaction complete</p>
-                    <p class="app-notification__meta">2 days ago</p>
-                  </div></a></li>
-            </div>
-            <li class="app-notification__footer"><a href="#">See all notifications.</a></li>
-          </ul>
-        </li> --}}
     </ul>
+@endif
 
     <!-- User Menu-->
     @if (Auth::check())
@@ -82,7 +45,7 @@
 </header>
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+{{-- 
 <script>
     function loadNotifikasi() {
         $.ajax({
@@ -92,15 +55,15 @@
                 let html = '';
                 if (res.data.length > 0) {
                     html +=
-                        `<li class="app-notification__title">You have ${res.jumlah} new notification${res.jumlah > 1 ? 's' : ''}.</li>`;
-                    html += `<div class="app-notification__content">`;
+                        `<li class="app-notification__title">Terdapat ${res.jumlah} notifikasi baru${res.jumlah > 1 ? '' : ''}.</li>`;
+                    html += `<div class="app-notification__content">`
                     res.data.forEach(n => {
     html += `
         <li>
-           <a class="app-notification__item" href="/${n.url}" data-id="${n.id}">
-                <span class="app-notification__icon">
-                 
-                </span>
+          
+           <a class="app-notification__item notifikasi-item" href="javascript:void(0)" data-id="${n.id}" data-url="${n.url}">
+            
+                <span class="app-notification__icon"></span>
                 <div>
                     <p class="app-notification__message">${n.message}</p>
                     <p class="app-notification__meta">${n.time}</p>
@@ -108,10 +71,10 @@
             </a>
         </li>
     `;
-                    });
+});
+
                     html += `</div>`;
-                    html +=
-                        `<li class="app-notification__footer"><a href="#">Lihat semua notifikasi</a></li>`;
+                    
                 } else {
                     html = `<li class="app-notification__title">Tidak ada notifikasi.</li>`;
                 }
@@ -127,15 +90,19 @@
     }
 
     $(document).ready(function() {
+      
         loadNotifikasi();
         setInterval(loadNotifikasi, 30000); // 30 detik sekali
 
-        $(document).on('click', '.notifikasi-item a', function () {
-    const item = $(this).closest('.notifikasi-item');
-    const id = item.data('id');
-    const url = $(this).data('url');
+       $(document).on('click', '.notifikasi-item', function (e) {
+    e.preventDefault(); // Jangan langsung redirect
 
-    // Opsional: tandai notifikasi sudah dibaca di server
+    const item = $(this);
+    const id = item.data('id');
+    const url = item.data('url'); // AMAN
+
+    console.log('Arahkan ke:', url); // DEBUG
+
     $.ajax({
         url: `/notifikasi/baca/${id}`,
         method: 'POST',
@@ -143,8 +110,14 @@
             _token: '{{ csrf_token() }}'
         },
         success: function () {
-            item.remove(); // Hapus dari tampilan
-            window.location.href = url; // Arahkan ke halaman pengajuan
+            item.closest('li').remove();
+            const jumlah = parseInt($('#jumlah-notifikasi').text()) || 0;
+$('#jumlah-notifikasi').text(jumlah > 1 ? jumlah - 1 : '');
+
+
+            setTimeout(() => {
+                window.location.href = url;
+            }, 200);
         },
         error: function () {
             alert('Gagal menghapus notifikasi');
@@ -152,8 +125,93 @@
     });
 });
 
+
+
+    });
+</script> --}}
+
+<script>
+    function loadNotifikasi() {
+        $.ajax({
+            url: '/notifikasi',
+            method: 'GET',
+            success: function(res) {
+                let html = '';
+                const terbaca = JSON.parse(localStorage.getItem('notifikasiTerbaca') || '[]');
+
+                // Filter notifikasi yang belum dibaca
+                const notifikasiBaru = res.data.filter(n => !terbaca.includes(n.id));
+
+                if (notifikasiBaru.length > 0) {
+                    html += `<li class="app-notification__title">Terdapat ${notifikasiBaru.length} notifikasi baru.</li>`;
+                    html += `<div class="app-notification__content">`;
+
+                    notifikasiBaru.forEach(n => {
+                        html += `
+                            <li>
+                                <a class="app-notification__item notifikasi-item" href="javascript:void(0)" data-id="${n.id}" data-url="${n.url}">
+                                    <span class="app-notification__icon"></span>
+                                    <div>
+                                        <p class="app-notification__message">${n.message}</p>
+                                        <p class="app-notification__meta">${n.time}</p>
+                                    </div>
+                                </a>
+                            </li>
+                        `;
+                    });
+
+                    html += `</div>`;
+                } else {
+                    html = `<li class="app-notification__title">Tidak ada notifikasi.</li>`;
+                }
+
+                $('#daftar-notifikasi').html(html);
+                $('#jumlah-notifikasi').text(notifikasiBaru.length > 0 ? notifikasiBaru.length : '');
+            },
+            error: function() {
+                $('#daftar-notifikasi').html('<li class="app-notification__title text-danger">Gagal memuat notifikasi</li>');
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        loadNotifikasi();
+        setInterval(loadNotifikasi, 30000); // per 30 detik
+
+        // Ketika user klik notifikasi
+        $(document).on('click', '.notifikasi-item', function (e) {
+            e.preventDefault();
+
+            const item = $(this);
+            const id = item.data('id');
+            const url = item.data('url');
+
+            // Simpan notifikasi yang sudah dibaca ke localStorage
+            let terbaca = JSON.parse(localStorage.getItem('notifikasiTerbaca') || '[]');
+            if (!terbaca.includes(id)) {
+                terbaca.push(id);
+                localStorage.setItem('notifikasiTerbaca', JSON.stringify(terbaca));
+            }
+
+            // Update tampilan manual (langsung hapus item)
+            item.closest('li').remove();
+
+            // Update jumlah badge
+            const jumlah = parseInt($('#jumlah-notifikasi').text()) || 0;
+            $('#jumlah-notifikasi').text(jumlah > 1 ? jumlah - 1 : '');
+
+            // Redirect ke halaman tujuan
+            setTimeout(() => {
+                window.location.href = url;
+            }, 100);
+        });
     });
 </script>
-@php
-    \Carbon\Carbon::setLocale('id');
-@endphp
+
+<script>
+    // Saat logout atau reload session
+    function resetNotifikasiTerbaca() {
+        localStorage.removeItem('notifikasiTerbaca');
+    }
+</script>
+

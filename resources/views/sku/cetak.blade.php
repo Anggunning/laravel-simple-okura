@@ -105,14 +105,13 @@
     </table>
 
     <p class="mt-2">
-        Surat Keterangan Usaha ini diberikan guna kepentingan untuk: <strong>{{ $sku->tujuan }}</strong>
+        Surat Keterangan Usaha ini diberikan guna kepentingan untuk: <strong>{{ $sku->tujuan }}</strong>.
     </p>
 
     <p class="mt-2">
         Demikianlah surat keterangan usaha ini kami buat dengan sebenarnya untuk dapat dipergunakan sebagaimana mestinya.
     </p>
 
-    <br>
     <table class="spacing" style="width: 100%;">
         <tr>
             <td style="width: 50%"></td>

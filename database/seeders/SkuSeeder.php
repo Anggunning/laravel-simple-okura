@@ -253,7 +253,7 @@ class SkuSeeder extends Seeder
                 'kk' => 'sku/kk3.jpg',
                 'ktp' => 'sku/ktp3.jpg',
                 'surat_pernyataan' => 'sku/pernyataan3.pdf',
-                'created_at' => '2025-07-01 08:12:50',
+                'created_at' => '2025-08-01 08:12:50',
                 'updated_at' => now(),
             ],
             [

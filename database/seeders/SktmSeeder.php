@@ -229,7 +229,7 @@ class SktmSeeder extends Seeder
                 'kk' => 'sktm/kk9.jpg',
                 'ktp' => 'sktm/ktp9.jpg',
                 'surat_pernyataan' => 'sktm/pernyataan9.pdf',
-                'created_at' => '2025-07-01 10:30:00',
+                'created_at' => '2025-08-01 10:30:00',
                 'updated_at' => now(),
             ],
             [

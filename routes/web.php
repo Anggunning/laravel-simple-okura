@@ -126,10 +126,10 @@ Route::get('/dokumen/{folder}/{filename}', [DokumenController::class, 'show'])
 // Route::delete('/data_pengguna/destroy/{id}', [DataPenggunaController::class, 'destroy'])->name('data_pengguna.destroy');
 
 // routes/web.php
-Route::middleware(['auth', 'role:Admin, Sekretaris'])->group(function () {
-Route::get('/notifikasi', [NotifikasiController::class, 'index']);
-Route::post('/notifikasi/baca/{id}', [NotifikasiController::class, 'baca']);
-});
+
+    Route::get('/notifikasi', [NotifikasiController::class, 'index']);
+    Route::post('/notifikasi/baca/{id}', [NotifikasiController::class, 'baca']);
+
 
 // Route::get('sktm', function () {
 //     return view('sk_tidak_mampu');

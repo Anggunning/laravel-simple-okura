@@ -97,9 +97,14 @@
                                                         <td>{{ $item->alamat }}</td>
                                                         <td>{{ $item->orangTua->nama_ayah }} dan
                                                             {{ $item->orangTua->nama_ibu }}</td>
+                                                        @php
+    \Carbon\Carbon::setLocale('id');
+@endphp
+
                                                         <td>
-                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+    {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}<br>
+    <small class="text-muted">({{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }})</small>
+</td>
 
                                                         <td class="text-center align-middle">
                                                             @php
@@ -185,9 +190,14 @@
                                                                 ->last();
                                                         @endphp
                                                         <td>{{ $riwayatSelesai?->alasan ?? '-' }}</td>
- <td>
-                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+ @php
+    \Carbon\Carbon::setLocale('id');
+@endphp
+
+                                                        <td>
+    {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}<br>
+    <small class="text-muted">({{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }})</small>
+</td>
                                                         <td class="text-center align-middle">
                                                             @php
                                                                 $badgeClass = match ($item->status) {
@@ -263,9 +273,14 @@
                                                                 ->last();
                                                         @endphp
                                                         <td>{{ $riwayatDitolak?->alasan ?? '-' }}</td>
+                                                        @php
+    \Carbon\Carbon::setLocale('id');
+@endphp
+
                                                         <td>
-                                                            {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+    {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}<br>
+    <small class="text-muted">({{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }})</small>
+</td>
                                                         <td class="text-center align-middle">
                                                             @php
                                                                 $badgeClass = match ($item->status) {

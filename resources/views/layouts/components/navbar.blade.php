@@ -11,7 +11,7 @@
             {{-- Penduduk Miskin --}}
             
     <ul class="app-nav">
-      @if (in_array(auth()->user()->role, ['Admin', 'Lurah', 'Sekretaris']))
+      
         <li class="dropdown">
             <a class="app-nav__item show" href="#" data-bs-toggle="dropdown" aria-label="Show notifications"
                 aria-expanded="true">
@@ -22,7 +22,7 @@
                 <li class="app-notification__title">Memuat notifikasi...</li>
         </li>
     </ul>
-@endif
+
 
     <!-- User Menu-->
     @if (Auth::check())

@@ -92,8 +92,14 @@
                                                         <td>{{ $item->jenis_usaha }}</td>
                                                         <td>{{ $item->tempat_usaha }}</td>
                                                         <td>{{ $item->tujuan }}</td>
-                                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+                                                        @php
+    \Carbon\Carbon::setLocale('id');
+@endphp
+
+                                                        <td>
+    {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}<br>
+    <small class="text-muted">({{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }})</small>
+</td>
                                                         <td class="text-center align-middle">
                                                             @php
                                                                 $badgeClass = match ($item->status) {
@@ -176,9 +182,14 @@
                                                             ->last();
                                                     @endphp
                                                     <td>{{ $riwayatSelesai?->alasan ?? '-' }}</td>
-                                                    <td>
-                                                        {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                    </td>
+                                                    @php
+    \Carbon\Carbon::setLocale('id');
+@endphp
+
+                                                        <td>
+    {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}<br>
+    <small class="text-muted">({{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }})</small>
+</td>
                                                     <td class="text-center align-middle">
                                                         @php
                                                             $badgeClass = match ($item->status) {
@@ -253,8 +264,14 @@
                                                                 ->last();
                                                         @endphp
                                                         <td>{{ $riwayatDitolak?->alasan ?? '-' }}</td>
-                                                        <td>{{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}
-                                                        </td>
+                                                       @php
+    \Carbon\Carbon::setLocale('id');
+@endphp
+
+                                                        <td>
+    {{ \Carbon\Carbon::parse($item->created_at)->format('d/m/Y') }}<br>
+    <small class="text-muted">({{ \Carbon\Carbon::parse($item->created_at)->diffForHumans() }})</small>
+</td>
                                                         <td class="text-center align-middle">
                                                             @php
                                                                 $badgeClass = match ($item->status) {
@@ -494,13 +511,14 @@
                                     2MB.</small>
                             </div>
                         </div>
+                        
                         <div class="row">
                             <div class="mb-3 col-md-6">
-                                <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW
-                                    <span class="text-danger">*</span></label>
-                                <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw"
-                                    class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
-                                    oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
+                                <label for="ktp" class="form-label">Kartu Tanda Penduduk <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="ktp" id="ktp" class="form-control validate-file"
+                                    accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah file KTP')"
                                     oninput="this.setCustomValidity('')">
                                 <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
                                     Maksimal :
@@ -517,14 +535,21 @@
                                     Maksimal :
                                     2MB.</small>
                             </div>
+                            
                         </div>
                         <div class="row">
                             <div class="mb-3 col-md-6">
-                                <label for="ktp" class="form-label">Kartu Tanda Penduduk <span
-                                        class="text-danger">*</span></label>
-                                <input type="file" name="ktp" id="ktp" class="form-control validate-file"
-                                    accept=".jpg,.jpeg,.png,.pdf" required
-                                    oninvalid="this.setCustomValidity('Silakan unggah file KTP')"
+                                <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW
+                                    <span class="text-danger">*</span>
+                                    <a href="{{ asset('contoh/Format_Surat_Pernyataan_RT_RW.docx') }}"
+                                        class="fw-bold text-decoration-none small" style="color: #093FB4;" download>
+                                        <i class="bi bi-file-earmark-text"></i>
+                                        Format Surat Pengantar RT/RW
+                                    </a>
+                                </label>
+                                <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw"
+                                    class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
                                     oninput="this.setCustomValidity('')">
                                 <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
                                     Maksimal :
@@ -784,7 +809,17 @@ if (inputField.length) {
             });
         });
     </script>
-
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: '{{ session('error') }}',
+            timer: 5000,
+            showConfirmButton: true
+        });
+    </script>
+@endif
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>

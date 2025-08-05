@@ -143,6 +143,14 @@ class SKPerkawinanController extends Controller
             'rt_ibu' => 'required|max:3',
             'rw_ibu' => 'required|max:3',
         ]);
+        $existing = SkpModel::where('nik', $request->nik)
+    ->whereNotIn('status', ['Ditolak', 'Selesai']) // boleh disesuaikan
+    ->exists();
+
+if ($existing) {
+    return redirect()->back()->withInput()->with('error', 'Pengajuan dengan NIK ini sudah ada.');
+
+}
 
         try {
             $data = $request->all();

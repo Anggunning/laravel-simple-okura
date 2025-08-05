@@ -107,6 +107,14 @@ class SKUsahaController extends Controller
             'ktp' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'surat_pernyataan' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
+        $existing = SkuModel::where('nik', $request->nik)
+    ->whereNotIn('status', ['Ditolak', 'Selesai']) // boleh disesuaikan
+    ->exists();
+
+if ($existing) {
+    return redirect()->back()->withInput()->with('error', 'Pengajuan dengan NIK ini sudah ada.');
+
+}
 
         try {
             $data = $request->all();

@@ -438,30 +438,6 @@
                             </div>
                         </div>
                         <div class="row">
-                            <!-- INPUT FILE -->
-                            <div class="mb-3 col-md-6">
-                                <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span
-                                        class="text-danger">*</span></label>
-                                <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw"
-                                    class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
-                                    oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
-                                    oninput="this.setCustomValidity('')">
-                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
-                                    2MB.</small>
-                            </div>
-
-                            <div class="mb-3 col-md-6">
-                                <label for="kk" class="form-label">Kartu Keluarga <span
-                                        class="text-danger">*</span></label>
-                                <input type="file" name="kk" id="kk" class="form-control validate-file"
-                                    accept=".jpg,.jpeg,.png,.pdf" required
-                                    oninvalid="this.setCustomValidity('Silakan unggah file KK')"
-                                    oninput="this.setCustomValidity('')">
-                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
-                                    2MB.</small>
-                            </div>
-                        </div>
-                        <div class="row">
                             <div class="mb-3 col-md-6">
                                 <label for="ktp" class="form-label">Kartu Tanda Penduduk <span
                                         class="text-danger">*</span></label>
@@ -469,13 +445,44 @@
                                     accept=".jpg,.jpeg,.png,.pdf" required
                                     oninvalid="this.setCustomValidity('Silakan unggah file KTP')"
                                     oninput="this.setCustomValidity('')">
-                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
+                                    Maksimal :
                                     2MB.</small>
                             </div>
-
+                            <div class="mb-3 col-md-6">
+                                <label for="kk" class="form-label">Kartu Keluarga <span
+                                        class="text-danger">*</span></label>
+                                <input type="file" name="kk" id="kk" class="form-control validate-file"
+                                    accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah file KK')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
+                                    Maksimal :
+                                    2MB.</small>
+                            </div>
+                            
+                        </div>
+                        <div class="row">
+                            <div class="mb-3 col-md-6">
+                                <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW
+                                    <span class="text-danger">*</span>
+                                    <a href="{{ asset('contoh/Format_Surat_Pernyataan_RT_RW.docx') }}"
+                                        class="fw-bold text-decoration-none small" style="color: #093FB4;" download>
+                                        <i class="bi bi-file-earmark-text"></i>
+                                        Format Surat Pengantar RT/RW
+                                    </a>
+                                </label>
+                                <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw"
+                                    class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
+                                    oninvalid="this.setCustomValidity('Silakan unggah surat pengantar RT/RW')"
+                                    oninput="this.setCustomValidity('')">
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
+                                    Maksimal :
+                                    2MB.</small>
+                            </div>
                             <div class="mb-3 col-md-6">
                                 <label for="surat_pernyataan" class="form-label">
-                                    Surat Pernyataan <span class="text-danger">*</span>
+                                    Surat Pernyataan<span class="text-danger">*</span>
                                     <a href="{{ asset('contoh/Format_Surat_Pernyataan.docx') }}"
                                         class="fw-bold text-decoration-none small" style="color: #093FB4;" download>
                                         <i class="bi bi-file-earmark-text"></i>
@@ -486,10 +493,12 @@
                                     class="form-control validate-file" accept=".jpg,.jpeg,.png,.pdf" required
                                     oninvalid="this.setCustomValidity('Silakan unggah surat pernyataan')"
                                     oninput="this.setCustomValidity('')">
-                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran Maksimal :
+                                <small class="form-text text-muted">Tipe File : JPG,PNG,PDF | Ukuran
+                                    Maksimal :
                                     2MB.</small>
                             </div>
                         </div>
+                        
 
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
@@ -543,6 +552,17 @@
             });
         });
     </script>
+    @if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: '{{ session('error') }}',
+            timer: 5000,
+            showConfirmButton: true
+        });
+    </script>
+@endif
 
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>

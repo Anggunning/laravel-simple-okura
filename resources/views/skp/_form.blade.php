@@ -173,7 +173,12 @@
         {{-- Surat Pengantar RT/RW --}}
         <div class="mb-3 col-md-6">
             <label for="pengantar_rt_rw" class="form-label">Surat Pengantar RT/RW <span
-                    class="text-danger">*</span></label>
+                    class="text-danger">*</span>
+                <a href="{{ asset('contoh/Format_Surat_Pernyataan_RT_RW.docx') }}"
+                                        class="fw-bold text-decoration-none small" style="color: #093FB4;" download>
+                                        <i class="bi bi-file-earmark-text"></i>
+                                        Format Surat Pengantar RT/RW
+                                    </a></label>
             <input type="file" name="pengantar_rt_rw" id="pengantar_rt_rw" class="form-control validate-file"
                 accept=".jpg,.jpeg,.png,.pdf" @if (!request()->isMethod('put') && $prefix == '') required @endif>
             <small class="form-text text-muted">Tipe File : JPG, PNG, PDF | Ukuran Maksimal: 2MB.</small>
@@ -502,6 +507,18 @@
             });
         });
     </script>
+
+@if (session('error'))
+    <script>
+        Swal.fire({
+            icon: 'error',
+            title: 'Gagal',
+            text: '{{ session('error') }}',
+            timer: 5000,
+            showConfirmButton: true
+        });
+    </script>
+@endif
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {

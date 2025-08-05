@@ -19,9 +19,9 @@
         <div class="row justify-content-start">
 
             <div class="col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card shadow-sm border-warning">
+                <div class="card shadow-sm border-info">
                     <div class="card-body d-flex align-items-center">
-                        <i class="bi bi-folder2 text-warning me-2 fs-5"></i>
+                        <i class="bi bi-folder2 text-primary me-2 fs-5"></i>
                         <div>
                             <h6 class="mb-1">Total Pengajuan Surat Keterangan Tidak Mampu</h6>
                             <p class="mb-0">{{ $sktm['total'] }}</p>
@@ -33,7 +33,7 @@
             <div class="col-sm-6 col-md-4 col-lg-2 mb-3">
                 <div class="card shadow-sm border-info">
                     <div class="card-body d-flex align-items-center">
-                        <i class="bi bi-folder2 text-info me-2 fs-5"></i>
+                        <i class="bi bi-folder2 text-primary me-2 fs-5"></i>
                         <div>
                             <h6 class="mb-1">Total Pengajuan Surat Keterangan Usaha</h6>
                             <p class="mb-0">{{ $sku['total'] }}</p>
@@ -43,7 +43,7 @@
             </div>
 
             <div class="col-sm-6 col-md-4 col-lg-2 mb-3">
-                <div class="card shadow-sm border-primary">
+                <div class="card shadow-sm border-info">
                     <div class="card-body d-flex align-items-center">
                         <i class="bi bi-folder2 text-primary me-2 fs-5"></i>
                         <div>
@@ -66,7 +66,7 @@
             </div>
             @if (auth()->user()->role == 'Admin')
                 <div class="col-sm-6 col-md-4 col-lg-2 mb-3">
-                    <div class="card shadow-sm border-primary">
+                    <div class="card shadow-sm border-info">
                         <div class="card-body d-flex align-items-center">
                             <i class="bi bi-person text-primary me-2 fs-5"></i>
                             <div>
@@ -93,7 +93,12 @@
                         <ul class="ps-3 mb-2">
                             <li>Fotokopi KTP</li>
                             <li>Fotokopi KK</li>
-                            <li>Surat pengantar RT/RW</li>
+                            <li>Surat pengantar RT/RW <br>
+                                <a href="{{ asset('contoh/Format_Surat_Pengantar_RT_RW.docx') }}"
+                                    class="fw-bold text-decoration-none small" style="color: #093FB4;" download>
+                                    <i class="bi bi-file-earmark-text"></i> Format Surat Pengantar RT/RW
+                                </a>
+                            </li>
                             <li>
                                 Surat pernyataan <br>
                                 <span class="text-muted">(ditandatangani di atas materai 10.000)</span><br>
@@ -107,7 +112,7 @@
                         <p class="mb-1 fw-semibold">Alur Pengajuan:</p>
                         <ol class="ps-3 mb-2">
                             <li>Isi formulir dan unggah dokumen</li>
-                            <li>Petugas kelurahan akan memverifikasi</li>
+                            <li>Petugas kelurahan akan memverifikasi pengajuan</li>
                             <li>Surat dapat diambil jika sudah disetujui</li>
                         </ol>
                         <p class="mb-0 text-muted"><i class="bi bi-clock"></i> Estimasi proses: 1–3 hari kerja</p>
@@ -124,7 +129,12 @@
                             <li>Fotokopi KTP</li>
                             <li>Fotokopi KK</li>
                             <li>Foto usaha</li>
-                            <li>Surat pengantar RT/RW</li>
+                            <li>Surat pengantar RT/RW <br>
+                                <a href="{{ asset('contoh/Format_Surat_Pengantar_RT_RW.docx') }}"
+                                    class="fw-bold text-decoration-none small" style="color: #093FB4;" download>
+                                    <i class="bi bi-file-earmark-text"></i> Format Surat Pengantar RT/RW
+                                </a>
+                            </li>
                             <li>
                                 Surat pernyataan usaha <br>
                                 <span class="text-muted">(ditandatangani di atas materai 10.000)</span><br>
@@ -139,7 +149,7 @@
                         <p class="mb-1 fw-semibold">Alur Pengajuan:</p>
                         <ol class="ps-3 mb-2">
                             <li>Isi formulir dan unggah dokumen</li>
-                            <li>Petugas akan melakukan verifikasi lapangan jika perlu</li>
+                            <li>Petugas kelurahan akan memverifikasi pengajuan</li>
                             <li>Surat dapat diambil jika sudah disetujui</li>
                         </ol>
                         <p class="mb-0 text-muted"><i class="bi bi-clock"></i> Estimasi proses: 1–3 hari kerja</p>
@@ -156,15 +166,21 @@
                         <ul class="ps-3 mb-2">
                             <li>Fotokopi KK</li>
                             <li>Fotokopi KTP</li>
-                            <li>Surat pengantar RT/RW</li>
                             <li>Pas foto latar biru 3x4</li>
+                            <li>Surat pengantar RT/RW <br>
+                                <a href="{{ asset('contoh/Format_Surat_Pengantar_RT_RW.docx') }}"
+                                    class="fw-bold text-decoration-none small" style="color: #093FB4;" download>
+                                    <i class="bi bi-file-earmark-text"></i> Format Surat Pengantar RT/RW
+                                </a>
+                            </li>
+                            
 
                         </ul>
                         <hr>
                         <p class="mb-1 fw-semibold">Alur Pengajuan:</p>
                         <ol class="ps-3 mb-2">
                             <li>Lengkapi formulir dan dokumen</li>
-                            <li>Verifikasi oleh petugas</li>
+                            <li>Petugas kelurahan akan memverifikasi pengajuan</li>
                             <li>Surat dapat diambil jika sudah disetujui</li>
                         </ol>
                         <p class="mb-0 text-muted"><i class="bi bi-clock"></i> Estimasi proses: 1–3 hari kerja</p>

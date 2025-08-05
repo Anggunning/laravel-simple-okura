@@ -7,9 +7,9 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class PengajuanSktmBaru extends Notification
+class PengajuanSkpBaru extends Notification
 {
-    use Queueable;
+      use Queueable;
 
     public $pengajuan;
 
@@ -26,8 +26,8 @@ class PengajuanSktmBaru extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'title' => 'Pengajuan Surat Keterangan Tidak Mampu Baru',
-            'message' => 'Ada pengajuan Surat Keterangan Tidak Mampu dari ' . $this->pengajuan->nama,
+            'title' => 'Pengajuan Surat Pengantar Pernikahan Baru',
+            'message' => 'Ada pengajuan Surat Pengantar Pernikahan dari ' . $this->pengajuan->nama,
             'id_pengajuan' => $this->pengajuan->id,
         ];
     }

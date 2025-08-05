@@ -40,6 +40,7 @@ class SktmModel extends Model
         'pekerjaan',
         'status',
         'alasan',
+        'nomor_surat',
         'pengantar_rt_rw',     
         'kk',                   
         'ktp',                 

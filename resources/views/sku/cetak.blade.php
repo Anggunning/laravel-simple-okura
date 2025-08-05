@@ -78,7 +78,7 @@
 </div>
 <div class="text-center">
     <p class="underline fw-bold" style="font-size:14pt;">SURAT KETERANGAN USAHA</p>
-        <p>Nomor: 500/TTO/{{ now()->year }}/...</p>
+        <p>Nomor: {{ $sku->nomor_surat }}</p>
 </div>
     <p class="mt-2">Yang bertanda tangan di bawah ini, Lurah Tebing Tinggi Okura Kecamatan Rumbai Timur Kota Pekanbaru, dengan ini menerangkan bahwa:</p>
 

@@ -103,7 +103,7 @@
 
     <div class="nomor">
         <p class="underline bold" style="margin-bottom: 0;">SURAT PENGANTAR PERKAWINAN</p>
-        <p>Nomor: 474.2/TTO/2024/22</p>
+        <p>Nomor: {{ $skp->nomor_surat }}</p>
     </div>
 
     <p class="mt-2">Yang bertanda tangan di bawah ini menjelaskan dengan sesungguhnya bahwa :</p>

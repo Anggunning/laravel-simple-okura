@@ -139,6 +139,17 @@ if ($existing) {
             $data['tanggal'] = now();
             $data['status'] = 'Diajukan';
 
+            // Hitung jumlah SKTM di tahun ini
+            $tahun = now()->year;
+            $jumlah = SktmModel::whereYear('created_at', $tahun)->count() + 1;
+
+            // Buat nomor surat
+            $nomorSurat = '400/TTO/' . $tahun . '/' . str_pad($jumlah, 3, '0', STR_PAD_LEFT);
+
+            // Tambahkan ke data
+            $data['nomor_surat'] = $nomorSurat;
+
+
             $sktm = SktmModel::create($data);
 
             RiwayatsktmModel::create([
@@ -153,6 +164,7 @@ if ($existing) {
             // Cari user dengan role admin, lurah, sekretaris
             $adminUsers = User::whereIn('role', ['admin', 'lurah', 'sekretaris'])->get();
 
+            
             foreach ($adminUsers as $admin) {
                 $admin->notify(new PengajuanSktmBaru('Pengajuan surat SKTM baru telah diajukan.'));
             }

@@ -129,6 +129,16 @@ if ($existing) {
             $data['status'] = 'Diajukan';
             $data['user_id'] = auth()->id();
             $sku = SkuModel::create($data);
+            // Hitung jumlah SKTM di tahun ini
+            $tahun = now()->year;
+            $jumlah = SkuModel::whereYear('created_at', $tahun)->count() + 1;
+
+            // Buat nomor surat
+            $nomorSurat = '400/TTO/' . $tahun . '/' . str_pad($jumlah, 3, '0', STR_PAD_LEFT);
+
+            // Tambahkan ke data
+            $data['nomor_surat'] = $nomorSurat;
+
 
             RiwayatskuModel::create([
                 'sku_id' => $sku->id,

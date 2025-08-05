@@ -178,6 +178,15 @@ if ($existing) {
             if (SkpModel::where('nik', $request->nik)->exists()) {
                 return redirect()->back()->withInput()->withErrors(['nik' => 'NIK sudah pernah digunakan.']);
             }
+            // Hitung jumlah SKTM di tahun ini
+            $tahun = now()->year;
+            $jumlah = SkpModel::whereYear('created_at', $tahun)->count() + 1;
+
+            // Buat nomor surat
+            $nomorSurat = '474.2/TTO/' . $tahun . '/' . str_pad($jumlah, 3, '0', STR_PAD_LEFT);
+
+            // Tambahkan ke data
+            $data['nomor_surat'] = $nomorSurat;
 
             // 4. Simpan data SKP (sementara belum isi orang_tua)
             $skp = SkpModel::create([

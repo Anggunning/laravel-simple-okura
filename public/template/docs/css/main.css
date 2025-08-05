@@ -15243,6 +15243,13 @@ label {
 table.dataTable {
     table-layout: auto !important;
 }
-
-
+#jumlah-notifikasi {
+    pointer-events: none;
+    z-index: 10;
+    white-space: nowrap;
+}
+.notifikasi-item.belum-dibaca {
+    background-color: #f5d5d5;
+    font-weight: bold;
+}
 

@@ -129,7 +129,7 @@ $('#jumlah-notifikasi').text(jumlah > 1 ? jumlah - 1 : '');
 
     });
 </script> --}}
-
+{{-- 
 <script>
     function loadNotifikasi() {
         $.ajax({
@@ -210,6 +210,101 @@ $('#jumlah-notifikasi').text(jumlah > 1 ? jumlah - 1 : '');
 
 <script>
     // Saat logout atau reload session
+    function resetNotifikasiTerbaca() {
+        localStorage.removeItem('notifikasiTerbaca');
+    }
+</script>
+ --}}
+ <script>
+    function loadNotifikasi() {
+        $.ajax({
+            url: '/notifikasi',
+            method: 'GET',
+            success: function(res) {
+                let html = '';
+                const terbaca = JSON.parse(localStorage.getItem('notifikasiTerbaca') || '[]');
+
+                if (res.data.length > 0) {
+                    html += `<li class="app-notification__title">Terdapat ${res.data.length} notifikasi.</li>`;
+                    html += `<div class="app-notification__content">`;
+
+                    res.data.forEach(n => {
+                        const belumDibaca = !terbaca.includes(n.id);
+                        html += `
+                            <li>
+                                <a class="app-notification__item notifikasi-item ${belumDibaca ? 'belum-dibaca' : ''}" href="javascript:void(0)" data-id="${n.id}" data-url="${n.url}">
+                                    <span class="app-notification__icon"></span>
+                                    <div>
+                                        <p class="app-notification__message">${n.message}</p>
+                                        <p class="app-notification__meta">${n.time}</p>
+                                    </div>
+                                </a>
+                            </li>
+                        `;
+                    });
+
+                    html += `</div>`;
+                } else {
+                    html = `<li class="app-notification__title">Tidak ada notifikasi.</li>`;
+                }
+
+                $('#daftar-notifikasi').html(html);
+
+                // Hitung jumlah notifikasi belum dibaca
+                
+                const belumDibacaJumlah = res.data.filter(n => !terbaca.includes(n.id)).length;
+
+if (belumDibacaJumlah > 0) {
+    $('#jumlah-notifikasi').text(belumDibacaJumlah).show();
+} else {
+    $('#jumlah-notifikasi').hide();
+}
+const jumlahSebelumnya = parseInt($('#jumlah-notifikasi').text()) || 0;
+const jumlahBaru = jumlahSebelumnya - 1;
+
+if (jumlahBaru > 0) {
+    $('#jumlah-notifikasi').text(jumlahBaru);
+} else {
+    $('#jumlah-notifikasi').hide();
+}
+
+            },
+            error: function() {
+                $('#daftar-notifikasi').html('<li class="app-notification__title text-danger">Gagal memuat notifikasi</li>');
+            }
+        });
+    }
+
+    $(document).ready(function() {
+        loadNotifikasi();
+        setInterval(loadNotifikasi, 30000); // per 30 detik
+
+        // Ketika user klik notifikasi
+        $(document).on('click', '.notifikasi-item', function (e) {
+            e.preventDefault();
+
+            const item = $(this);
+            const id = item.data('id');
+            const url = item.data('url');
+
+            // Simpan notifikasi yang sudah dibaca ke localStorage
+            let terbaca = JSON.parse(localStorage.getItem('notifikasiTerbaca') || '[]');
+            if (!terbaca.includes(id)) {
+                terbaca.push(id);
+                localStorage.setItem('notifikasiTerbaca', JSON.stringify(terbaca));
+            }
+
+            // Reload notifikasi agar tampilan berubah
+            loadNotifikasi();
+
+            // Redirect ke halaman tujuan
+            setTimeout(() => {
+                window.location.href = url;
+            }, 100);
+        });
+    });
+
+    // Optional: Reset notifikasi terbaca saat logout
     function resetNotifikasiTerbaca() {
         localStorage.removeItem('notifikasiTerbaca');
     }

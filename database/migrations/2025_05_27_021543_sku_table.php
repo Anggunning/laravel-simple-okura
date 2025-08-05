@@ -31,7 +31,7 @@ return new class extends Migration
             $table->string('rw', 3)->nullable();
             $table->text('keterangan')->nullable();
             $table->enum('status', ['Diajukan', 'Diproses', 'Selesai', 'Ditolak', 'draf'])->default('Diajukan');
-
+            $table->string('nomor_surat')->nullable();
             $table->text('alasan')->nullable();
             $table->string('foto_usaha')->nullable();
             $table->string('pengantar_rt_rw')->nullable();

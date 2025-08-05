@@ -40,6 +40,7 @@ class SkuModel extends Model
         'rw',
         'keterangan',
         'status',
+        'nomor_surat',
         'alasan',
         'foto_usaha',
         'pengantar_rt_rw',

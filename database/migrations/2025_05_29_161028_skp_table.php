@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('agama')->nullable();
             $table->enum('status', ['Diajukan', 'Diproses', 'Selesai', 'Ditolak','draf'])->default('Diajukan')->nullable();
             $table->string('alasan')->nullable();
+            $table->string('nomor_surat')->nullable();
             $table->text('alamat')->nullable();
              $table->string('rt', 3)->nullable();
             $table->string('rw', 3)->nullable();

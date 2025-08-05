@@ -80,7 +80,8 @@
 </div>
 <div class="text-center">
         <p class="underline fw-bold" style="font-size:14pt;">SURAT KETERANGAN TIDAK MAMPU</p>
-        <p>Nomor: 500/TTO/{{ now()->year }}/...</p>
+        <p>Nomor: {{ $sktm->nomor_surat }}</p>
+
 </div>
 
     <p class="mt-2">Lurah Tebing Tinggi Okura Kecamatan Rumbai Timur Kota Pekanbaru, dengan ini menerangkan bahwa:</p>

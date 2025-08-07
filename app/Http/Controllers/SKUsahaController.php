@@ -16,16 +16,16 @@ use Illuminate\Support\Facades\Response;
 class SKUsahaController extends Controller
 {
     public function index(Request $request)
-{
-     $user = auth()->user();
+    {
+        $user = auth()->user();
         $drafToLoad = null;
 
-    if ($request->has('draf')) {
-    $drafToLoad = SkuModel::where('id', $request->get('draf'))
-        ->where('status', 'draf')
-        ->where('user_id', $user->id)
-        ->first();
-}
+        if ($request->has('draf')) {
+            $drafToLoad = SkuModel::where('id', $request->get('draf'))
+                ->where('status', 'draf')
+                ->where('user_id', $user->id)
+                ->first();
+        }
 
 
         if ($user->role === 'Masyarakat') {
@@ -100,7 +100,7 @@ class SKUsahaController extends Controller
             'kecamatan' => 'required|string',
             'kota' => 'required|string',
             'rt' => 'required|max:3',
-            'rw' => 'required|max:3',   
+            'rw' => 'required|max:3',
             'foto_usaha' => 'required|file|mimes:jpg,jpeg,png|max:2048',
             'pengantar_rt_rw' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
             'kk' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
@@ -108,13 +108,12 @@ class SKUsahaController extends Controller
             'surat_pernyataan' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
         $existing = SkuModel::where('nik', $request->nik)
-    ->whereNotIn('status', ['Ditolak', 'Selesai']) // boleh disesuaikan
-    ->exists();
+            ->whereNotIn('status', ['Ditolak', 'Selesai']) // boleh disesuaikan
+            ->exists();
 
-if ($existing) {
-    return redirect()->back()->withInput()->with('error', 'Pengajuan dengan NIK ini sudah ada.');
-
-}
+        if ($existing) {
+            return redirect()->back()->withInput()->with('error', 'Pengajuan dengan NIK ini sudah ada.');
+        }
 
         try {
             $data = $request->all();
@@ -128,7 +127,7 @@ if ($existing) {
             $data['tanggal'] = now();
             $data['status'] = 'Diajukan';
             $data['user_id'] = auth()->id();
-            $sku = SkuModel::create($data);
+            
             // Hitung jumlah SKTM di tahun ini
             $tahun = now()->year;
             $jumlah = SkuModel::whereYear('created_at', $tahun)->count() + 1;
@@ -140,12 +139,15 @@ if ($existing) {
             $data['nomor_surat'] = $nomorSurat;
 
 
+            
+        // Simpan ke database dengan nomor surat sudah ada
+        $sku = SkuModel::create($data);
             RiwayatskuModel::create([
                 'sku_id' => $sku->id,
                 'tanggal' => now()->toDateString(),
                 'waktu' => now(),
                 'status' => 'Diajukan',
-                'peninjau' => '-', 
+                'peninjau' => '-',
                 'keterangan' => 'Surat diajukan oleh pemohon',
                 'alasan' => null
             ]);
@@ -156,7 +158,7 @@ if ($existing) {
         }
     }
 
-      public function storeDraf(Request $request)
+    public function storeDraf(Request $request)
     {
         try {
             \Log::info('✅ Request masuk ke storeDraf:', $request->all());
@@ -168,10 +170,10 @@ if ($existing) {
 
             $draf = SkuModel::updateOrCreate(
                 ['user_id' => $userId, 'status' => 'draf'],
-                $request->except(['ktp','surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha']) + ['status' => 'draf']
+                $request->except(['ktp', 'surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha']) + ['status' => 'draf']
             );
 
-            foreach (['ktp','surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha'] as $file) {
+            foreach (['ktp', 'surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha'] as $file) {
                 if ($request->hasFile($file)) {
                     $path = $request->file($file)->store("draf/{$userId}", 'local');
                     $draf->$file = $path;
@@ -202,38 +204,38 @@ if ($existing) {
     }
 
 
-   public function previewDrafFile($field)
-{
-    $allowed = ['ktp','surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha'];
-    if (!in_array($field, $allowed)) {
-        abort(403, 'Field tidak diizinkan.');
+    public function previewDrafFile($field)
+    {
+        $allowed = ['ktp', 'surat_pernyataan', 'kk', 'pengantar_rt_rw', 'foto_usaha'];
+        if (!in_array($field, $allowed)) {
+            abort(403, 'Field tidak diizinkan.');
+        }
+
+        $draf = SkuModel::where('user_id', auth()->id())
+            ->where('status', 'draf')
+            ->first();
+
+        // Pastikan draf dan field-nya ada dan tidak kosong
+        if (!$draf || empty($draf->$field)) {
+            abort(404, 'Data draf atau file tidak ditemukan.');
+        }
+
+        $path = $draf->$field;
+
+        // Cek keberadaan file di disk 'local'
+        if (!Storage::disk('local')->exists($path)) {
+            abort(404, 'File tidak ditemukan di storage.');
+        }
+
+        $mime = Storage::disk('local')->mimeType($path);
+        $content = Storage::disk('local')->get($path);
+        \Log::info('Preview file path:', ['path' => $path]);
+
+        return \Response::make($content, 200, [
+            'Content-Type' => $mime,
+            'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
+        ]);
     }
-
-    $draf = SkuModel::where('user_id', auth()->id())
-        ->where('status', 'draf')
-        ->first();
-
-    // Pastikan draf dan field-nya ada dan tidak kosong
-    if (!$draf || empty($draf->$field)) {
-        abort(404, 'Data draf atau file tidak ditemukan.');
-    }
-
-    $path = $draf->$field;
-
-    // Cek keberadaan file di disk 'local'
-    if (!Storage::disk('local')->exists($path)) {
-        abort(404, 'File tidak ditemukan di storage.');
-    }
-
-    $mime = Storage::disk('local')->mimeType($path);
-    $content = Storage::disk('local')->get($path);
-\Log::info('Preview file path:', ['path' => $path]);
-
-    return \Response::make($content, 200, [
-        'Content-Type' => $mime,
-        'Content-Disposition' => 'inline; filename="' . basename($path) . '"'
-    ]);
-}
 
 
 

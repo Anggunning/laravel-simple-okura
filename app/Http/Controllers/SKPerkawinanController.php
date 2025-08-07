@@ -210,6 +210,7 @@ class SKPerkawinanController extends Controller
                 'foto' => $data['foto'],
                 'status_perkawinan_id' => $statusPerkawinan->id,
                 'status' => 'Diajukan',
+                'nomor_surat' => $nomorSurat,
                 'created_at' => now(),
                 'updated_at' => now(),
 

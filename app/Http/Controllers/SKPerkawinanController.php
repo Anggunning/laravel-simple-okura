@@ -380,11 +380,24 @@ if ($existing) {
                 abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
             }
             $userId = auth()->id();
+            $data = $request->except(['ktp', 'kk', 'pengantar_rt_rw', 'foto']) + ['status' => 'draf'];
 
-            $draf = SkpModel::updateOrCreate(
-                ['user_id' => $userId, 'status' => 'draf'],
-                $request->except(['ktp', 'kk', 'pengantar_rt_rw', 'foto']) + ['status' => 'draf']
-            );
+        // Set null jika tidak ada file dikirim
+        foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
+            if (!$request->hasFile($file)) {
+                $data[$file] = null;
+            }
+        }
+
+        $draf = SkpModel::updateOrCreate(
+            ['user_id' => $userId, 'status' => 'draf'],
+            $data
+        );
+
+            // $draf = SkpModel::updateOrCreate(
+            //     ['user_id' => $userId, 'status' => 'draf'],
+            //     $request->except(['ktp', 'kk', 'pengantar_rt_rw', 'foto']) + ['status' => 'draf']
+            // );
 
             foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
                 if ($request->hasFile($file)) {

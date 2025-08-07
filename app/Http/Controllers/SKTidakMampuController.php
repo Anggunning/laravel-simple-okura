@@ -229,6 +229,9 @@ public function storeDraf(Request $request)
 
         $data = $request->except(['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan']) + ['status' => 'draf'];
 
+        
+// Tambahkan field lain yang wajib di database
+$data['status_perkawinan_id'] = $request->input('status_perkawinan_id', null);
         // Tambahkan nilai null jika file tidak ada di request
         foreach (['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'] as $file) {
             if ($request->hasFile($file)) {

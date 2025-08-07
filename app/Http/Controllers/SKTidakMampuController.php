@@ -184,39 +184,75 @@ foreach ($adminUsers as $admin) {
     }
 
 
-    public function storeDraf(Request $request)
-    {
-        try {
-            \Log::info('✅ Request masuk ke storeDraf:', $request->all());
+    // public function storeDraf(Request $request)
+    // {
+    //     try {
+    //         \Log::info('✅ Request masuk ke storeDraf:', $request->all());
 
-            if (auth()->user()->role !== 'Masyarakat') {
-                abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
-            }
-            $userId = auth()->id();
+    //         if (auth()->user()->role !== 'Masyarakat') {
+    //             abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
+    //         }
+    //         $userId = auth()->id();
 
-            $draf = SktmModel::updateOrCreate(
-                ['user_id' => $userId, 'status' => 'draf'],
-                $request->except(['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan']) + ['status' => 'draf']
-            );
+    //         $draf = SktmModel::updateOrCreate(
+    //             ['user_id' => $userId, 'status' => 'draf'],
+    //             $request->except(['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan']) + ['status' => 'draf']
+    //         );
 
-            foreach (['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'] as $file) {
-                if ($request->hasFile($file)) {
-                    $path = $request->file($file)->store("draf/{$userId}", 'local');
-                    $draf->$file = $path;
-                }
-            }
+    //         foreach (['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'] as $file) {
+    //             if ($request->hasFile($file)) {
+    //                 $path = $request->file($file)->store("draf/{$userId}", 'local');
+    //                 $draf->$file = $path;
+    //             }
+    //         }
 
-            $draf->save();
+    //         $draf->save();
 
-            return response()->json(['success' => true]);
-        } catch (\Exception $e) {
-            \Log::error('❌ storeDraf error: ' . $e->getMessage());
-            return response()->json([
-                'success' => false,
-                'error' => $e->getMessage(),
-            ], 500);
+    //         return response()->json(['success' => true]);
+    //     } catch (\Exception $e) {
+    //         \Log::error('❌ storeDraf error: ' . $e->getMessage());
+    //         return response()->json([
+    //             'success' => false,
+    //             'error' => $e->getMessage(),
+    //         ], 500);
+    //     }
+    // }
+public function storeDraf(Request $request)
+{
+    try {
+        \Log::info('✅ Request masuk ke storeDraf:', $request->all());
+
+        if (auth()->user()->role !== 'Masyarakat') {
+            abort(403, 'Hanya masyarakat yang bisa menyimpan draf.');
         }
+        $userId = auth()->id();
+
+        $data = $request->except(['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan']) + ['status' => 'draf'];
+
+        // Tambahkan nilai null jika file tidak ada di request
+        foreach (['ktp', 'kk', 'pengantar_rt_rw', 'surat_pernyataan'] as $file) {
+            if ($request->hasFile($file)) {
+                $path = $request->file($file)->store("draf/{$userId}", 'local');
+                $data[$file] = $path;
+            } else {
+                $data[$file] = null; // inilah kunci agar selalu ada nilai
+            }
+        }
+
+        $draf = SktmModel::updateOrCreate(
+            ['user_id' => $userId, 'status' => 'draf'],
+            $data
+        );
+
+        return response()->json(['success' => true]);
+    } catch (\Exception $e) {
+        \Log::error('❌ storeDraf error: ' . $e->getMessage());
+        return response()->json([
+            'success' => false,
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
 
 
 

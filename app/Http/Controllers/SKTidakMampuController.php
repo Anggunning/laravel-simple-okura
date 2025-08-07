@@ -119,13 +119,12 @@ class SKTidakMampuController extends Controller
             'surat_pernyataan' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048',
         ]);
         $existing = SktmModel::where('nik', $request->nik)
-    ->whereNotIn('status', ['Ditolak', 'Selesai']) // boleh disesuaikan
-    ->exists();
+            ->whereNotIn('status', ['Ditolak', 'Selesai']) // boleh disesuaikan
+            ->exists();
 
-if ($existing) {
-    return redirect()->back()->withInput()->with('error', 'Pengajuan dengan NIK ini sudah ada.');
-
-}
+        if ($existing) {
+            return redirect()->back()->withInput()->with('error', 'Pengajuan dengan NIK ini sudah ada.');
+        }
 
         try {
             $data = $request->all();
@@ -164,10 +163,14 @@ if ($existing) {
             // Cari user dengan role admin, lurah, sekretaris
             $adminUsers = User::whereIn('role', ['admin', 'lurah', 'sekretaris'])->get();
 
-            
-            foreach ($adminUsers as $admin) {
-                $admin->notify(new PengajuanSktmBaru('Pengajuan surat SKTM baru telah diajukan.'));
-            }
+if (!($sktm instanceof SktmModel)) {
+    throw new \Exception("Gagal menyimpan SKTM. Objek tidak valid.");
+}
+
+foreach ($adminUsers as $admin) {
+    $admin->notify(new PengajuanSktmBaru($sktm));
+}
+
             // Hapus draf
             SktmModel::where('user_id', auth()->id())->where('status', 'draf')->delete();
 

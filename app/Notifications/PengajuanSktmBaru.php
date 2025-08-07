@@ -11,11 +11,18 @@ class PengajuanSktmBaru extends Notification
 {
     use Queueable;
 
-    public $pengajuan;
+    protected $pengajuan;
 
     public function __construct($pengajuan)
     {
-        $this->pengajuan = $pengajuan;
+        // Jika hanya ID dikirim, ambil ulang datanya
+        if (is_numeric($pengajuan)) {
+            $this->pengajuan = \App\Models\SktmModel::find($pengajuan);
+        } elseif (is_array($pengajuan)) {
+            $this->pengajuan = (object) $pengajuan;
+        } else {
+            $this->pengajuan = $pengajuan;
+        }
     }
 
     public function via($notifiable)
@@ -26,9 +33,9 @@ class PengajuanSktmBaru extends Notification
     public function toDatabase($notifiable)
     {
         return [
-            'title' => 'Pengajuan Surat Keterangan Tidak Mampu Baru',
-            'message' => 'Ada pengajuan Surat Keterangan Tidak Mampu dari ' . $this->pengajuan->nama,
-            'id_pengajuan' => $this->pengajuan->id,
+            'title' => 'Pengajuan SKTM Baru',
+            'message' => 'Ada pengajuan Surat Keterangan Tidak Mampu dari ' . ($this->pengajuan->nama ?? '(tidak diketahui)'),
+            'id_pengajuan' => $this->pengajuan->id ?? null,
         ];
     }
 }

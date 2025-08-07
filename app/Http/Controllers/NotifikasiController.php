@@ -28,7 +28,7 @@ class NotifikasiController extends Controller
 
                 foreach ($sktmBaru as $item) {
                     $notifikasi->push([
-                        'id' => 'sktm-baru_',$item->id,
+                        'id' => 'sktm-baru_' . $item->id,
                         // 'icon' => 'bi-people text-primary',
                         'message' => "Pengajuan Surat Keterangan Tidak Mampu oleh {$item->nama}",
                         'time' => $item->created_at->diffForHumans(),
@@ -39,7 +39,7 @@ class NotifikasiController extends Controller
 
                 foreach ($sktmLama as $item) {
                     $notifikasi->push([
-                        'id' => 'sktm-lama_',$item->id,
+                        'id' => 'sktm-lama_' . $item->id,
                         // 'icon' => 'bi-hourglass-split text-danger',
                         'message' => "<span class='text-danger'>Pengajuan Keterangan Tidak Mampu oleh {$item->nama} Belum diproses > 3 hari</span>",
                         'time' => $item->created_at->diffForHumans(),
@@ -54,7 +54,7 @@ class NotifikasiController extends Controller
 
                 foreach ($skuBaru as $item) {
                     $notifikasi->push([
-                        'id' =>'sku-baru_', $item->id,
+                        'id' =>'sku-baru_' . $item->id,
                         // 'icon' => 'bi-file-earmark-text text-success',
                         'message' => "Pengajuan Surat Keterangan Usaha oleh {$item->nama}",
                         'time' => $item->created_at->diffForHumans(),
@@ -65,7 +65,7 @@ class NotifikasiController extends Controller
 
                 foreach ($skuLama as $item) {
                     $notifikasi->push([
-                        'id' =>'sku-lama_', $item->id,
+                        'id' =>'sku-lama_' . $item->id,
                         // 'icon' => 'bi-file-earmark-text text-success',
                         'message' => "<span class='text-danger'>Pengajuan Surat Keterangan Usaha oleh {$item->nama} Belum diproses > 3 hari</span>",
                         'time' => $item->created_at->diffForHumans(),
@@ -80,7 +80,7 @@ class NotifikasiController extends Controller
 
                 foreach ($skpBaru as $item) {
                     $notifikasi->push([
-                        'id' => 'skp-baru_',$item->id,
+                        'id' => 'skp-baru_' . $item->id,
                         // 'icon' => 'bi-heart text-warning',
                         'message' => "Pengajuan Surat Pengantar Perkawinan oleh {$item->nama}",
                         'time' => $item->created_at->diffForHumans(),
@@ -91,7 +91,7 @@ class NotifikasiController extends Controller
 
                 foreach ($skpLama as $item) {
                     $notifikasi->push([
-                        'id' =>'skp-lama_', $item->id,
+                        'id' =>'skp-lama_' .  $item->id,
                         // 'icon' => 'bi-clock-history text-danger',
                         'message' => "<span class='text-danger'>Pengajuan Pengantar Perkawinan oleh {$item->nama} Belum diproses > 3 hari</span>",
                         'time' => $item->created_at->diffForHumans(),
@@ -193,7 +193,7 @@ class NotifikasiController extends Controller
                 foreach ($sktm as $item) {
                     $notifikasi->push([
                         'id' => 'sktm_' . $item->id,
-                        'message' => "Pengajuan Surat Keterangan Tidak Mampu: : <strong>{$item->status}</strong>",
+                        'message' => "Pengajuan Surat Keterangan Tidak Mampu: <strong>{$item->status}</strong>",
                         'time' => $item->updated_at->diffForHumans(),
                         'created_at' => $item->updated_at,
                         'url' => route('sktm.show', $item->id),

@@ -144,13 +144,12 @@ class SKPerkawinanController extends Controller
             'rw_ibu' => 'required|max:3',
         ]);
         $existing = SkpModel::where('nik', $request->nik)
-    ->whereNotIn('status', ['Ditolak', 'Selesai']) // boleh disesuaikan
-    ->exists();
+            ->whereNotIn('status', ['Ditolak', 'Selesai']) // boleh disesuaikan
+            ->exists();
 
-if ($existing) {
-    return redirect()->back()->withInput()->with('error', 'Pengajuan dengan NIK ini sudah ada.');
-
-}
+        if ($existing) {
+            return redirect()->back()->withInput()->with('error', 'Pengajuan dengan NIK ini sudah ada.');
+        }
 
         try {
             $data = $request->all();
@@ -382,17 +381,17 @@ if ($existing) {
             $userId = auth()->id();
             $data = $request->except(['ktp', 'kk', 'pengantar_rt_rw', 'foto']) + ['status' => 'draf'];
 
-        // Set null jika tidak ada file dikirim
-        foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
-            if (!$request->hasFile($file)) {
-                $data[$file] = null;
+            // Set null jika tidak ada file dikirim
+            foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
+                if (!$request->hasFile($file)) {
+                    $data[$file] = null;
+                }
             }
-        }
 
-        $draf = SkpModel::updateOrCreate(
-            ['user_id' => $userId, 'status' => 'draf'],
-            $data
-        );
+            $draf = SkpModel::updateOrCreate(
+                ['user_id' => $userId, 'status' => 'draf'],
+                $data
+            );
 
             // $draf = SkpModel::updateOrCreate(
             //     ['user_id' => $userId, 'status' => 'draf'],

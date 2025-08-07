@@ -21,7 +21,7 @@ return new class extends Migration
             $table->string('kewarganegaraan')->nullable();
             $table->string('pekerjaan')->nullable();
             $table->string('agama')->nullable();
-            $table->enum('status', ['Diajukan', 'Diproses', 'Selesai', 'Ditolak','draf'])->default('Diajukan')->nullable();
+            $table->enum('status', ['Diajukan', 'Diproses', 'Selesai', 'Ditolak','draf'])->default('Diajukan');
             $table->string('alasan')->nullable();
             $table->string('nomor_surat')->nullable();
             $table->text('alamat')->nullable();
@@ -50,6 +50,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        //
+        Schema::dropIfExists('skp');
     }
 };

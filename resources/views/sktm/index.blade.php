@@ -418,7 +418,7 @@
                             <div class="mb-3 col-md-6">
                                 <label for="rw" class="form-label">RW <span class="text-danger">*</span></label>
                                 <input type="text" name="rw" id="rw" class="form-control" required
-                                    maxlength="3" pattern="^\d{3}$" placeholder="Contoh: 002"
+                                    maxlength="3" pattern="^\d{3}$" inputmode="numeric" placeholder="Contoh: 002"
                                     oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 002')"
                                     oninput="this.setCustomValidity('')">
                             </div>

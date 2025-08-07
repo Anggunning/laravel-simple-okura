@@ -261,114 +261,114 @@ class SKPerkawinanController extends Controller
                 ->with('form', 'tambah');
         }
     }
-    public function update(Request $request, $id)
-    {
-        try {
-            // 1. Validasi input
-            $validated = $request->validate([
-                'nama' => 'required',
-                'nik' => 'required',
-                'jenis_kelamin' => 'required',
-                'tempat_lahir' => 'required',
-                'tanggal_lahir' => 'required|date',
-                'agama' => 'required',
-                'pekerjaan' => 'required',
-                'status_kawin' => 'required|in:Belum Menikah,Cerai Mati,Cerai Hidup',
-                'alamat' => 'required',
-                'rt' => 'required|max:3',
-                'rw' => 'required|max:3',
-                'kewarganegaraan' => 'required',
-                'keterangan' => 'nullable',
+    // public function update(Request $request, $id)
+    // {
+    //     try {
+    //         // 1. Validasi input
+    //         $validated = $request->validate([
+    //             'nama' => 'required',
+    //             'nik' => 'required',
+    //             'jenis_kelamin' => 'required',
+    //             'tempat_lahir' => 'required',
+    //             'tanggal_lahir' => 'required|date',
+    //             'agama' => 'required',
+    //             'pekerjaan' => 'required',
+    //             'status_kawin' => 'required|in:Belum Menikah,Cerai Mati,Cerai Hidup',
+    //             'alamat' => 'required',
+    //             'rt' => 'required|max:3',
+    //             'rw' => 'required|max:3',
+    //             'kewarganegaraan' => 'required',
+    //             'keterangan' => 'nullable',
 
-                // Dokumen
-                'ktp' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-                'kk' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-                'pengantar_rt_rw' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
-                'foto' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    //             // Dokumen
+    //             'ktp' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    //             'kk' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    //             'pengantar_rt_rw' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
+    //             'foto' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048',
 
-                // Data Orang Tua
-                'nama_ayah' => 'required',
-                'nik_ayah' => 'required',
-                'agama_ayah' => 'required',
-                'kewarganegaraan_ayah' => 'required',
-                'pekerjaan_ayah' => 'required',
-                'alamat_ayah' => 'required',
-                'rt_ayah' => 'required|max:3',
-                'rw_ayah' => 'required|max:3',
-                'nama_ibu' => 'required',
-                'nik_ibu' => 'required',
-                'agama_ibu' => 'required',
-                'kewarganegaraan_ibu' => 'required',
-                'pekerjaan_ibu' => 'required',
-                'alamat_ibu' => 'required',
-                'rt_ibu' => 'required|max:3',
-                'rw_ibu' => 'required|max:3',
-            ]);
+    //             // Data Orang Tua
+    //             'nama_ayah' => 'required',
+    //             'nik_ayah' => 'required',
+    //             'agama_ayah' => 'required',
+    //             'kewarganegaraan_ayah' => 'required',
+    //             'pekerjaan_ayah' => 'required',
+    //             'alamat_ayah' => 'required',
+    //             'rt_ayah' => 'required|max:3',
+    //             'rw_ayah' => 'required|max:3',
+    //             'nama_ibu' => 'required',
+    //             'nik_ibu' => 'required',
+    //             'agama_ibu' => 'required',
+    //             'kewarganegaraan_ibu' => 'required',
+    //             'pekerjaan_ibu' => 'required',
+    //             'alamat_ibu' => 'required',
+    //             'rt_ibu' => 'required|max:3',
+    //             'rw_ibu' => 'required|max:3',
+    //         ]);
 
-            // 2. Ambil data SKP
-            $skp = SkpModel::findOrFail($id);
+    //         // 2. Ambil data SKP
+    //         $skp = SkpModel::findOrFail($id);
 
-            // 3. Update Status Perkawinan
-            if ($skp->status_perkawinan_id) {
-                $statusPerkawinan = StatusPerkawinanModel::find($skp->status_perkawinan_id);
-                if ($statusPerkawinan) {
-                    $statusPerkawinan->update([
-                        'status_kawin' => $request->status_kawin,
-                        'jenis_kelamin_psgn_dulu' => in_array($request->status_kawin, ['Cerai Hidup', 'Cerai Mati'])
-                            ? ($request->jenis_kelamin === 'Laki-laki' ? 'Perempuan' : 'Laki-laki')
-                            : null,
-                        'nama_pasangan_dulu' => in_array($request->status_kawin, ['Cerai Hidup', 'Cerai Mati'])
-                            ? $request->nama_pasangan_dulu
-                            : null,
-                    ]);
-                }
-            }
-
-
-            // 4. Upload file jika ada, kalau tidak ada tetap gunakan nilai lama
-            foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
-                if ($request->hasFile($file)) {
-                    // Hapus file lama jika perlu
-                    if ($skp->$file && \Storage::exists($skp->$file)) {
-                        Storage::delete($skp->$file);
-                    }
-
-                    // Simpan file baru
-                    $validated[$file] = $request->file($file)->store('skp', 'local');
-                } else {
-                    // Gunakan data lama agar tidak hilang
-                    $validated[$file] = $skp->$file;
-                }
-            }
+    //         // 3. Update Status Perkawinan
+    //         if ($skp->status_perkawinan_id) {
+    //             $statusPerkawinan = StatusPerkawinanModel::find($skp->status_perkawinan_id);
+    //             if ($statusPerkawinan) {
+    //                 $statusPerkawinan->update([
+    //                     'status_kawin' => $request->status_kawin,
+    //                     'jenis_kelamin_psgn_dulu' => in_array($request->status_kawin, ['Cerai Hidup', 'Cerai Mati'])
+    //                         ? ($request->jenis_kelamin === 'Laki-laki' ? 'Perempuan' : 'Laki-laki')
+    //                         : null,
+    //                     'nama_pasangan_dulu' => in_array($request->status_kawin, ['Cerai Hidup', 'Cerai Mati'])
+    //                         ? $request->nama_pasangan_dulu
+    //                         : null,
+    //                 ]);
+    //             }
+    //         }
 
 
-            // 5. Update SKP
-            $skp->update($validated);
+    //         // 4. Upload file jika ada, kalau tidak ada tetap gunakan nilai lama
+    //         foreach (['ktp', 'kk', 'pengantar_rt_rw', 'foto'] as $file) {
+    //             if ($request->hasFile($file)) {
+    //                 // Hapus file lama jika perlu
+    //                 if ($skp->$file && \Storage::exists($skp->$file)) {
+    //                     Storage::delete($skp->$file);
+    //                 }
 
-            // 6. Update Orang Tua (gunakan relasi atau pencarian manual)
-            if ($skp->orangTua) {
-                $skp->orangTua->update([
-                    'nama_ayah' => $request->nama_ayah,
-                    'nik_ayah' => $request->nik_ayah,
-                    'agama_ayah' => $request->agama_ayah,
-                    'kewarganegaraan_ayah' => $request->kewarganegaraan_ayah,
-                    'pekerjaan_ayah' => $request->pekerjaan_ayah,
-                    'alamat_ayah' => $request->alamat_ayah,
-                    'nama_ibu' => $request->nama_ibu,
-                    'nik_ibu' => $request->nik_ibu,
-                    'agama_ibu' => $request->agama_ibu,
-                    'kewarganegaraan_ibu' => $request->kewarganegaraan_ibu,
-                    'pekerjaan_ibu' => $request->pekerjaan_ibu,
-                    'alamat_ibu' => $request->alamat_ibu,
-                ]);
-            }
+    //                 // Simpan file baru
+    //                 $validated[$file] = $request->file($file)->store('skp', 'local');
+    //             } else {
+    //                 // Gunakan data lama agar tidak hilang
+    //                 $validated[$file] = $skp->$file;
+    //             }
+    //         }
 
-            return redirect()->back()->with('success', 'Data berhasil diperbarui');
-        } catch (\Exception $e) {
-            \Log::error('Update SKP error: ' . $e->getMessage());
-            return redirect()->back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: ' . $e->getMessage()]);
-        }
-    }
+
+    //         // 5. Update SKP
+    //         $skp->update($validated);
+
+    //         // 6. Update Orang Tua (gunakan relasi atau pencarian manual)
+    //         if ($skp->orangTua) {
+    //             $skp->orangTua->update([
+    //                 'nama_ayah' => $request->nama_ayah,
+    //                 'nik_ayah' => $request->nik_ayah,
+    //                 'agama_ayah' => $request->agama_ayah,
+    //                 'kewarganegaraan_ayah' => $request->kewarganegaraan_ayah,
+    //                 'pekerjaan_ayah' => $request->pekerjaan_ayah,
+    //                 'alamat_ayah' => $request->alamat_ayah,
+    //                 'nama_ibu' => $request->nama_ibu,
+    //                 'nik_ibu' => $request->nik_ibu,
+    //                 'agama_ibu' => $request->agama_ibu,
+    //                 'kewarganegaraan_ibu' => $request->kewarganegaraan_ibu,
+    //                 'pekerjaan_ibu' => $request->pekerjaan_ibu,
+    //                 'alamat_ibu' => $request->alamat_ibu,
+    //             ]);
+    //         }
+
+    //         return redirect()->back()->with('success', 'Data berhasil diperbarui');
+    //     } catch (\Exception $e) {
+    //         \Log::error('Update SKP error: ' . $e->getMessage());
+    //         return redirect()->back()->withInput()->withErrors(['error' => 'Gagal memperbarui data: ' . $e->getMessage()]);
+    //     }
+    // }
 
     public function storeDraf(Request $request)
     {

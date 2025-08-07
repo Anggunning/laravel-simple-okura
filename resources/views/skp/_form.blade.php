@@ -126,14 +126,14 @@
         <div class="mb-3 col-md-6">
             <label for="rt" class="form-label">RT <span class="text-danger">*</span></label>
             <input type="text" name="rt" id="rt" class="form-control" required maxlength="3"
-                pattern="^\d{3}$" placeholder="Contoh: 001"
+                pattern="^\d{3}$" placeholder="Contoh: 001" inputmode="numeric"
                 oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 001')"
                 oninput="this.setCustomValidity('')">
         </div>
         <div class="mb-3 col-md-6">
             <label for="rw" class="form-label">RW <span class="text-danger">*</span></label>
             <input type="text" name="rw" id="rw" class="form-control" required maxlength="3"
-                pattern="^\d{3}$" placeholder="Contoh: 002"
+                pattern="^\d{3}$" placeholder="Contoh: 002" inputmode="numeric"
                 oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 002')"
                 oninput="this.setCustomValidity('')">
         </div>
@@ -289,14 +289,14 @@
         <div class="mb-3 col-md-6">
             <label for="rt_ayah" class="form-label">RT Ayah <span class="text-danger">*</span></label>
             <input type="text" name="rt_ayah" id="rt_ayah" class="form-control" required maxlength="3"
-                pattern="^\d{3}$" placeholder="Contoh: 001"
+                pattern="^\d{3}$" placeholder="Contoh: 001" inputmode="numeric"
                 oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 001')"
                 oninput="this.setCustomValidity('')">
         </div>
         <div class="mb-3 col-md-6">
             <label for="rw_ayah" class="form-label">RW Ayah <span class="text-danger">*</span></label>
             <input type="text" name="rw_ayah" id="rw_ayah" class="form-control" required maxlength="3"
-                pattern="^\d{3}$" placeholder="Contoh: 002"
+                pattern="^\d{3}$" placeholder="Contoh: 002" inputmode="numeric"
                 oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 002')"
                 oninput="this.setCustomValidity('')">
         </div>
@@ -381,14 +381,14 @@
         <div class="mb-3 col-md-6">
             <label for="rt_ibu" class="form-label">RT Ibu <span class="text-danger">*</span></label>
             <input type="text" name="rt_ibu" id="rt_ibu" class="form-control" required maxlength="3"
-                pattern="^\d{3}$" placeholder="Contoh: 001"
+                pattern="^\d{3}$" placeholder="Contoh: 001" inputmode="numeric"
                 oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 001')"
                 oninput="this.setCustomValidity('')">
         </div>
         <div class="mb-3 col-md-6">
             <label for="rw_ibu" class="form-label">RW Ibu<span class="text-danger">*</span></label>
             <input type="text" name="rw_ibu" id="rw_ibu" class="form-control" required maxlength="3"
-                pattern="^\d{3}$" placeholder="Contoh: 002"
+                pattern="^\d{3}$" placeholder="Contoh: 002" inputmode="numeric"
                 oninvalid="this.setCustomValidity('Isi 3 digit angka, contoh: 002')"
                 oninput="this.setCustomValidity('')">
         </div>
